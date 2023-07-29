@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.chat-bg-gradient {
+	background: linear-gradient(180deg, rgba(5, 10, 5, 0) 0%, #050a05 27.1%);
+}

@@ -3,13 +3,16 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
+import { useUser } from '@clerk/nextjs'
 
 export default function Options() {
+	const { user } = useUser()
+	console.log(user)
 	return (
-		<div className='text-right text-sm text-custom-white'>
+		<div className='text-right text-sm text-custom-white w-full'>
 			<Menu
 				as='div'
-				className='relative inline-block text-left'>
+				className='relative inline-block text-left w-full'>
 				<div>
 					<Menu.Button className='p-3 border border-custom-gray rounded-xl flex items-center justify-center'>
 						<Bars3Icon
@@ -26,19 +29,23 @@ export default function Options() {
 					leave='transition ease-in duration-75'
 					leaveFrom='transform opacity-100 scale-100'
 					leaveTo='transform opacity-0 scale-95'>
-					<Menu.Items className='absolute left-0 mt-2 w-56 origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none '>
-						<div className='flex items-center justify-start gap-[10px] px-[15px] py-[16px]'>
-							<Image
-								src='/alex.png'
-								height={36}
-								width={36}
-								className='rounded-lg'
-								alt='Profile picture of user'
-							/>
+					<Menu.Items className='absolute left-0 mt-2  origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none '>
+						<div className='flex items-center justify-start gap-[10px] px-[15px] py-[16px] w-full'>
+							{user && (
+								<Image
+									src={`${user.imageUrl}`}
+									height={36}
+									width={36}
+									className='rounded-lg'
+									alt='Profile picture of user'
+								/>
+							)}
 							<div>
-								<p className='font-semibold'>John Doe</p>
+								<p className='font-semibold'>
+									{user?.fullName}
+								</p>
 								<p className='text-xs opacity-60'>
-									johndoe@gmail.com
+									{user?.emailAddresses[0].emailAddress}
 								</p>
 							</div>
 						</div>
