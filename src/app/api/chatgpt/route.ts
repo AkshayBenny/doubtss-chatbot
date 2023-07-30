@@ -52,7 +52,7 @@ export async function POST(req: Request) {
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
 		if (!success) {
-			console.log('INFO: rate limit exceeded')
+			//console.log('INFO: rate limit exceeded')
 			return new NextResponse(
 				JSON.stringify({
 					Message: "Hi, the companions can't talk this fast.",
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
 		const name = req.headers.get('name')
 		const companionFileName = name + '.txt'
 
-		console.log('prompt: ', prompt)
+		//console.log('prompt: ', prompt)
 		if (isText) {
 			clerkUserId = userId
 			clerkUserName = userName
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
 		}
 
 		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
-			console.log('user not authorized')
+			//console.log('user not authorized')
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
 				{
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
 		try {
 			data = txt_alex_data
 		} catch (err) {
-			console.error('Error reading companion file:', err)
+			//console.error('Error reading companion file:', err)
 			throw err
 		}
 
@@ -179,26 +179,26 @@ export async function POST(req: Request) {
 					recentChatHistory: recentChatHistory,
 				})
 				.catch((err) => {
-					console.error('Error calling chain:', err)
+					//console.error('Error calling chain:', err)
 					throw err
 				})
 		} catch (err) {
-			console.error('Error processing chain:', err)
+			//console.error('Error processing chain:', err)
 			throw err
 		}
 
-		console.log('result', result)
+		//console.log('result', result)
 		const chatHistoryRecord = await memoryManager.writeToHistory(
 			result!.text + '\n',
 			companionKey
 		)
-		console.log('chatHistoryRecord', chatHistoryRecord)
+		//console.log('chatHistoryRecord', chatHistoryRecord)
 		if (isText) {
 			return NextResponse.json(result!.text)
 		}
 		return new StreamingTextResponse(stream)
 	} catch (err) {
-		console.error('An error occurred in POST:', err)
+		//console.error('An error occurred in POST:', err)
 		return new NextResponse(
 			JSON.stringify({
 				message: 'Internal Server Error',

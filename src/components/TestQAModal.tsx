@@ -37,19 +37,9 @@ export default function TestQAModal({
 	})
 
 	if (!example) {
-		console.log('ERROR: no companion selected')
+		//console.log('ERROR: no companion selected')
 		return null
 	}
-	console.log({
-		completion,
-		input,
-		isLoading,
-		handleInputChange,
-		handleSubmit,
-		stop,
-		setInput,
-		setCompletion,
-	})
 
 	return (
 		<div className='fixed inset-0 z-10 overflow-y-auto'>
