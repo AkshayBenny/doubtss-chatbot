@@ -9,6 +9,7 @@ import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
+import path from 'path'
 
 dotenv.config({ path: `.env.local` })
 
@@ -65,7 +66,12 @@ export async function POST(req: Request) {
 		const fs = require('fs').promises
 		let data
 		try {
-			data = await fs.readFile('companions/' + companionFileName, 'utf8')
+			const absolutePath = path.resolve(
+				__dirname,
+				'../../../../../companions/',
+				companionFileName
+			)
+			data = await fs.readFile(absolutePath, 'utf8')
 		} catch (err) {
 			console.error('Error reading companion file:', err)
 			throw err
