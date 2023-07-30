@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
-import { useUser } from '@clerk/nextjs'
+import { useUser, SignOutButton } from '@clerk/nextjs'
 
 export default function Options() {
 	const { user } = useUser()
@@ -114,17 +114,19 @@ export default function Options() {
 							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
-									<button
-										className={`group flex w-full items-center rounded-md pt-[10.25px] text-sm`}>
-										<Image
-											src='/options/logout.svg'
-											className='mr-2'
-											height={18}
-											width={18}
-											alt='Star icon'
-										/>
-										Logout
-									</button>
+									<SignOutButton>
+										<button
+											className={`group flex w-full items-center rounded-md pt-[10.25px] text-sm`}>
+											<Image
+												src='/options/logout.svg'
+												className='mr-2'
+												height={18}
+												width={18}
+												alt='Star icon'
+											/>
+											Logout
+										</button>
+									</SignOutButton>
 								)}
 							</Menu.Item>
 						</div>

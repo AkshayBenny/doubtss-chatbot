@@ -14,13 +14,14 @@ export default function Chatbox({
 		<form
 			onSubmit={handleSubmit}
 			className='flex items-center justify-center gap-3 w-full max-w-[770px]'>
-			<select
+			<div
 				className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[36%] h-full'
-				name='type'
+				// name='type'
 				id='type'>
-				<option value='summary'>Summary</option>
-				<option value='question'>Question</option>
-			</select>
+				<p>Summary</p>
+				{/* <option value='summary'>Summary</option> */}
+				{/* <option value='question'>Question</option> */}
+			</div>
 			<div className='rounded-xl border border-white border-opacity-[36%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full'>
 				<SearchLineIcon />
 				<input
