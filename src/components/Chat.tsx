@@ -167,7 +167,7 @@ export default function Chat() {
 							}
 						})}
 					</div>
-					<div className='w-full flex items-center justify-center pt-7 pb-6 chat-bg-gradient'>
+					<div className='w-full flex items-center justify-center pt-7 pb-6 '>
 						<Chatbox
 							handleSubmit={handleSubmit}
 							input={input}
