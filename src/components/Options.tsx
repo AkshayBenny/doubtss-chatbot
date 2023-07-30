@@ -7,7 +7,6 @@ import { useUser } from '@clerk/nextjs'
 
 export default function Options() {
 	const { user } = useUser()
-	console.log(user)
 	return (
 		<div className='text-right text-sm text-custom-white w-full'>
 			<Menu

@@ -1,22 +1,18 @@
+'use client'
 import { useCompletion } from 'ai/react'
 import SearchLineIcon from 'remixicon-react/SearchLineIcon'
 import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
+import { useRecoilState } from 'recoil'
+import { chatHistory } from '@/state/recoil'
+import { useEffect } from 'react'
 
-export default function Chatbox() {
-	let {
-		completion,
-		input,
-		isLoading,
-		handleInputChange,
-		handleSubmit,
-		stop,
-		setInput,
-		setCompletion,
-	} = useCompletion({
-		api: '/api/' + 'chatgpt',
-		headers: { name: 'Alex' },
-	})
-	// console.log('>>>>', completion)
+export default function Chatbox({
+	handleSubmit,
+	input,
+	handleInputChange,
+	isLoading,
+	completion,
+}: any) {
 	return (
 		<form
 			onSubmit={handleSubmit}
@@ -28,11 +24,14 @@ export default function Chatbox() {
 				<option value='summary'>Summary</option>
 				<option value='question'>Question</option>
 			</select>
+			{/* {chats.map((chat, index) => (
+				<div key={index}>{chat.human || chat.bot}</div>
+			))}
 			{completion && (
 				<div className='mt-2'>
 					<p className='text-sm text-gray-200'>{completion}</p>
 				</div>
-			)}
+			)} */}
 			<div className='rounded-xl border border-white border-opacity-[36%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full'>
 				<SearchLineIcon />
 				<input
