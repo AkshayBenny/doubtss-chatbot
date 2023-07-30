@@ -11,6 +11,11 @@ import { chatHistory } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 
+const questions = [
+	'How did the Industrial Revolution impact economy in Europe & North America?',
+	'What are the main factors that led to the decline of the Indus Valley Civilisation?',
+]
+
 export default function Chat() {
 	const { user } = useUser()
 	const [chats, setChats] = useRecoilState(chatHistory)
@@ -36,6 +41,15 @@ export default function Chat() {
 		handleAISubmit(e)
 		addMessage({ human: input })
 		setInput('')
+	}
+
+	const submitQuestion = (question: string) => {
+		const event = {
+			target: question,
+			preventDefault: () => {},
+		}
+		setInput(question)
+		handleSubmit(event)
 	}
 
 	useEffect(() => {
@@ -68,18 +82,28 @@ export default function Chat() {
 					/>
 					{/* suggestions */}
 					<div className='grid grid-cols-3 mt-[60px] gap-[24.5px] max-w-[770px]'>
-						<button className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px]'>
+						<div className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px]'>
 							<p>Try an example</p>
 							<ArrowRightLineIcon className='w-[18px] h-[18px]' />
-						</button>
-						<button className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left'>
-							How did the Industrial Revolution impact economy in
-							Europe & North America?
-						</button>
-						<button className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left'>
-							What are the main factors that led to the decline of
-							the Indus Valley Civilisation?
-						</button>
+						</div>
+						<form onSubmit={handleSubmit}>
+							<button
+								onClick={() => {
+									setInput(questions[0])
+								}}
+								className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
+								{questions[0]}
+							</button>
+						</form>
+						<form onSubmit={handleSubmit}>
+							<button
+								onClick={() => {
+									setInput(questions[1])
+								}}
+								className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
+								{questions[1]}
+							</button>
+						</form>
 					</div>
 				</>
 			) : (
@@ -130,7 +154,11 @@ export default function Chat() {
 												/>
 											)}
 
-											<p className='leading-normal'>
+											<p
+												className='leading-normal'
+												style={{
+													whiteSpace: 'pre-wrap',
+												}}>
 												{chat.bot}
 											</p>
 										</div>
