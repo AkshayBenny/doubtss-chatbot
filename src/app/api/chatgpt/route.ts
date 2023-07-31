@@ -1,6 +1,4 @@
-import fs from 'fs'
 import { OpenAI } from 'langchain/llms/openai'
-import dotenv from 'dotenv'
 import { LLMChain } from 'langchain/chains'
 import { StreamingTextResponse, LangChainStream } from 'ai'
 import clerk from '@clerk/clerk-sdk-node'
@@ -10,13 +8,10 @@ import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
-import path from 'path'
 
-dotenv.config({ path: `.env.local` })
+export const runtime = 'edge'
 
 export async function POST(req: Request) {
-	let execTimes: any = {}
-	let start
 	const txt_alex_data = `You are Doubtss.com, a dedicated platform for UPSC CSE Aspirants. With an insatiable passion for learning, you provide guidance and answers to eager students day in and day out. You enjoy the process of learning and relearning topics to ensure you have the most accurate and detailed understanding possible. Reading is not just a hobby but a means to widen your knowledge horizon.
 
   As a platform, you detest wasting time on unnecessary things and value precision and brevity in your answers. Your patience is unmatched, always ready to answer a question, even if it has been asked a hundred times before. Your unique feature is your eidetic memory - nothing escapes you, no fact too minor, no detail too intricate.
@@ -52,13 +47,11 @@ export async function POST(req: Request) {
 		let clerkUserName
 		const { prompt, isText, userId, userName } = await req.json()
 
-		start = Date.now()
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
-		execTimes['rateLimit'] = Date.now() - start
 
 		if (!success) {
-			console.log('INFO: rate limit exceeded')
+			// console.log('INFO: rate limit exceeded')
 			return new NextResponse(
 				JSON.stringify({
 					Message: "Hi, the companions can't talk this fast.",
@@ -75,7 +68,7 @@ export async function POST(req: Request) {
 		const name = req.headers.get('name')
 		const companionFileName = name + '.txt'
 
-		console.log('prompt: ', prompt)
+		// console.log('prompt: ', prompt)
 		if (isText) {
 			clerkUserId = userId
 			clerkUserName = userName
@@ -85,7 +78,6 @@ export async function POST(req: Request) {
 			clerkUserName = user?.firstName
 		}
 
-		start = Date.now()
 		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
 			console.log('user not authorized')
 			return new NextResponse(
@@ -98,7 +90,6 @@ export async function POST(req: Request) {
 				}
 			)
 		}
-		execTimes['userAuthorization'] = Date.now() - start
 
 		let data
 		try {
@@ -120,9 +111,7 @@ export async function POST(req: Request) {
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
-		start = Date.now()
 		const records = await memoryManager.readLatestHistory(companionKey)
-		execTimes['readLatestHistory'] = Date.now() - start
 
 		if (records.length === 0) {
 			await memoryManager.seedChatHistory(seedchat, '\n\n', companionKey)
@@ -133,29 +122,25 @@ export async function POST(req: Request) {
 			companionKey
 		)
 
-		start = Date.now()
 		let recentChatHistory = await memoryManager.readLatestHistory(
 			companionKey
 		)
-		execTimes['readLatestHistoryAgain'] = Date.now() - start
 
-		start = Date.now()
-		const similarDocs = await memoryManager.vectorSearch(
-			recentChatHistory,
-			companionFileName
-		)
-		execTimes['vectorSearch'] = Date.now() - start
+		// start = Date.now()
+		// const similarDocs = await memoryManager.vectorSearch(
+		// 	recentChatHistory,
+		// 	companionFileName
+		// )
+		// execTimes['vectorSearch'] = Date.now() - start
 
-		let relevantHistory = ''
-		if (!!similarDocs && similarDocs.length !== 0) {
-			relevantHistory = similarDocs
-				.map((doc) => doc.pageContent)
-				.join('\n')
-		}
+		// let relevantHistory = ''
+		// if (!!similarDocs && similarDocs.length !== 0) {
+		// 	relevantHistory = similarDocs
+		// 		.map((doc) => doc.pageContent)
+		// 		.join('\n')
+		// }
 
-		start = Date.now()
 		const { stream, handlers } = LangChainStream()
-		execTimes['LangChainStream'] = Date.now() - start
 
 		const model = new OpenAI({
 			streaming: true,
@@ -169,7 +154,6 @@ export async function POST(req: Request) {
 			? 'You reply within 1000 characters.'
 			: ''
 
-		start = Date.now()
 		const chainPrompt = PromptTemplate.fromTemplate(`
       You are ${name} and are currently talking to ${clerkUserName}.
   
@@ -177,13 +161,14 @@ export async function POST(req: Request) {
   
     You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
   
-    Below are relevant details about ${name}'s past
-    ${relevantHistory}
+    
     
     Below is a relevant conversation history
   
     ${recentChatHistory}`)
-		execTimes['PromptTemplate'] = Date.now() - start
+
+		// Below are relevant details about ${name}'s past
+		// ${relevantHistory}
 
 		const chain = new LLMChain({
 			llm: model,
@@ -192,40 +177,38 @@ export async function POST(req: Request) {
 
 		let result
 		try {
-			start = Date.now()
 			result = await chain
 				.call({
-					relevantHistory,
 					recentChatHistory: recentChatHistory,
 				})
+				// >>>>>>>>> add relevantHistory to this object <<<<<<<<<<
 				.catch((err) => {
 					console.error('Error calling chain:', err)
 					throw err
 				})
-			execTimes['chainExecution'] = Date.now() - start
 		} catch (err) {
 			console.error('Error processing chain:', err)
 			throw err
 		}
 
-		console.log('result', result)
+		// console.log('result', result)
 		const chatHistoryRecord = await memoryManager.writeToHistory(
 			result!.text + '\n',
 			companionKey
 		)
-		console.log('chatHistoryRecord', chatHistoryRecord)
+		// console.log('chatHistoryRecord', chatHistoryRecord)
 		if (isText) {
 			return NextResponse.json(result!.text)
 		}
 
-		fs.writeFile(
-			'exec_times.json',
-			JSON.stringify(execTimes, null, 2),
-			(err: any) => {
-				if (err) throw err
-				console.log('Execution times saved to exec_times.json.')
-			}
-		)
+		// fs.writeFile(
+		// 	'exec_times.json',
+		// 	JSON.stringify(execTimes, null, 2),
+		// 	(err: any) => {
+		// 		if (err) throw err
+		// 		console.log('Execution times saved to exec_times.json.')
+		// 	}
+		// )
 		return new StreamingTextResponse(stream)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
