@@ -6,10 +6,9 @@
 
 <img width="1182" alt="Screen Shot 2023-07-10 at 11 27 03 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/e4cc8042-e091-4c8b-851f-e361ca5b5814">
 
+This is a tutorial stack to create and host AI companions that you can chat with on a browser or text via SMS. It allows you to determine the personality and backstory of your companion, and uses a vector database with similarity search to retrieve and prompt so the conversations have more depth. It also provides some conversational memory by keeping the conversation in a queue and including it in the prompt.
 
-This is a tutorial stack to create and host AI companions that you can chat with on a browser or text via SMS. It allows you to determine the personality and backstory of your companion, and uses a vector database with similarity search to retrieve and prompt so the conversations have more depth. It also provides some conversational memory by keeping the conversation in a queue and including it in the prompt. 
-
-It currently contains companions on both ChatGPT and Vicuna hosted on [Replicate](https://replicate.com/). 
+It currently contains companions on both ChatGPT and Vicuna hosted on [Replicate](https://replicate.com/).
 
 There are many possible use cases for these companions - romantic (AI girlfriends / boyfriends), friendship, entertainment, coaching, etc. You can guide your companion towards your ideal use case with the backstory you write and the model you choose.
 
@@ -17,27 +16,27 @@ There are many possible use cases for these companions - romantic (AI girlfriend
 
 ## Overview
 
-- 💻 [Stack](#stack)
-- 🧠 [Quickstart](#quickstart)
-- 🚀 [How does this work?](#how-does-this-work)
-- 👤 [Adding/modifying characters](#addingmodifying-characters)
-- 👩‍💻 [How to contribute to this repo](#how-to-contribute-to-this-repo)
-- 🐍 [Python support](#python-support)
-- 💽 [Exporting your companion to Character.ai](#export-to-characterai)
+-   💻 [Stack](#stack)
+-   🧠 [Quickstart](#quickstart)
+-   🚀 [How does this work?](#how-does-this-work)
+-   👤 [Adding/modifying characters](#addingmodifying-characters)
+-   👩‍💻 [How to contribute to this repo](#how-to-contribute-to-this-repo)
+-   🐍 [Python support](#python-support)
+-   💽 [Exporting your companion to Character.ai](#export-to-characterai)
 
 ## Stack
 
 The stack is based on the [AI Getting Started Stack](https://github.com/a16z-infra/ai-getting-started):
 
-- Auth: [Clerk](https://clerk.com/)
-- App logic: [Next.js](https://nextjs.org/)
-- VectorDB: [Pinecone](https://www.pinecone.io/) / [Supabase pgvector](https://supabase.com/docs/guides/database/extensions/pgvector)
-- LLM orchestration: [Langchain.js](https://js.langchain.com/docs/)
-- Text model: [OpenAI](https://platform.openai.com/docs/models), [Replicate (Vicuna13b)](https://replicate.com/replicate/vicuna-13b)
-- Text streaming: [ai sdk](https://github.com/vercel-labs/ai)
-- Conversation history: [Upstash](https://upstash.com/)
-- Deployment: [Fly](https://fly.io/)
-- Text with companion: [Twilio](https://twilio.com/)
+-   Auth: [Clerk](https://clerk.com/)
+-   App logic: [Next.js](https://nextjs.org/)
+-   VectorDB: [Pinecone](https://www.pinecone.io/) / [Supabase pgvector](https://supabase.com/docs/guides/database/extensions/pgvector)
+-   LLM orchestration: [Langchain.js](https://js.langchain.com/docs/)
+-   Text model: [OpenAI](https://platform.openai.com/docs/models), [Replicate (Vicuna13b)](https://replicate.com/replicate/vicuna-13b)
+-   Text streaming: [ai sdk](https://github.com/vercel-labs/ai)
+-   Conversation history: [Upstash](https://upstash.com/)
+-   Deployment: [Fly](https://fly.io/)
+-   Text with companion: [Twilio](https://twilio.com/)
 
 ## Quickstart
 
@@ -57,7 +56,7 @@ git clone git@github.com:[YOUR_GITHUB_ACCOUNT_NAME]/companion-app.git
 **Alternatively**, you can launch the app quickly through Github Codespaces by clicking on "Code" -> "Codespaces" -> "+"
 <img width="458" alt="Screen Shot 2023-07-10 at 11 04 04 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/eb954517-29f2-44b7-b9ca-4184dcf42806">
 
-If you choose to use Codespaces, npm dependencies will be installed automatically and you can proceed to step 3. 
+If you choose to use Codespaces, npm dependencies will be installed automatically and you can proceed to step 3.
 
 ### 2. Install dependencies
 
@@ -84,7 +83,6 @@ If you want to text your AI companion in later steps, you should also enable "ph
 
 <img width="1013" alt="Screen Shot 2023-07-10 at 11 05 42 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/4435c759-f33e-4e38-a276-1be6d538df28">
 
-
 b. **OpenAI API key**
 
 Visit https://platform.openai.com/account/api-keys to get your OpenAI API key if you're using OpenAI for your language model.
@@ -93,34 +91,32 @@ c. **Replicate API key**
 
 Visit https://replicate.com/account/api-tokens to get your Replicate API key if you're using Vicuna for your language model.
 
-
 ❗ **_NOTE:_** By default, this template uses Pinecone as vector store, but you can turn on Supabase pgvector easily by uncommenting `VECTOR_DB=supabase` in `.env.local`. This means you only need to fill out either Pinecone API key _or_ Supabase API key.
 
 d. **Pinecone API key**
 
-- Create a Pinecone index by visiting https://app.pinecone.io/ and click on "Create Index"
-- Give it an index name (this will be the environment variable `PINECONE_INDEX`)
-- Fill in Dimension as `1536`
-- Once the index is successfully created, click on "API Keys" on the left side nav and create an API key: copy "Environment" value to `PINECONE_ENVIRONMENT` variable, and "Value" to `PINECONE_API_KEY`
+-   Create a Pinecone index by visiting https://app.pinecone.io/ and click on "Create Index"
+-   Give it an index name (this will be the environment variable `PINECONE_INDEX`)
+-   Fill in Dimension as `1536`
+-   Once the index is successfully created, click on "API Keys" on the left side nav and create an API key: copy "Environment" value to `PINECONE_ENVIRONMENT` variable, and "Value" to `PINECONE_API_KEY`
 
 e. **Upstash API key**
 
-- Sign in to [Upstash](https://upstash.com/)
-- Under "Redis" on the top nav, click on "Create Database"
-- Give it a name, and then select regions and other options based on your preference. Click on "Create"
-<img width="507" alt="Screen Shot 2023-07-10 at 11 06 36 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/2b8647f3-7242-448b-8db1-ec76f2d59275">
+-   Sign in to [Upstash](https://upstash.com/)
+-   Under "Redis" on the top nav, click on "Create Database"
+-   Give it a name, and then select regions and other options based on your preference. Click on "Create"
+    <img width="507" alt="Screen Shot 2023-07-10 at 11 06 36 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/2b8647f3-7242-448b-8db1-ec76f2d59275">
 
-- Scroll down to "REST API" section and click on ".env". Now you can copy paste both environment variables to your `.env.local`
-<img width="866" alt="Screen Shot 2023-07-10 at 11 07 21 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/f8e6c43f-8810-423e-86b4-9e8aa70598c9">
-
+-   Scroll down to "REST API" section and click on ".env". Now you can copy paste both environment variables to your `.env.local`
+    <img width="866" alt="Screen Shot 2023-07-10 at 11 07 21 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/f8e6c43f-8810-423e-86b4-9e8aa70598c9">
 
 e. **Supabase API key** (optional)
 If you prefer to use Supabase, you will need to uncomment `VECTOR_DB=supabase` and fill out the Supabase credentials in `.env.local`.
 
-- Create a Supabase instance [here](https://supabase.com/dashboard/projects); then go to Project Settings -> API
-- `SUPABASE_URL` is the URL value under "Project URL"
-- `SUPABASE_PRIVATE_KEY` is the key starts with `ey` under Project API Keys
-- Now, you should enable pgvector on Supabase and create a schema. You can do this easily by clicking on "SQL editor" on the left hand side on Supabase UI and then clicking on "+New Query". Copy paste [this code snippet](https://github.com/a16z-infra/ai-getting-started/blob/main/pgvector.sql) in the SQL editor and click "Run".
+-   Create a Supabase instance [here](https://supabase.com/dashboard/projects); then go to Project Settings -> API
+-   `SUPABASE_URL` is the URL value under "Project URL"
+-   `SUPABASE_PRIVATE_KEY` is the key starts with `ey` under Project API Keys
+-   Now, you should enable pgvector on Supabase and create a schema. You can do this easily by clicking on "SQL editor" on the left hand side on Supabase UI and then clicking on "+New Query". Copy paste [this code snippet](https://github.com/a16z-infra/ai-getting-started/blob/main/pgvector.sql) in the SQL editor and click "Run".
 
 ### 4. Generate embeddings
 
@@ -152,16 +148,15 @@ a. Create a Twilio account.
 
 b. Once you created an account, create a Twilio phone number.
 
-c. On [Twilio dashboard](https://console.twilio.com/), scroll down to the "Account Info" section and paste `Account SID` value as `TWILIO_ACCOUNT_SID`, `Auth Token` as `TWILIO_AUTH_TOKEN` in `.env.local`
+c. On [Twilio dashboard](https:////console.twilio.com/), scroll down to the "Account Info" section and paste `Account SID` value as `TWILIO_ACCOUNT_SID`, `Auth Token` as `TWILIO_AUTH_TOKEN` in `.env.local`
 
 d. [Optional] If you are running the app locally, use [ngrok](https://ngrok.com/docs/getting-started/#step-2-install-the-ngrok-agent) to generate a public url that can forward the request to your localhost.
 
-e. On Twilio's UI, you can now click on "# Phone Numbers" -> "Manage" -> "[Active numbers](https://console.twilio.com/us1/develop/phone-numbers/manage/incoming)" on the left hand side nav.
+e. On Twilio's UI, you can now click on "# Phone Numbers" -> "Manage" -> "[Active numbers](https:////console.twilio.com/us1/develop/phone-numbers/manage/incoming)" on the left hand side nav.
 
 f. Click on the phone number you just created from the list, scroll down to "Messaging Configuration" section and enter [your_app_url]/api/text in "A message comes in" section under "Webhook".
 
 <img width="1062" alt="Screen Shot 2023-07-10 at 11 08 55 PM" src="https://github.com/a16z-infra/companion-app/assets/3489963/d7905f13-a83a-47f8-ac74-b66698d4292b">
-
 
 g. Add your Twilio phone number in `companions.json` under the companion you want to text with. Make sure you include area code when adding the phone number ("+14050000000" instead of "4050000000")
 
@@ -171,15 +166,15 @@ h. Now you can text the Twilio phone number from your phone and get a response f
 
 #### Deploy to fly.io
 
-- Register an account on fly.io and then [install flyctl](https://fly.io/docs/hands-on/install-flyctl/)
-- **If you are using Github Codespaces**: You will need to [install flyctl](https://fly.io/docs/hands-on/install-flyctl/) and authenticate from your codespaces cli by running `fly auth login`.
+-   Register an account on fly.io and then [install flyctl](https://fly.io/docs/hands-on/install-flyctl/)
+-   **If you are using Github Codespaces**: You will need to [install flyctl](https://fly.io/docs/hands-on/install-flyctl/) and authenticate from your codespaces cli by running `fly auth login`.
 
-- Run `fly launch` under project root. This will generate a `fly.toml` that includes all the configurations you will need
-- Run `fly scale memory 512` to scale up the fly vm memory for this app.
-- Run `fly deploy --ha=false` to deploy the app. The --ha flag makes sure fly only spins up one instance, which is included in the free plan.
-- For any other non-localhost environment, the existing Clerk development instance should continue to work. You can upload the secrets to Fly by running `cat .env.local | fly secrets import`
-- If you are ready to deploy to production, you should create a prod environment under the [current Clerk instance](https://dashboard.clerk.com/). For more details on deploying a production app with Clerk, check out their documentation [here](https://clerk.com/docs/deployments/overview). **Note that you will likely need to manage your own domain and do domain verification as part of the process.**
-- Create a new file `.env.prod` locally and fill in all the production-environment secrets. Remember to update `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` by copying secrets from Clerk's production instance -`cat .env.prod | fly secrets import` to upload secrets.
+-   Run `fly launch` under project root. This will generate a `fly.toml` that includes all the configurations you will need
+-   Run `fly scale memory 512` to scale up the fly vm memory for this app.
+-   Run `fly deploy --ha=false` to deploy the app. The --ha flag makes sure fly only spins up one instance, which is included in the free plan.
+-   For any other non-localhost environment, the existing Clerk development instance should continue to work. You can upload the secrets to Fly by running `cat .env.local | fly secrets import`
+-   If you are ready to deploy to production, you should create a prod environment under the [current Clerk instance](https://dashboard.clerk.com/). For more details on deploying a production app with Clerk, check out their documentation [here](https://clerk.com/docs/deployments/overview). **Note that you will likely need to manage your own domain and do domain verification as part of the process.**
+-   Create a new file `.env.prod` locally and fill in all the production-environment secrets. Remember to update `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` by copying secrets from Clerk's production instance -`cat .env.prod | fly secrets import` to upload secrets.
 
 ## How does this work?
 
@@ -234,7 +229,6 @@ red tape, being in one place for too long, people who are not genuine or authent
 
 4. Ask questions and have a conversation with your AI companion!
 
-
 ## Adding/modifying characters
 
 All character data is stored in the `companions/` directory. To add a companion,
@@ -268,10 +262,10 @@ The **preamble** is used with every prompt so it should be relatively short. The
 
 Oh, there are so many.
 
-- Currently the UI only shows the current chat and response, losing the history.
-- Vicuna has a cold start problem so can take a couple of minutes to get a response for the initial chat.
-- Error reporting is total crap. Particularly when deployed. So if you have a timeout, or other back end isue, it typically fails silently.
-- The Upstash message history is never cleared. To clear it, you have to go to Upstash and manually delete.
+-   Currently the UI only shows the current chat and response, losing the history.
+-   Vicuna has a cold start problem so can take a couple of minutes to get a response for the initial chat.
+-   Error reporting is total crap. Particularly when deployed. So if you have a timeout, or other back end isue, it typically fails silently.
+-   The Upstash message history is never cleared. To clear it, you have to go to Upstash and manually delete.
 
 ## How to contribute to this repo
 
@@ -302,21 +296,19 @@ If you have tried out the Quickstart above, you probably know that we have only 
 
 To get started, run the following command:
 
-`
-npm run export-to-character [COMPANION_NAME] [MODEL_NAME] [USER_ID]
-`
+`npm run export-to-character [COMPANION_NAME] [MODEL_NAME] [USER_ID]`
 
-- `COMPANION_NAME`: name of your companion. i.e Alice
-- `MODEL_NAME`: `chatgpt` or `vicuna13b`
-- `USER_ID`: you can find this on Clerk, under "Users" -> click on your user -> copy "User ID"
+-   `COMPANION_NAME`: name of your companion. i.e Alice
+-   `MODEL_NAME`: `chatgpt` or `vicuna13b`
+-   `USER_ID`: you can find this on Clerk, under "Users" -> click on your user -> copy "User ID"
 
 Once you run this script, you will see two files created under the root directory:
 
-- `[COMPANION_NAME]_chat_history.txt`: This outputs all of the chat history stored in Upstash
-- `[COMPANION_NAME_]_character_ai_data.txt`: This outputs the data you need in order to re-create the companion on Character.ai. You can find Character.ai character configurations under "View Character Settings" on any newly-created characters.
+-   `[COMPANION_NAME]_chat_history.txt`: This outputs all of the chat history stored in Upstash
+-   `[COMPANION_NAME_]_character_ai_data.txt`: This outputs the data you need in order to re-create the companion on Character.ai. You can find Character.ai character configurations under "View Character Settings" on any newly-created characters.
 
 ## Refs
 
-- https://js.langchain.com/docs/modules/indexes/vector_stores/integrations/pinecone
-- https://js.langchain.com/docs/modules/models/llms/integrations#replicate
-- https://js.langchain.com/docs/modules/chains/index_related_chains/retrieval_qa
+-   https://js.langchain.com/docs/modules/indexes/vector_stores/integrations/pinecone
+-   https://js.langchain.com/docs/modules/models/llms/integrations#replicate
+-   https://js.langchain.com/docs/modules/chains/index_related_chains/retrieval_qa

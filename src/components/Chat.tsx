@@ -22,6 +22,7 @@ export default function Chat() {
 	let {
 		completion,
 		input,
+		error,
 		isLoading,
 		handleInputChange,
 		handleSubmit: handleAISubmit,
@@ -35,21 +36,13 @@ export default function Chat() {
 	const addMessage = (message: any) => {
 		setChats((oldChats) => [...oldChats, message])
 	}
+	console.log(completion)
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
 		addMessage({ human: input })
 		setInput('')
-	}
-
-	const submitQuestion = (question: string) => {
-		const event = {
-			target: question,
-			preventDefault: () => {},
-		}
-		setInput(question)
-		handleSubmit(event)
 	}
 
 	useEffect(() => {
@@ -167,6 +160,7 @@ export default function Chat() {
 							}
 						})}
 					</div>
+
 					<div className='w-full flex items-center justify-center pt-7 pb-6 '>
 						<Chatbox
 							handleSubmit={handleSubmit}

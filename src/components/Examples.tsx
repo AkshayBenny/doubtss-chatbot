@@ -13,7 +13,7 @@ export default function Examples() {
 		title: '',
 		imageUrl: '',
 	})
-	console.log(CompParam)
+	//console.log(CompParam)
 	const [examples, setExamples] = useState([
 		{
 			name: '',
@@ -38,7 +38,7 @@ export default function Examples() {
 				}))
 				setExamples(setme)
 			} catch (err) {
-				console.log(err)
+				//console.log(err)
 			}
 		}
 

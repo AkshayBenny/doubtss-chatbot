@@ -1,5 +1,4 @@
 import { OpenAI } from 'langchain/llms/openai'
-import dotenv from 'dotenv'
 import { LLMChain } from 'langchain/chains'
 import { StreamingTextResponse, LangChainStream } from 'ai'
 import clerk from '@clerk/clerk-sdk-node'
@@ -9,9 +8,8 @@ import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
-import path from 'path'
 
-dotenv.config({ path: `.env.local` })
+export const runtime = 'edge'
 
 export async function POST(req: Request) {
 	const txt_alex_data = `You are Doubtss.com, a dedicated platform for UPSC CSE Aspirants. With an insatiable passion for learning, you provide guidance and answers to eager students day in and day out. You enjoy the process of learning and relearning topics to ensure you have the most accurate and detailed understanding possible. Reading is not just a hobby but a means to widen your knowledge horizon.
@@ -51,8 +49,9 @@ export async function POST(req: Request) {
 
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
+
 		if (!success) {
-			console.log('INFO: rate limit exceeded')
+			// console.log('INFO: rate limit exceeded')
 			return new NextResponse(
 				JSON.stringify({
 					Message: "Hi, the companions can't talk this fast.",
@@ -69,7 +68,7 @@ export async function POST(req: Request) {
 		const name = req.headers.get('name')
 		const companionFileName = name + '.txt'
 
-		console.log('prompt: ', prompt)
+		// console.log('prompt: ', prompt)
 		if (isText) {
 			clerkUserId = userId
 			clerkUserName = userName
@@ -92,7 +91,6 @@ export async function POST(req: Request) {
 			)
 		}
 
-		const fs = require('fs').promises
 		let data
 		try {
 			data = txt_alex_data
@@ -114,6 +112,7 @@ export async function POST(req: Request) {
 		const memoryManager = await MemoryManager.getInstance()
 
 		const records = await memoryManager.readLatestHistory(companionKey)
+
 		if (records.length === 0) {
 			await memoryManager.seedChatHistory(seedchat, '\n\n', companionKey)
 		}
@@ -122,21 +121,24 @@ export async function POST(req: Request) {
 			'Human: ' + prompt + '\n',
 			companionKey
 		)
+
 		let recentChatHistory = await memoryManager.readLatestHistory(
 			companionKey
 		)
 
-		const similarDocs = await memoryManager.vectorSearch(
-			recentChatHistory,
-			companionFileName
-		)
+		// start = Date.now()
+		// const similarDocs = await memoryManager.vectorSearch(
+		// 	recentChatHistory,
+		// 	companionFileName
+		// )
+		// execTimes['vectorSearch'] = Date.now() - start
 
-		let relevantHistory = ''
-		if (!!similarDocs && similarDocs.length !== 0) {
-			relevantHistory = similarDocs
-				.map((doc) => doc.pageContent)
-				.join('\n')
-		}
+		// let relevantHistory = ''
+		// if (!!similarDocs && similarDocs.length !== 0) {
+		// 	relevantHistory = similarDocs
+		// 		.map((doc) => doc.pageContent)
+		// 		.join('\n')
+		// }
 
 		const { stream, handlers } = LangChainStream()
 
@@ -159,12 +161,14 @@ export async function POST(req: Request) {
   
     You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
   
-    Below are relevant details about ${name}'s past
-    ${relevantHistory}
+    
     
     Below is a relevant conversation history
   
     ${recentChatHistory}`)
+
+		// Below are relevant details about ${name}'s past
+		// ${relevantHistory}
 
 		const chain = new LLMChain({
 			llm: model,
@@ -175,9 +179,9 @@ export async function POST(req: Request) {
 		try {
 			result = await chain
 				.call({
-					relevantHistory,
 					recentChatHistory: recentChatHistory,
 				})
+				// >>>>>>>>> add relevantHistory to this object <<<<<<<<<<
 				.catch((err) => {
 					console.error('Error calling chain:', err)
 					throw err
@@ -187,17 +191,26 @@ export async function POST(req: Request) {
 			throw err
 		}
 
-		console.log('result', result)
+		// console.log('result', result)
 		const chatHistoryRecord = await memoryManager.writeToHistory(
 			result!.text + '\n',
 			companionKey
 		)
-		console.log('chatHistoryRecord', chatHistoryRecord)
+		// console.log('chatHistoryRecord', chatHistoryRecord)
 		if (isText) {
 			return NextResponse.json(result!.text)
 		}
+
+		// fs.writeFile(
+		// 	'exec_times.json',
+		// 	JSON.stringify(execTimes, null, 2),
+		// 	(err: any) => {
+		// 		if (err) throw err
+		// 		console.log('Execution times saved to exec_times.json.')
+		// 	}
+		// )
 		return new StreamingTextResponse(stream)
-	} catch (err) {
+	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(
 			JSON.stringify({
