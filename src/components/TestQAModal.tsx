@@ -40,6 +40,7 @@ export default function TestQAModal({
 		//console.log('ERROR: no companion selected')
 		return null
 	}
+	
 
 	return (
 		<div className='fixed inset-0 z-10 overflow-y-auto'>

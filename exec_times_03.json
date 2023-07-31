@@ -1,0 +1,10 @@
+{
+  "rateLimit": 191,
+  "userAuthorization": 410,
+  "readLatestHistory": 58,
+  "readLatestHistoryAgain": 57,
+  "vectorSearch": 11386,
+  "LangChainStream": 0,
+  "PromptTemplate": 1,
+  "chainExecution": 16650
+}

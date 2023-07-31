@@ -45,49 +45,24 @@ class MemoryManager {
 		recentChatHistory: string,
 		companionFileName: string
 	) {
-		if (process.env.VECTOR_DB === 'pinecone') {
-			//console.log("INFO: using Pinecone for vector search.");
-			const pineconeClient = <PineconeClient>this.vectorDBClient
-
-			const pineconeIndex = pineconeClient.Index(
-				process.env.PINECONE_INDEX! || ''
-			)
-
-			const vectorStore = await PineconeStore.fromExistingIndex(
-				new OpenAIEmbeddings({
-					openAIApiKey: process.env.OPENAI_API_KEY,
-				}),
-				{ pineconeIndex }
-			)
-
-			const similarDocs = await vectorStore
-				.similaritySearch(recentChatHistory, 3, {
-					fileName: companionFileName,
-				})
-				.catch((err) => {
-					//console.log("WARNING: failed to get vector search results.", err);
-				})
-			return similarDocs
-		} else {
-			//console.log("INFO: using Supabase for vector search.");
-			const supabaseClient = <SupabaseClient>this.vectorDBClient
-			const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-				new OpenAIEmbeddings({
-					openAIApiKey: process.env.OPENAI_API_KEY,
-				}),
-				{
-					client: supabaseClient,
-					tableName: 'documents',
-					queryName: 'match_documents',
-				}
-			)
-			const similarDocs = await vectorStore
-				.similaritySearch(recentChatHistory, 3)
-				.catch((err) => {
-					//console.log("WARNING: failed to get vector search results.", err);
-				})
-			return similarDocs
-		}
+		//console.log("INFO: using Supabase for vector search.");
+		const supabaseClient = <SupabaseClient>this.vectorDBClient
+		const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+			new OpenAIEmbeddings({
+				openAIApiKey: process.env.OPENAI_API_KEY,
+			}),
+			{
+				client: supabaseClient,
+				tableName: 'documents',
+				queryName: 'match_documents',
+			}
+		)
+		const similarDocs = await vectorStore
+			.similaritySearch(recentChatHistory, 3)
+			.catch((err) => {
+				//console.log("WARNING: failed to get vector search results.", err);
+			})
+		return similarDocs
 	}
 
 	public static async getInstance(): Promise<MemoryManager> {
