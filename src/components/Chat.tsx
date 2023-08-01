@@ -57,7 +57,8 @@ export default function Chat() {
 		if (completion && !isLoading) {
 			addMessage({ bot: completion, id: Date.now() })
 		}
-	}, [completion])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [completion, isLoading])
 
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
