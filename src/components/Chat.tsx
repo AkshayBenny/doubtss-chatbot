@@ -53,6 +53,7 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
+		console.log(completion)
 		if (completion && !isLoading) {
 			addMessage({ bot: completion, id: Date.now() })
 		}

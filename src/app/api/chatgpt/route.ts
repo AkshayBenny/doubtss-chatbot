@@ -201,14 +201,6 @@ export async function POST(req: Request) {
 			return NextResponse.json(result!.text)
 		}
 
-		// fs.writeFile(
-		// 	'exec_times.json',
-		// 	JSON.stringify(execTimes, null, 2),
-		// 	(err: any) => {
-		// 		if (err) throw err
-		// 		console.log('Execution times saved to exec_times.json.')
-		// 	}
-		// )
 		return new StreamingTextResponse(stream)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
