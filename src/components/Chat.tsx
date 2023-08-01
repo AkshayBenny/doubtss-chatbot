@@ -3,7 +3,7 @@
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { chatHistory } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -45,7 +45,7 @@ export default function Chat() {
 		})
 	}
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
 		addMessage({ human: input, id: Date.now() })
@@ -53,10 +53,15 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
-		if (completion) {
-			addMessage({ bot: completion, id: Date.now() })
+		if (completion && isLoading) {
+			// Check if last message is by a human
+			const lastMessage = chats[chats.length - 1]
+			if (lastMessage && lastMessage.human) {
+				addMessage({ bot: completion, id: Date.now() })
+			}
 		}
-	}, [completion])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [completion, isLoading])
 
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
