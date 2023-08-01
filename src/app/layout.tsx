@@ -15,22 +15,10 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
-	
 	return (
 		<ClerkProvider>
 			<html lang='en'>
-				<body className={inter.className}><noscript>
-				<iframe
-					src='https://www.googletagmanager.com/ns.html?id=GTM-54BQ247G'
-					height='0'
-					width='0'
-					style={{
-						display: 'none',
-						visibility: 'hidden',
-					}}></iframe>
-			</noscript>
-			{children}
-			</body>
+				<body className={inter.className}>{children}</body>
 			</html>
 		</ClerkProvider>
 	)
