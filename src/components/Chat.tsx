@@ -3,7 +3,7 @@
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { chatHistory } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -16,6 +16,7 @@ const questions = [
 
 export default function Chat() {
 	const { user } = useUser()
+	const lastCompletion = useRef('')
 	const [chats, setChats] = useRecoilState(chatHistory)
 	let {
 		completion,
@@ -45,7 +46,7 @@ export default function Chat() {
 		})
 	}
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
 		addMessage({ human: input, id: Date.now() })
@@ -53,8 +54,9 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
-		if (completion) {
+		if (completion && completion !== lastCompletion.current) {
 			addMessage({ bot: completion, id: Date.now() })
+			lastCompletion.current = completion
 		}
 	}, [completion])
 
