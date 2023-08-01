@@ -80,9 +80,6 @@ dependencies:
   react-github-btn:
     specifier: ^1.4.0
     version: 1.4.0(react@18.2.0)
-  react-gtm-module:
-    specifier: ^2.0.11
-    version: 2.0.11
   react-tooltip:
     specifier: ^5.16.1
     version: 5.16.1(react-dom@18.2.0)(react@18.2.0)
@@ -3559,10 +3556,6 @@ packages:
     dependencies:
       github-buttons: 2.27.0
       react: 18.2.0
-    dev: false
-
-  /react-gtm-module@2.0.11:
-    resolution: {integrity: sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==}
     dev: false
 
   /react-is@16.13.1:
