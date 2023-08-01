@@ -53,7 +53,6 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
-		console.log(completion)
 		if (completion && isLoading) {
 			// Check if last message is by a human
 			const lastMessage = chats[chats.length - 1]
