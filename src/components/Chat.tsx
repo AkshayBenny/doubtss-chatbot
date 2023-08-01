@@ -54,7 +54,7 @@ export default function Chat() {
 
 	useEffect(() => {
 		console.log(completion)
-		if (completion && !isLoading) {
+		if (completion && isLoading) {
 			addMessage({ bot: completion, id: Date.now() })
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
