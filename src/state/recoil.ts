@@ -1,7 +1,7 @@
 import { atom } from 'recoil'
 
 // Define the message types
-type Message = { bot?: string; human?: string }
+type Message = { bot?: string; human?: string; id: number }
 
 // Define the chat history type as an array of Message objects
 type ChatHistory = Message[]

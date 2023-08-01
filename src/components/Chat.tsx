@@ -1,11 +1,9 @@
 'use client'
+
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
-import ChatData from '../../sample-conversation.json'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { getCompanions } from './actions'
-import TestQAModal from './TestQAModal'
+import { useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { chatHistory } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -33,23 +31,30 @@ export default function Chat() {
 		api: '/api/' + 'chatgpt',
 		headers: { name: 'Alex' },
 	})
+
 	const addMessage = (message: any) => {
-		setChats((oldChats) => [...oldChats, message])
+		setChats((oldChats) => {
+			const messageExists = oldChats.some(
+				(chat) => chat.id === message.id
+			)
+			if (messageExists) {
+				return oldChats
+			} else {
+				return [...oldChats, message]
+			}
+		})
 	}
-	console.log(completion)
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
-		addMessage({ human: input })
+		addMessage({ human: input, id: Date.now() })
 		setInput('')
 	}
 
 	useEffect(() => {
 		if (completion) {
-			;(async () => {
-				await addMessage({ bot: completion })
-			})()
+			addMessage({ bot: completion, id: Date.now() })
 		}
 	}, [completion])
 
