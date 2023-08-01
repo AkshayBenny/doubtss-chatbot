@@ -16,7 +16,6 @@ const questions = [
 
 export default function Chat() {
 	const { user } = useUser()
-	const lastCompletion = useRef('')
 	const [chats, setChats] = useRecoilState(chatHistory)
 	let {
 		completion,
@@ -54,9 +53,8 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
-		if (completion && completion !== lastCompletion.current) {
+		if (completion && !isLoading) {
 			addMessage({ bot: completion, id: Date.now() })
-			lastCompletion.current = completion
 		}
 	}, [completion])
 
