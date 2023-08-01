@@ -1,15 +1,11 @@
-// ts-nocheck
+'use client'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import Script from 'next/script'
+import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-	title: 'Doubtss',
-	description: 'Help you pass UPSC exam with ease',
-}
 
 export default function RootLayout({
 	children,
@@ -19,6 +15,13 @@ export default function RootLayout({
 	return (
 		<ClerkProvider>
 			<html lang='en'>
+				<Head>
+					<title>Doubtss</title>
+					<meta
+						name='description'
+						content='Help you pass UPSC exam with ease'
+					/>
+				</Head>
 				<Script
 					id='google_tag_manager_script'
 					strategy='afterInteractive'
