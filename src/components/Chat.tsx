@@ -55,7 +55,11 @@ export default function Chat() {
 	useEffect(() => {
 		console.log(completion)
 		if (completion && isLoading) {
-			addMessage({ bot: completion, id: Date.now() })
+			// Check if last message is by a human
+			const lastMessage = chats[chats.length - 1]
+			if (lastMessage && lastMessage.human) {
+				addMessage({ bot: completion, id: Date.now() })
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
