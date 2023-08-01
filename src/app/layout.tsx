@@ -32,9 +32,6 @@ export default function RootLayout({
 						})(window,document,'script','dataLayer','GTM-54BQ247G');
                             `,
 					}}
-					onError={(err) => {
-						console.error('Error loading GTM: ', err)
-					}}
 				/>
 				<body className={inter.className}>
 					<noscript>
