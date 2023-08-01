@@ -31,20 +31,30 @@ export default function Chat() {
 		api: '/api/' + 'chatgpt',
 		headers: { name: 'Alex' },
 	})
+
 	const addMessage = (message: any) => {
-		setChats((oldChats) => [...oldChats, message])
+		setChats((oldChats) => {
+			const messageExists = oldChats.some(
+				(chat) => chat.id === message.id
+			)
+			if (messageExists) {
+				return oldChats
+			} else {
+				return [...oldChats, message]
+			}
+		})
 	}
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
-		addMessage({ human: input })
+		addMessage({ human: input, id: Date.now() })
 		setInput('')
 	}
 
 	useEffect(() => {
 		if (completion) {
-			addMessage({ bot: completion })
+			addMessage({ bot: completion, id: Date.now() })
 		}
 	}, [completion])
 
