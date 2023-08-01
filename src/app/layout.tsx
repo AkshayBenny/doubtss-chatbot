@@ -1,4 +1,3 @@
-'use client'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
@@ -24,7 +23,6 @@ export default function RootLayout({
 				</Head>
 				<Script
 					id='google_tag_manager_script'
-					strategy='afterInteractive'
 					dangerouslySetInnerHTML={{
 						__html: `
 						function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
