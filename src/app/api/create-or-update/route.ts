@@ -10,14 +10,12 @@ export async function POST(req: Request) {
 				message: 'Missing user clerk id in request body',
 			})
 		}
-		console.log('user_clerk_id is: ', user_clerk_id)
 
 		// Check if a user with the given clerk ID already exists
 		let user: any = await prisma.user.findUnique({
 			where: { user_clerk_Id: user_clerk_id },
 			include: { messages: true }, // Include messages if needed
 		})
-		if (user) console.log('user is: ', user)
 
 		if (!user) {
 			// If the user doesn't exist, create a new one
@@ -27,7 +25,6 @@ export async function POST(req: Request) {
 					email: email,
 				},
 			})
-			console.log('user is', user)
 		}
 
 		let json_response = {

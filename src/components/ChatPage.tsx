@@ -1,15 +1,16 @@
 'use client'
+
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useUser } from '@clerk/nextjs'
-import { useEffect } from 'react'
-import { RecoilRoot } from 'recoil'
+import { useEffect, useState } from 'react'
+import { RecoilRoot, useRecoilState } from 'recoil'
 import axios from 'axios'
+import { userData } from '@/state/recoil'
 
-export default function ChatPage({ messages }: any) {
+export default function ChatPage() {
 	const { user } = useUser()
-	console.log(user)
-
+	const [userDataState, setUserDataState] = useState({})
 	useEffect(() => {
 		const createOrUpdateUser = async () => {
 			if (user && user.id) {
@@ -27,17 +28,18 @@ export default function ChatPage({ messages }: any) {
 					}
 				)
 				console.log('response>>>', data.data.user)
+				setUserDataState(data?.data?.user)
+				
 			}
 		}
 		createOrUpdateUser()
 	}, [user])
 
-	// console.log('>>>>>>>>>>messge>>>>>>>>', messages)
 	return (
 		<RecoilRoot>
 			<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
 				<Navbar />
-				<Chat />
+				<Chat userDataState={userDataState} />
 			</div>
 			<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
 				<div className='relative w-fit'>
