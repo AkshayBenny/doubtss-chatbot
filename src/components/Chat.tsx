@@ -42,7 +42,7 @@ export default function Chat() {
 			} else {
 				return [...oldChats, message]
 			}
-		})
+		}) 
 	}
 
 	const handleSubmit = async (e: any) => {
