@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 		// Check if a user with the given clerk ID already exists
 		let user: any = await prisma.user.findUnique({
 			where: { user_clerk_Id: user_clerk_id },
-			include: { messages: true }, // Include messages if needed
+			include: { messages: { orderBy: { createdAt: 'asc' } } },
 		})
 
 		if (!user) {
