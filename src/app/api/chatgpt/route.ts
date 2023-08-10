@@ -126,12 +126,10 @@ export async function POST(req: Request) {
 			companionKey
 		)
 
-		// start = Date.now()
 		// const similarDocs = await memoryManager.vectorSearch(
 		// 	recentChatHistory,
 		// 	companionFileName
 		// )
-		// execTimes['vectorSearch'] = Date.now() - start
 
 		// let relevantHistory = ''
 		// if (!!similarDocs && similarDocs.length !== 0) {
