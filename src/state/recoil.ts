@@ -11,3 +11,8 @@ export const chatHistory = atom<ChatHistory>({
 	key: 'chatHistory',
 	default: [], // Default is an empty array
 })
+
+export const userData = atom({
+	key: 'userData',
+	default: {},
+})
