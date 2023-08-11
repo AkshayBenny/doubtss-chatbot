@@ -11,6 +11,14 @@ import { rateLimit } from '@/app/utils/rateLimit'
 
 export const runtime = 'edge'
 
+function countTokens(text: string) {
+	// Use a regular expression to match words and punctuation
+	const tokens = text.match(/\b\w+\b/g)
+
+	// If no tokens are found, return 0, otherwise return the count
+	return tokens ? tokens.length : 0
+}
+
 export async function POST(req: Request) {
 	const txt_alex_data = `You are Doubtss.com, a dedicated platform for UPSC CSE Aspirants. With an insatiable passion for learning, you provide guidance and answers to eager students day in and day out. You enjoy the process of learning and relearning topics to ensure you have the most accurate and detailed understanding possible. Reading is not just a hobby but a means to widen your knowledge horizon.
 
@@ -66,7 +74,6 @@ export async function POST(req: Request) {
 		}
 
 		const name = req.headers.get('name')
-		const companionFileName = name + '.txt'
 
 		// console.log('prompt: ', prompt)
 		if (isText) {
@@ -79,7 +86,6 @@ export async function POST(req: Request) {
 		}
 
 		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
-			console.log('user not authorized')
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
 				{
@@ -125,18 +131,20 @@ export async function POST(req: Request) {
 		let recentChatHistory = await memoryManager.readLatestHistory(
 			companionKey
 		)
-
-		// const similarDocs = await memoryManager.vectorSearch(
-		// 	recentChatHistory,
-		// 	companionFileName
-		// )
-
-		// let relevantHistory = ''
-		// if (!!similarDocs && similarDocs.length !== 0) {
-		// 	relevantHistory = similarDocs
-		// 		.map((doc) => doc.pageContent)
-		// 		.join('\n')
-		// }
+		let relevantHistory = ''
+		// query Pinecone
+		try {
+			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
+				recentChatHistory
+			)
+			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
+				relevantHistory = pineconeSimilarDocs
+					.map((doc: any) => doc.pageContent)
+					.join('\n')
+			}
+		} catch (err: any) {
+			console.log('Quering pinecone went wrong!!', err.message)
+		}
 
 		const { stream, handlers } = LangChainStream()
 
@@ -153,20 +161,14 @@ export async function POST(req: Request) {
 			: ''
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-      You are ${name} and are currently talking to ${clerkUserName}.
-  
-      ${preamble}
-  
-    You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
-  
-    
-    
-    Below is a relevant conversation history
-  
-    ${recentChatHistory}`)
-
-		// Below are relevant details about ${name}'s past
-		// ${relevantHistory}
+      		You are ${name} and are currently talking to ${clerkUserName}.
+      		${preamble}
+			You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
+			Below are relevant details about ${name}'s past
+			${relevantHistory}
+			Below is a relevant conversation history
+		    ${recentChatHistory}
+			`)
 
 		const chain = new LLMChain({
 			llm: model,
@@ -174,27 +176,15 @@ export async function POST(req: Request) {
 		})
 
 		let result
-		try {
-			result = await chain
-				.call({
-					recentChatHistory: recentChatHistory,
-				})
-				// >>>>>>>>> add relevantHistory to this object <<<<<<<<<<
-				.catch((err) => {
-					console.error('Error calling chain:', err)
-					throw err
-				})
-		} catch (err) {
-			console.error('Error processing chain:', err)
-			throw err
-		}
 
-		// console.log('result', result)
-		const chatHistoryRecord = await memoryManager.writeToHistory(
-			result!.text + '\n',
-			companionKey
-		)
-		// console.log('chatHistoryRecord', chatHistoryRecord)
+		result = await chain
+			.call({ relevantHistory, recentChatHistory: recentChatHistory })
+			.catch((err) => {
+				console.error('Error calling chain:', err)
+				throw err
+			})
+
+		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
 		if (isText) {
 			return NextResponse.json(result!.text)
 		}

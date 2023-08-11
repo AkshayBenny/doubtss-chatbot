@@ -37,10 +37,11 @@ export default function Chat({ userDataState }: any) {
 	const addMessage = async (message: any) => {
 		if (user && recoilUser) {
 			try {
-				const { data } = await axios.post(
+				await axios.post(
 					'/api/create-message',
 					{
-						uid: recoilUser.id || '',
+						// @ts-ignore
+						uid: recoilUser?.id || '',
 						email: user.emailAddresses[0].emailAddress || '',
 						isUser: true,
 						content: message.human,
@@ -98,7 +99,8 @@ export default function Chat({ userDataState }: any) {
 						const { data } = await axios.post(
 							'/api/create-message',
 							{
-								uid: recoilUser.id || '',
+								// @ts-ignore
+								uid: recoilUser?.id || '',
 								email:
 									user.emailAddresses[0].emailAddress || '',
 								isUser: false,
