@@ -4,10 +4,51 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import NotificationIcon from 'remixicon-react/NotificationLineIcon'
+import DeleteBinLineIcon from 'remixicon-react/DeleteBinLineIcon'
+import { chatHistory, userData } from '@/state/recoil'
+import { useRecoilState } from 'recoil'
+import axios from 'axios'
+import { useUser } from '@clerk/nextjs'
 
 export default function Alert() {
+	const { user } = useUser()
+	const [chats, setChats] = useRecoilState(chatHistory)
+	const [recoilUser, setRecoilUser] = useRecoilState(userData)
+	const clearChatHandler = async () => {
+		setChats([])
+		if (user && recoilUser) {
+			await axios.post(
+				'/api/delete-message',
+				{
+					// @ts-ignore
+					uid: recoilUser?.id,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Accept: 'application/json',
+					},
+				}
+			)
+		}
+	}
+
 	return (
-		<div className='text-right text-sm text-custom-white'>
+		<div className='text-right text-sm text-custom-white flex items-center justify-end gap-2'>
+			{chats.length > 0 && (
+				<button
+					onClick={clearChatHandler}
+					className='p-3 border border-custom-gray rounded-xl flex items-center justify-center group gap-1 transition-all duration-200 ease-in-out'>
+					<DeleteBinLineIcon
+						className='h-[18px] w-[18px] text-custom-red'
+						aria-hidden='true'
+					/>
+					<p className='hidden group-hover:inline-block whitespace-nowrap transition-all duration-200 ease-in-out font-semibold text-xs'>
+						Clear Chat
+					</p>
+				</button>
+			)}
+
 			<Menu
 				as='div'
 				className='relative inline-block text-left'>
