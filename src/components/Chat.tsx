@@ -5,7 +5,7 @@ import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { chatHistory, userData } from '@/state/recoil'
+import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import axios from 'axios'
@@ -18,6 +18,7 @@ const questions = [
 export default function Chat({ userDataState }: any) {
 	const { user } = useUser()
 	const [chats, setChats] = useRecoilState(chatHistory)
+	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUser, setRecoilUser] = useRecoilState(userData)
 	let {
 		completion,
@@ -30,7 +31,7 @@ export default function Chat({ userDataState }: any) {
 		setInput,
 		setCompletion,
 	} = useCompletion({
-		api: '/api/' + 'chatgpt',
+		api: '/api/' + `chatgpt-${recoilChatType.toLowerCase()}`,
 		headers: { name: 'Alex' },
 	})
 

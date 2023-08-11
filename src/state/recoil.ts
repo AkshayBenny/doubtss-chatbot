@@ -2,7 +2,7 @@ import { atom } from 'recoil'
 
 // Define the message types
 type Message = { bot?: string; human?: string; id: number }
-
+type ChatType = 'Summary' | 'Question'
 // Define the chat history type as an array of Message objects
 type ChatHistory = Message[]
 
@@ -15,4 +15,9 @@ export const chatHistory = atom<ChatHistory>({
 export const userData = atom({
 	key: 'userData',
 	default: {},
+})
+
+export const chatType = atom<ChatType>({
+	key: 'chatType',
+	default: 'Summary',
 })
