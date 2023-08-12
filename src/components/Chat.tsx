@@ -3,20 +3,23 @@
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { chatHistory } from '@/state/recoil'
+import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
+import axios from 'axios'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
 	'What are the main factors that led to the decline of the Indus Valley Civilisation?',
 ]
 
-export default function Chat() {
+export default function Chat({ userDataState }: any) {
 	const { user } = useUser()
 	const [chats, setChats] = useRecoilState(chatHistory)
+	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
+	const [recoilUser, setRecoilUser] = useRecoilState(userData)
 	let {
 		completion,
 		input,
@@ -28,11 +31,33 @@ export default function Chat() {
 		setInput,
 		setCompletion,
 	} = useCompletion({
-		api: '/api/' + 'chatgpt',
+		api: '/api/' + `chatgpt-${recoilChatType.toLowerCase()}`,
 		headers: { name: 'Alex' },
 	})
 
-	const addMessage = (message: any) => {
+	const addMessage = async (message: any) => {
+		if (user && recoilUser) {
+			try {
+				await axios.post(
+					'/api/create-message',
+					{
+						// @ts-ignore
+						uid: recoilUser?.id || '',
+						email: user.emailAddresses[0].emailAddress || '',
+						isUser: true,
+						content: message.human,
+					},
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							Accept: 'application/json',
+						},
+					}
+				)
+			} catch (error) {
+				console.error(error)
+			}
+		}
 		setChats((oldChats) => {
 			const messageExists = oldChats.some(
 				(chat) => chat.id === message.id
@@ -53,13 +78,54 @@ export default function Chat() {
 	}
 
 	useEffect(() => {
-		if (completion && isLoading) {
-			// Check if last message is by a human
-			const lastMessage = chats[chats.length - 1]
-			if (lastMessage && lastMessage.human) {
-				addMessage({ bot: completion, id: Date.now() })
+		if (userDataState) {
+			setRecoilUser(userDataState)
+			if (userDataState?.messages?.length > 0) {
+				userDataState.messages.forEach((message: any) => {
+					if (message.isUser) {
+						addMessage({ human: message.content, id: Date.now() })
+					} else {
+						addMessage({ bot: message.content, id: Date.now() })
+					}
+				})
 			}
 		}
+	}, [userDataState])
+
+	useEffect(() => {
+		const addBotMessage = async () => {
+			if (completion && isLoading) {
+				if (user) {
+					try {
+						const { data } = await axios.post(
+							'/api/create-message',
+							{
+								// @ts-ignore
+								uid: recoilUser?.id || '',
+								email:
+									user.emailAddresses[0].emailAddress || '',
+								isUser: false,
+								content: `${completion}`,
+							},
+							{
+								headers: {
+									'Content-Type': 'application/json',
+									Accept: 'application/json',
+								},
+							}
+						)
+					} catch (error) {
+						console.error(error)
+					}
+				}
+				// Check if last message is by a human
+				const lastMessage = chats[chats.length - 1]
+				if (lastMessage && lastMessage.human) {
+					addMessage({ bot: completion, id: Date.now() })
+				}
+			}
+		}
+		addBotMessage()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 

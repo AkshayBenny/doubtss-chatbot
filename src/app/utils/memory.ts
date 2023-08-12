@@ -4,6 +4,8 @@ import { PineconeClient } from '@pinecone-database/pinecone'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
+import { VectorDBQAChain } from 'langchain/chains'
+import { OpenAI } from 'langchain'
 
 export type CompanionKey = {
 	companionName: string
@@ -45,24 +47,93 @@ class MemoryManager {
 		recentChatHistory: string,
 		companionFileName: string
 	) {
-		//console.log("INFO: using Supabase for vector search.");
-		const supabaseClient = <SupabaseClient>this.vectorDBClient
-		const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-			new OpenAIEmbeddings({
-				openAIApiKey: process.env.OPENAI_API_KEY,
-			}),
-			{
-				client: supabaseClient,
-				tableName: 'documents',
-				queryName: 'match_documents',
-			}
+		if (process.env.VECTOR_DB === 'pinecone') {
+			console.log('INFO: using Pinecone for vector search.')
+			const pineconeClient = <PineconeClient>this.vectorDBClient
+
+			const pineconeIndex = pineconeClient.Index(
+				process.env.PINECONE_INDEX! || ''
+			)
+
+			const vectorStore = await PineconeStore.fromExistingIndex(
+				new OpenAIEmbeddings({
+					openAIApiKey: process.env.OPENAI_API_KEY,
+				}),
+				{ pineconeIndex }
+			)
+
+			const similarDocs = await vectorStore
+				.similaritySearch(recentChatHistory, 3, {
+					fileName: companionFileName,
+				})
+				.catch((err) => {
+					console.log(
+						'WARNING: failed to get vector search results.',
+						err
+					)
+				})
+			return similarDocs
+		} else {
+			console.log('INFO: using Supabase for vector search.')
+			const supabaseClient = <SupabaseClient>this.vectorDBClient
+			const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+				new OpenAIEmbeddings({
+					openAIApiKey: process.env.OPENAI_API_KEY,
+				}),
+				{
+					client: supabaseClient,
+					tableName: 'documents',
+					queryName: 'match_documents',
+				}
+			)
+			const similarDocs = await vectorStore
+				.similaritySearch(recentChatHistory, 3)
+				.catch((err) => {
+					console.log(
+						'WARNING: failed to get vector search results.',
+						err
+					)
+				})
+			return similarDocs
+		}
+	}
+
+	public async pineconeVectorSearch(
+		query: string,
+		numberOfResults: number = 1,
+		metadataFilter?: any
+	) {
+		const client = new PineconeClient()
+		await client.init({
+			apiKey: process.env.PINECONE_API_KEY!,
+			environment: process.env.PINECONE_ENVIRONMENT!,
+		})
+		const pineconeIndex = client.Index(process.env.PINECONE_INDEX!)
+
+		const vectorStore = await PineconeStore.fromExistingIndex(
+			new OpenAIEmbeddings(),
+			{ pineconeIndex }
 		)
-		const similarDocs = await vectorStore
-			.similaritySearch(recentChatHistory, 3)
-			.catch((err) => {
-				//console.log("WARNING: failed to get vector search results.", err);
-			})
-		return similarDocs
+
+		// Search the vector DB independently with meta filters
+		const results = await vectorStore.similaritySearch(
+			query,
+			numberOfResults,
+			metadataFilter
+		)
+		console.log(results)
+
+		// Optionally use as part of a chain (currently no metadata filters)
+		const model = new OpenAI()
+		const chain = VectorDBQAChain.fromLLM(model, vectorStore, {
+			k: numberOfResults,
+			returnSourceDocuments: true,
+		})
+		const response = await chain.call({ query: query })
+		console.log(response)
+
+		// Return the desired results, either `results` or `response`
+		return results // or return response;
 	}
 
 	public static async getInstance(): Promise<MemoryManager> {
@@ -79,7 +150,7 @@ class MemoryManager {
 
 	public async writeToHistory(text: string, companionKey: CompanionKey) {
 		if (!companionKey || typeof companionKey.userId == 'undefined') {
-			//console.log("Companion key set incorrectly");
+			console.log('Companion key set incorrectly')
 			return ''
 		}
 
@@ -96,7 +167,7 @@ class MemoryManager {
 		companionKey: CompanionKey
 	): Promise<string> {
 		if (!companionKey || typeof companionKey.userId == 'undefined') {
-			//console.log("Companion key set incorrectly");
+			console.log('Companion key set incorrectly')
 			return ''
 		}
 
@@ -105,7 +176,7 @@ class MemoryManager {
 			byScore: true,
 		})
 
-		result = result.slice(-30).reverse()
+		result = result.slice(-20).reverse()
 		const recentChats = result.reverse().join('\n')
 		return recentChats
 	}
@@ -117,7 +188,7 @@ class MemoryManager {
 	) {
 		const key = this.generateRedisCompanionKey(companionKey)
 		if (await this.history.exists(key)) {
-			//console.log("User already has chat history");
+			console.log('User already has chat history')
 			return
 		}
 
