@@ -70,10 +70,13 @@ dependencies:
     version: 1.4.2
   langchain:
     specifier: ^0.0.92
-    version: 0.0.92(@pinecone-database/pinecone@0.1.6)(@supabase/supabase-js@2.25.0)(@upstash/redis@1.21.0)(axios@1.4.0)(hnswlib-node@1.4.2)(replicate@0.9.3)
+    version: 0.0.92(@pinecone-database/pinecone@0.1.6)(@supabase/supabase-js@2.25.0)(@upstash/redis@1.21.0)(axios@1.4.0)(hnswlib-node@1.4.2)(pdf-parse@1.1.1)(replicate@0.9.3)
   next:
     specifier: 13.4.4
     version: 13.4.4(react-dom@18.2.0)(react@18.2.0)
+  pdf-parse:
+    specifier: ^1.1.1
+    version: 1.1.1
   postcss:
     specifier: 8.4.24
     version: 8.4.24
@@ -2748,7 +2751,7 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /langchain@0.0.92(@pinecone-database/pinecone@0.1.6)(@supabase/supabase-js@2.25.0)(@upstash/redis@1.21.0)(axios@1.4.0)(hnswlib-node@1.4.2)(replicate@0.9.3):
+  /langchain@0.0.92(@pinecone-database/pinecone@0.1.6)(@supabase/supabase-js@2.25.0)(@upstash/redis@1.21.0)(axios@1.4.0)(hnswlib-node@1.4.2)(pdf-parse@1.1.1)(replicate@0.9.3):
     resolution: {integrity: sha512-77528kXJu9C391qV1a5jDzZLEjIblq/VtpH7xd4BwavgvhRmeSXR9WkrHHmih/Phpae4Ss3dtb7pcyd78rp/YA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -2909,6 +2912,7 @@ packages:
       openai: 3.3.0
       p-queue: 6.6.2
       p-retry: 4.6.2
+      pdf-parse: 1.1.1
       replicate: 0.9.3
       uuid: 9.0.0
       yaml: 2.3.1
@@ -3179,6 +3183,10 @@ packages:
     resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
     dev: false
 
+  /node-ensure@0.0.0:
+    resolution: {integrity: sha512-DRI60hzo2oKN1ma0ckc6nQWlHU69RH6xN0sjQTjMpChPfTYvKZdcQFfdYK2RWbJcKyUizSIy/l8OTGxMAM1QDw==}
+    dev: false
+
   /node-fetch-native@1.0.1:
     resolution: {integrity: sha512-VzW+TAk2wE4X9maiKMlT+GsPU4OMmR1U9CrHSmd3DFLn2IcZ9VJ6M6BBugGfYUnPCLSYxXdZy17M0BEJyhUTwg==}
     dev: false
@@ -3427,6 +3435,16 @@ packages:
   /path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
+    dev: false
+
+  /pdf-parse@1.1.1:
+    resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
+    engines: {node: '>=6.8.1'}
+    dependencies:
+      debug: 3.2.7
+      node-ensure: 0.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /periscopic@3.1.0:
