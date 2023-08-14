@@ -4,9 +4,9 @@ import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
-import { RecoilRoot, useRecoilState } from 'recoil'
+import { RecoilRoot } from 'recoil'
 import axios from 'axios'
-import { userData } from '@/state/recoil'
+import Script from 'next/script'
 
 export default function ChatPage() {
 	const { user } = useUser()
@@ -29,7 +29,6 @@ export default function ChatPage() {
 				)
 				console.log('response>>>', data.data.user)
 				setUserDataState(data?.data?.user)
-				
 			}
 		}
 		createOrUpdateUser()
