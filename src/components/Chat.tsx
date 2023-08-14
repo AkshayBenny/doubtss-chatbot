@@ -9,6 +9,7 @@ import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import axios from 'axios'
+import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -212,7 +213,7 @@ export default function Chat({ userDataState }: any) {
 										key={index}
 										className='w-full bg-white bg-opacity-5'>
 										<div
-											className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
+											className={`flex flex-col items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
 											{user && (
 												<Image
 													height={32}
@@ -230,6 +231,7 @@ export default function Chat({ userDataState }: any) {
 												}}>
 												{chat.bot}
 											</p>
+											<FileCopyLineIcon className='w-[16px] h-[16px] text-custom-white' />
 										</div>
 									</div>
 								)
