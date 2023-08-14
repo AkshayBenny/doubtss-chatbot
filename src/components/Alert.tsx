@@ -79,7 +79,7 @@ export default function Alert() {
 											10 Free Trials
 										</span>{' '}
 										to your account. Explore now &#128640;
-										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px]'>
+										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px] text-[12px]'>
 											Upgrade to Plus
 										</button>
 									</div>
@@ -96,7 +96,7 @@ export default function Alert() {
 											30 Free Trials
 										</span>{' '}
 										. Try now &#128293;
-										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px]'>
+										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px] text-[12px]'>
 											Refer a Friend
 										</button>
 									</div>
