@@ -136,7 +136,7 @@ export default function Chat({ userDataState }: any) {
 				<>
 					{/* FIRST CHAT */}
 					<div className='relative w-fit mb-10'>
-						<p className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-opacity-80 scale-90'>
+						<p className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-opacity-80'>
 							Experimental
 						</p>
 						<h3 className='text-custom-green font-bold text-[40px]'>
