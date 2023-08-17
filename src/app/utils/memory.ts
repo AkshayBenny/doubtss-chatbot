@@ -176,7 +176,7 @@ class MemoryManager {
 			byScore: true,
 		})
 
-		result = result.slice(-20).reverse()
+		result = result.slice(-10).reverse()
 		const recentChats = result.reverse().join('\n')
 		return recentChats
 	}

@@ -34,8 +34,13 @@ export default function Chat({ userDataState }: any) {
 	} = useCompletion({
 		api: '/api/' + `chatgpt-${recoilChatType.toLowerCase()}`,
 		headers: { name: 'Alex' },
+		body: {
+			isText: true,
+			userId: user?.id || '',
+			username: user?.emailAddresses[0].emailAddress || '',
+		},
 	})
-
+	if (completion) console.log(completion, '----------------completion')
 	const addMessage = async (message: any) => {
 		if (user && recoilUser) {
 			try {

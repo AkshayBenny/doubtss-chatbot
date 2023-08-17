@@ -54,7 +54,8 @@ export async function POST(req: Request) {
 		let user
 		let clerkUserName
 		const { prompt, isText, userId, userName } = await req.json()
-
+		console.log(await req.json())
+		console.log(isText, '>>>>>>>>>>>>>>>>>>isText')
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
 
@@ -137,6 +138,10 @@ export async function POST(req: Request) {
 			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
 				recentChatHistory
 			)
+			console.log(
+				pineconeSimilarDocs,
+				'-----------------------------pineconeSimilarDocs'
+			)
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
@@ -150,6 +155,7 @@ export async function POST(req: Request) {
 
 		const model = new OpenAI({
 			streaming: true,
+			temperature: 0.7,
 			modelName: 'gpt-3.5-turbo-16k',
 			openAIApiKey: process.env.OPENAI_API_KEY,
 			callbackManager: CallbackManager.fromHandlers(handlers),

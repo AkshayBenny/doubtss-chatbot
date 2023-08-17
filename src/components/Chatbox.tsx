@@ -46,7 +46,7 @@ export default function Chatbox({
 					/>
 				</div>
 				<button
-					disabled={isLoading && !completion}
+					disabled={isLoading}
 					type='submit'
 					className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[36%] h-full'>
 					<SendPlane2FillIcon />
