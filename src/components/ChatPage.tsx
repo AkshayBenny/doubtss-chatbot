@@ -6,7 +6,6 @@ import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import axios from 'axios'
-import Script from 'next/script'
 
 export default function ChatPage() {
 	const { user } = useUser()

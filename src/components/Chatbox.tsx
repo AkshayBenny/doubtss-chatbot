@@ -5,6 +5,7 @@ import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
 import Loader from './Loader'
 import { useRecoilState } from 'recoil'
 import { chatType } from '@/state/recoil'
+
 // import ChatTypeDropDown from './ChatTypeDropdown'
 
 export default function Chatbox({

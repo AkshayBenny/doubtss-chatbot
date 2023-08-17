@@ -1,12 +1,7 @@
-import { authMiddleware } from "@clerk/nextjs";
+// Without a defined matcher, this one line applies next-auth
+// to the entire project
+export { default } from 'next-auth/middleware'
 
-// This requires user to sign in to see any page or call any API route
-
-// TODO - the public route list should only contain /api/text for production
-export default authMiddleware({
-  publicRoutes: ["/api(.*)"],
-});
-
-export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+// Applies next-auth only to matching routes - can be regex
+// Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+// export const config = { matcher: ['/chat', '/admin-dashboard'] }
