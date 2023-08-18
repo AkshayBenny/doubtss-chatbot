@@ -1,17 +1,15 @@
-// ts-nocheck
-
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
-import { RecoilRoot } from 'recoil'
-import { Session } from 'next-auth'
+// import { RecoilRoot } from 'recoil'
+import AuthProvider from './context/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// export const metadata = {
-// 	title: 'Doubtss',
-// 	description: 'Help you pass UPSC exam with ease',
-// }
+export const metadata = {
+	title: 'Doubtss',
+	description: 'Help you pass UPSC exam with ease',
+}
 
 export default async function RootLayout({
 	children,
@@ -20,7 +18,9 @@ export default async function RootLayout({
 }) {
 	return (
 		// <RecoilRoot>
-		<html lang='en'>
+		<html
+			lang='en'
+			className='bg-custom-black'>
 			<Script
 				id='google-tag-manager'
 				strategy='afterInteractive'
@@ -37,14 +37,16 @@ export default async function RootLayout({
 				}}
 			/>
 			<body className={inter.className}>
-				<noscript
-					dangerouslySetInnerHTML={{
-						__html: `<iframe
-							src='https://www.googletagmanager.com/ns.html?id=GTM-54BQ247G'
+				<AuthProvider>
+					<noscript
+						dangerouslySetInnerHTML={{
+							__html: `<iframe
+						src='https://www.googletagmanager.com/ns.html?id=GTM-54BQ247G'
 						height='0'
 						width='0'></iframe>`,
-					}}></noscript>
-				{children}
+						}}></noscript>
+					<main>{children}</main>
+				</AuthProvider>
 			</body>
 		</html>
 		// </RecoilRoot>
