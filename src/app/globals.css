@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.auth-btn {
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: linear-gradient(0deg, #1e231e 0%, #1e231e 100%), #050a05;
+}
+
+.testimonial-person-baw {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 46.88%, #000 100%),
+		lightgray 0px -66.448px / 100% 143.012% no-repeat;
+	background-blend-mode: hard-light, normal;
+}

@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import axios from 'axios'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
+import { useSession } from 'next-auth/react'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -17,7 +18,7 @@ const questions = [
 ]
 
 export default function Chat({ userDataState }: any) {
-	const { user } = useUser()
+	const { data: session, status } = useSession()
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUser, setRecoilUser] = useRecoilState(userData)
@@ -34,41 +35,48 @@ export default function Chat({ userDataState }: any) {
 	} = useCompletion({
 		api: '/api/' + `chatgpt-${recoilChatType.toLowerCase()}`,
 		headers: { name: 'Alex' },
+		body: {
+			isText: true,
+			userId: session?.user.email || '',
+			userName: session?.user.name || '',
+		},
 	})
-
+	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
+	if (completion) console.log(completion, '----------------completion')
 	const addMessage = async (message: any) => {
-		if (user && recoilUser) {
-			try {
-				await axios.post(
-					'/api/create-message',
-					{
-						// @ts-ignore
-						uid: recoilUser?.id || '',
-						email: user.emailAddresses[0].emailAddress || '',
-						isUser: true,
-						content: message.human,
-					},
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Accept: 'application/json',
-						},
-					}
-				)
-			} catch (error) {
-				console.error(error)
-			}
-		}
-		setChats((oldChats) => {
-			const messageExists = oldChats.some(
-				(chat) => chat.id === message.id
-			)
-			if (messageExists) {
-				return oldChats
-			} else {
-				return [...oldChats, message]
-			}
-		})
+		// if (session && recoilUser) {
+		// 	try {
+		// 		await axios.post(
+		// 			'/api/create-message',
+		// 			{
+		// 				// @ts-ignore
+		// 				uid: recoilUser?.id || '',
+		// 				email: session?.user.email || '',
+		// 				isUser: true,
+		// 				content: message.human,
+		// 			},
+		// 			{
+		// 				headers: {
+		// 					'Content-Type': 'application/json',
+		// 					Accept: 'application/json',
+		// 				},
+		// 			}
+		// 		)
+		// 	} catch (error) {
+		// 		console.error(error)
+		// 	}
+		// }
+		// setChats((oldChats) => {
+		// 	const messageExists = oldChats.some(
+		// 		(chat) => chat.id === message.id
+		// 	)
+		// 	if (messageExists) {
+		// 		return oldChats
+		// 	} else {
+		// 		return [...oldChats, message]
+		// 	}
+		// })
+		setChats((oldChats) => [...oldChats, message])
 	}
 
 	const handleSubmit = async (e: any) => {
@@ -96,29 +104,28 @@ export default function Chat({ userDataState }: any) {
 	useEffect(() => {
 		const addBotMessage = async () => {
 			if (completion && isLoading) {
-				if (user) {
-					try {
-						const { data } = await axios.post(
-							'/api/create-message',
-							{
-								// @ts-ignore
-								uid: recoilUser?.id || '',
-								email:
-									user.emailAddresses[0].emailAddress || '',
-								isUser: false,
-								content: `${completion}`,
-							},
-							{
-								headers: {
-									'Content-Type': 'application/json',
-									Accept: 'application/json',
-								},
-							}
-						)
-					} catch (error) {
-						console.error(error)
-					}
-				}
+				// if (session) {
+				// 	try {
+				// 		const { data } = await axios.post(
+				// 			'/api/create-message',
+				// 			{
+				// 				// @ts-ignore
+				// 				uid: recoilUser?.id || '',
+				// 				email: session?.user.email || '',
+				// 				isUser: false,
+				// 				content: `${completion}`,
+				// 			},
+				// 			{
+				// 				headers: {
+				// 					'Content-Type': 'application/json',
+				// 					Accept: 'application/json',
+				// 				},
+				// 			}
+				// 		)
+				// 	} catch (error) {
+				// 		console.error(error)
+				// 	}
+				// }
 				// Check if last message is by a human
 				const lastMessage = chats[chats.length - 1]
 				if (lastMessage && lastMessage.human) {
@@ -190,11 +197,11 @@ export default function Chat({ userDataState }: any) {
 										className='w-full bg-custom-black'>
 										<div
 											className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{user && (
+											{session && (
 												<Image
 													height={32}
 													width={32}
-													src={`${user.imageUrl}`}
+													src={session?.user.image}
 													alt='Avatar'
 													className='rounded-full'
 												/>
@@ -213,8 +220,8 @@ export default function Chat({ userDataState }: any) {
 										key={index}
 										className='w-full bg-white bg-opacity-5'>
 										<div
-											className={`flex flex-col items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{user && (
+											className={`flex  items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
+											{session && (
 												<Image
 													height={32}
 													width={32}
@@ -231,8 +238,8 @@ export default function Chat({ userDataState }: any) {
 												}}>
 												{chat.bot}
 											</p>
-											<FileCopyLineIcon className='w-[16px] h-[16px] text-custom-white' />
 										</div>
+										{/* <FileCopyLineIcon className='w-[16px] h-[16px] text-custom-white' /> */}
 									</div>
 								)
 							}

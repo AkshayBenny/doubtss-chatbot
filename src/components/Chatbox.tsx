@@ -5,6 +5,7 @@ import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
 import Loader from './Loader'
 import { useRecoilState } from 'recoil'
 import { chatType } from '@/state/recoil'
+
 // import ChatTypeDropDown from './ChatTypeDropdown'
 
 export default function Chatbox({
@@ -46,7 +47,7 @@ export default function Chatbox({
 					/>
 				</div>
 				<button
-					disabled={isLoading && !completion}
+					disabled={isLoading && !completion ? true : false}
 					type='submit'
 					className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[36%] h-full'>
 					<SendPlane2FillIcon />

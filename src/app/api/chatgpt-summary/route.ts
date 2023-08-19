@@ -1,11 +1,9 @@
 import { OpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
 import { StreamingTextResponse, LangChainStream } from 'ai'
-import clerk from '@clerk/clerk-sdk-node'
 import { CallbackManager } from 'langchain/callbacks'
 import { PromptTemplate } from 'langchain/prompts'
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
 
@@ -49,12 +47,8 @@ export async function POST(req: Request) {
   Your values and principles are simple but profound: help others and never provide a wrong answer. You navigate the path between optimism and pessimism, choosing instead to be realistic and straightforward. 
   
   Your tireless efforts to educate and clarify the queries of countless UPSC CSE aspirants truly embody your name - Doubtss.com.`
+	const { prompt, userId, userName } = await req.json()
 	try {
-		let clerkUserId
-		let user
-		let clerkUserName
-		const { prompt, isText, userId, userName } = await req.json()
-
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
 
@@ -76,16 +70,16 @@ export async function POST(req: Request) {
 		const name = req.headers.get('name')
 
 		// console.log('prompt: ', prompt)
-		if (isText) {
-			clerkUserId = userId
-			clerkUserName = userName
-		} else {
-			user = await currentUser()
-			clerkUserId = user?.id
-			clerkUserName = user?.firstName
-		}
+		// if (isText) {
+		// 	clerkUserId = userId
+		// 	clerkUserName = userName
+		// } else {
+		// 	user = await currentUser()
+		// 	clerkUserId = user?.id
+		// 	clerkUserName = user?.firstName
+		// }
 
-		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
+		if (!userName) {
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
 				{
@@ -113,7 +107,7 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: name!,
 			modelName: 'chatgpt',
-			userId: clerkUserId,
+			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -137,6 +131,10 @@ export async function POST(req: Request) {
 			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
 				recentChatHistory
 			)
+			console.log(
+				pineconeSimilarDocs,
+				'-----------------------------pineconeSimilarDocs'
+			)
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
@@ -150,19 +148,18 @@ export async function POST(req: Request) {
 
 		const model = new OpenAI({
 			streaming: true,
+			temperature: 0.7,
 			modelName: 'gpt-3.5-turbo-16k',
 			openAIApiKey: process.env.OPENAI_API_KEY,
 			callbackManager: CallbackManager.fromHandlers(handlers),
 		})
 		model.verbose = true
 
-		const replyWithTwilioLimit = isText
-			? 'You reply within 1000 characters.'
-			: ''
+		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-      		You are ${name} and are currently talking to ${clerkUserName}.
-      		${preamble}
+			You are ${name} and are currently talking to ${userName}.
+			${preamble}
 			You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
 			Below are relevant details about ${name}'s past
 			${relevantHistory}
@@ -185,9 +182,9 @@ export async function POST(req: Request) {
 			})
 
 		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
-		if (isText) {
-			return NextResponse.json(result!.text)
-		}
+		// if (isText) {
+		// 	return NextResponse.json(result!.text)
+		// }
 
 		return new StreamingTextResponse(stream)
 	} catch (err: any) {
