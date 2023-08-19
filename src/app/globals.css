@@ -9,7 +9,6 @@
 }
 
 .testimonial-person-baw {
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 46.88%, #000 100%),
-		lightgray 0px -66.448px / 100% 143.012% no-repeat;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 46.88%, #000 100%);
 	background-blend-mode: hard-light, normal;
 }

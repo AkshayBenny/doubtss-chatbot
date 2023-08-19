@@ -9,7 +9,7 @@ export default async function MainChatPage() {
 	if (session) {
 		return (
 			<div>
-				<ChatPage />
+				<ChatPage session={session} />
 			</div>
 		)
 	}
