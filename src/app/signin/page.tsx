@@ -1,4 +1,3 @@
-
 import AuthButton from '@/components/AuthButton'
 import Logo from '@/components/Logo'
 

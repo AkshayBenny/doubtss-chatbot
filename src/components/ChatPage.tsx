@@ -7,18 +7,19 @@ import { useEffect, useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import axios from 'axios'
 import Logo from './Logo'
+import { useSession } from 'next-auth/react'
 
 export default function ChatPage() {
-	const { user } = useUser()
+	const { data: session, status } = useSession()
 	const [userDataState, setUserDataState] = useState({})
 	useEffect(() => {
 		const createOrUpdateUser = async () => {
-			if (user && user.id) {
+			if (session) {
 				const { data } = await axios.post(
 					'/api/create-or-update',
 					{
-						user_clerk_id: user.id || '',
-						email: user.emailAddresses[0].emailAddress || '',
+						user_clerk_id: session?.user.email  || '',
+						email: session?.user.email || '',
 					},
 					{
 						headers: {
@@ -31,8 +32,8 @@ export default function ChatPage() {
 				setUserDataState(data?.data?.user)
 			}
 		}
-		createOrUpdateUser()
-	}, [user])
+		// createOrUpdateUser()
+	}, [session, status])
 
 	return (
 		<RecoilRoot>

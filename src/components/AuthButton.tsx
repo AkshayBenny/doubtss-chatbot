@@ -14,7 +14,13 @@ export default function AuthButton({
 }) {
 	return (
 		<button
-			onClick={() => signIn(id)}
+			onClick={() =>
+				signIn(id, {
+					callbackUrl: `${
+						window.location.origin || 'http://localhost:3000/'
+					}`,
+				})
+			}
 			className='flex items-center justify-center text-sm font-medium gap-3 px-5 py-[15px] w-full auth-btn'>
 			<Image
 				src={img}

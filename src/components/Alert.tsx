@@ -9,14 +9,15 @@ import { chatHistory, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import axios from 'axios'
 import { useUser } from '@clerk/nextjs'
+import { useSession } from 'next-auth/react'
 
 export default function Alert() {
-	const { user } = useUser()
+	const { data: session, status } = useSession()
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilUser, setRecoilUser] = useRecoilState(userData)
 	const clearChatHandler = async () => {
 		setChats([])
-		if (user && recoilUser) {
+		if (session && recoilUser) {
 			await axios.post(
 				'/api/delete-message',
 				{

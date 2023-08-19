@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import axios from 'axios'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
+import { useSession } from 'next-auth/react'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -17,7 +18,7 @@ const questions = [
 ]
 
 export default function Chat({ userDataState }: any) {
-	const { user } = useUser()
+	const { data: session, status } = useSession()
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUser, setRecoilUser] = useRecoilState(userData)
@@ -36,20 +37,20 @@ export default function Chat({ userDataState }: any) {
 		headers: { name: 'Alex' },
 		body: {
 			isText: true,
-			userId: user?.id || '',
-			username: user?.emailAddresses[0].emailAddress || '',
+			userId: session?.user.email || '',
+			username: session?.user.email || '',
 		},
 	})
 	if (completion) console.log(completion, '----------------completion')
 	const addMessage = async (message: any) => {
-		if (user && recoilUser) {
+		if (session && recoilUser) {
 			try {
 				await axios.post(
 					'/api/create-message',
 					{
 						// @ts-ignore
 						uid: recoilUser?.id || '',
-						email: user.emailAddresses[0].emailAddress || '',
+						email: session?.user.email || '',
 						isUser: true,
 						content: message.human,
 					},
@@ -101,15 +102,14 @@ export default function Chat({ userDataState }: any) {
 	useEffect(() => {
 		const addBotMessage = async () => {
 			if (completion && isLoading) {
-				if (user) {
+				if (session) {
 					try {
 						const { data } = await axios.post(
 							'/api/create-message',
 							{
 								// @ts-ignore
 								uid: recoilUser?.id || '',
-								email:
-									user.emailAddresses[0].emailAddress || '',
+								email: session?.user.email || '',
 								isUser: false,
 								content: `${completion}`,
 							},
@@ -195,11 +195,11 @@ export default function Chat({ userDataState }: any) {
 										className='w-full bg-custom-black'>
 										<div
 											className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{user && (
+											{session && (
 												<Image
 													height={32}
 													width={32}
-													src={`${user.imageUrl}`}
+													src={session?.user.image}
 													alt='Avatar'
 													className='rounded-full'
 												/>
@@ -219,7 +219,7 @@ export default function Chat({ userDataState }: any) {
 										className='w-full bg-white bg-opacity-5'>
 										<div
 											className={`flex flex-col items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{user && (
+											{session && (
 												<Image
 													height={32}
 													width={32}
