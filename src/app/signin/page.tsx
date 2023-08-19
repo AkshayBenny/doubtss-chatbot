@@ -1,8 +1,30 @@
+
 import AuthButton from '@/components/AuthButton'
 import Logo from '@/components/Logo'
-import Image from 'next/image'
 
 export default async function SigninPage() {
+	const providers = [
+		{
+			id: 'github',
+			img: '/google-logo.svg',
+			name: 'Github',
+		},
+		{
+			id: 'github',
+			img: '/microsoft-logo.svg',
+			name: 'Microsoft',
+		},
+		{
+			id: 'github',
+			img: '/facebook-logo.svg',
+			name: 'Facebook',
+		},
+		{
+			id: 'github',
+			img: '/apple-logo.svg',
+			name: 'Apple',
+		},
+	]
 	return (
 		<div className='w-screen h-screen max-w-screen max-w-screen flex text-custom-white'>
 			{/* <div className="bg-[url('/testimonial.jpg')] w-full h-full max-w-[70%]"></div> */}
@@ -39,22 +61,16 @@ export default async function SigninPage() {
 						Welcome
 					</h2>
 					<div className='space-y-[16px] w-full max-w-[320px] mx-auto'>
-						<AuthButton
-							img='/google-logo.svg'
-							name='Google'
-						/>
-						<AuthButton
-							img='/microsoft-logo.svg'
-							name='Microsoft'
-						/>
-						<AuthButton
-							img='/facebook-logo.svg'
-							name='Facebook'
-						/>
-						<AuthButton
-							img='/apple-logo.svg'
-							name='Apple'
-						/>
+						{providers.map((provider, index) => {
+							return (
+								<AuthButton
+									key={index}
+									img={provider.img}
+									name={provider.name}
+									id={provider.id}
+								/>
+							)
+						})}
 					</div>
 					<p className='text-sm text-center pt-6'>
 						Dont have an account?{' '}
