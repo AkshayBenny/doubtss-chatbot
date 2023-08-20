@@ -50,9 +50,17 @@ export default function Chatbox({
 					/>
 				</div>
 				<button
-					disabled={isLoading && !completion ? true : false}
+					disabled={
+						(isLoading && !completion) || input === ''
+							? true
+							: false
+					}
 					type='submit'
-					className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full'>
+					className={`${
+						(isLoading && !completion) || input === ''
+							? 'cursor-not-allowed'
+							: ''
+					} p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full`}>
 					<SendPlane2FillIcon />
 				</button>
 			</form>

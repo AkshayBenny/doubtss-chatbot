@@ -86,15 +86,13 @@ export async function POST(req: Request) {
 			companionKey
 		)
 		let relevantHistory = ''
+		let pineconeSimilarDocs: any = []
 		// query Pinecone
 		try {
-			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
+			pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
 				recentChatHistory
 			)
-			console.log(
-				pineconeSimilarDocs,
-				'-----------------------------pineconeSimilarDocs'
-			)
+
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
