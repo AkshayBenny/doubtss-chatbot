@@ -171,14 +171,18 @@ export default function Chat({ userSessionData }: any) {
 											: 'bg-custom-black'
 									}`}>
 									<div
-										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
+										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
+											!isBot && index === 0
+												? 'pt-[40px] px-7 pb-7'
+												: 'p-7'
+										}`}>
 										{recoilUserState && (
 											<Image
 												height={32}
 												width={32}
 												src={
 													isBot
-														? '/rosie.png'
+														? '/doubtss-pfp.svg'
 														: recoilUserState?.image
 												}
 												alt='Avatar'
@@ -186,11 +190,8 @@ export default function Chat({ userSessionData }: any) {
 											/>
 										)}
 
-										{/* <p className='leading-normal mt-2'>
-												{chat.content}
-											</p> */}
 										<p
-											className='leading-normal'
+											className={`leading-normal ${!isBot && 'pt-[4px]'}`}
 											style={{
 												whiteSpace: 'pre-wrap',
 											}}>
