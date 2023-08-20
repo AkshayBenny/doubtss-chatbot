@@ -60,7 +60,7 @@ export default function Chatbox({
 						(isLoading && !completion) || input === ''
 							? 'cursor-not-allowed text-custom-white'
 							: 'text-custom-green'
-					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full`}>
+					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full aspect-square flex items-center justify-center`}>
 					<SendPlane2FillIcon className='w-[18px] h-[18px]' />
 				</button>
 			</form>
