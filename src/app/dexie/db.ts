@@ -1,36 +1,35 @@
-import Dexie from 'dexie'
+import Dexie from 'dexie';
 
 interface User {
-	id?: number
-	name: string
-	email: string
+	email: string;
+	name: string;
 }
 
 interface Message {
-	id?: number
-	userId: number
-	role: string
-	content: string
-	createdAt: string
+	id?: number;
+	userEmail: string;
+	role: string;
+	content: string;
+	createdAt: string;
 }
 
 class ChatDatabase extends Dexie {
-	users: Dexie.Table<User, number> // number is the type of the primary key
-	messages: Dexie.Table<Message, number>
+	users: Dexie.Table<User, string>; // string is the type of the primary key (email)
+	messages: Dexie.Table<Message, number>;
 
 	constructor() {
-		super('ChatDatabase')
+		super('ChatDatabase');
 
 		// Define tables and indexes
 		this.version(1).stores({
-			users: '++id, name, email',
-			messages: '++id, userId, role, content, createdAt',
-		})
+			users: 'email, name', // Set email as the primary key
+			messages: '++id, userEmail, role, content, createdAt',
+		});
 
 		// Define tables
-		this.users = this.table('users')
-		this.messages = this.table('messages')
+		this.users = this.table('users');
+		this.messages = this.table('messages');
 	}
 }
 
-export const db = new ChatDatabase()
+export const db = new ChatDatabase();
