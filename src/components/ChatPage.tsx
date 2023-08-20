@@ -2,23 +2,42 @@
 
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
-import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import axios from 'axios'
 import Logo from './Logo'
 import { useSession } from 'next-auth/react'
+import { addUserDexie } from '@/app/dexie/crud'
 
-export default function ChatPage() {
+export default async function ChatPage({ session: serverSession }: any) {
 	const { data: session, status } = useSession()
 	const [userDataState, setUserDataState] = useState({})
+
+	useEffect(() => {
+		const addNewUserDexie = async () => {
+			if (serverSession) {
+				let newDexieUser = {
+					name: serverSession.user.name,
+					email: serverSession.user.email,
+				}
+				await addUserDexie(newDexieUser)
+			}
+		}
+
+		if (!('indexedDB' in window)) {
+			console.log('IndexedDB not supported')
+		} else {
+			addNewUserDexie()
+		}
+	}, [serverSession])
+	
 	useEffect(() => {
 		const createOrUpdateUser = async () => {
 			if (session) {
 				const { data } = await axios.post(
 					'/api/create-or-update',
 					{
-						user_clerk_id: session?.user.email  || '',
+						user_clerk_id: session?.user.email || '',
 						email: session?.user.email || '',
 					},
 					{

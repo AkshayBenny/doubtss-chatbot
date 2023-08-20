@@ -1,5 +1,5 @@
 import AuthPage from '@/components/AuthPage'
 
 export default async function SigninPage() {
-	return <AuthPage type='login' />
+	return <AuthPage type='signup' />
 }

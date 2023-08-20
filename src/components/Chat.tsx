@@ -11,6 +11,7 @@ import { useCompletion } from 'ai/react'
 import axios from 'axios'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
 import { useSession } from 'next-auth/react'
+import { addMessageDexie } from '@/app/dexie/crud'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -76,13 +77,17 @@ export default function Chat({ userDataState }: any) {
 		// 		return [...oldChats, message]
 		// 	}
 		// })
+
+		// addMessageDexie({})
+		// restructure the objects for storing user data and messages
+
 		setChats((oldChats) => [...oldChats, message])
 	}
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault()
 		handleAISubmit(e)
-		addMessage({ human: input, id: Date.now() })
+		addMessage({ role: 'human', content: input, id: Date.now() })
 		setInput('')
 	}
 
@@ -92,9 +97,17 @@ export default function Chat({ userDataState }: any) {
 			if (userDataState?.messages?.length > 0) {
 				userDataState.messages.forEach((message: any) => {
 					if (message.isUser) {
-						addMessage({ human: message.content, id: Date.now() })
+						addMessage({
+							role: 'human',
+							content: message.content,
+							id: Date.now(),
+						})
 					} else {
-						addMessage({ bot: message.content, id: Date.now() })
+						addMessage({
+							role: 'bot',
+							content: message.content,
+							id: Date.now(),
+						})
 					}
 				})
 			}
@@ -128,8 +141,12 @@ export default function Chat({ userDataState }: any) {
 				// }
 				// Check if last message is by a human
 				const lastMessage = chats[chats.length - 1]
-				if (lastMessage && lastMessage.human) {
-					addMessage({ bot: completion, id: Date.now() })
+				if (lastMessage && lastMessage.role === 'human') {
+					addMessage({
+						role: 'bot',
+						content: completion,
+						id: Date.now(),
+					})
 				}
 			}
 		}
@@ -188,61 +205,45 @@ export default function Chat({ userDataState }: any) {
 					{/* CHAT CONTINUATION */}
 					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
 						{chats.map((chat, index) => {
-							const isBot = chat.bot
-							if (!isBot) {
-								// human
-								return (
-									<div
-										key={index}
-										className='w-full bg-custom-black'>
-										<div
-											className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{session && (
-												<Image
-													height={32}
-													width={32}
-													src={session?.user.image}
-													alt='Avatar'
-													className='rounded-full'
-												/>
-											)}
+							const isBot = chat.role === 'bot' ? true : false
 
-											<p className='leading-normal mt-2'>
-												{chat.human}
-											</p>
-										</div>
-									</div>
-								)
-							} else {
-								// bot
-								return (
+							return (
+								<div
+									key={index}
+									className={`w-full ${
+										isBot
+											? 'bg-white bg-opacity-5'
+											: 'bg-custom-black'
+									}`}>
 									<div
-										key={index}
-										className='w-full bg-white bg-opacity-5'>
-										<div
-											className={`flex  items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-											{session && (
-												<Image
-													height={32}
-													width={32}
-													src={'/rosie.png'}
-													alt='Avatar'
-													className='rounded-full'
-												/>
-											)}
+										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
+										{session && (
+											<Image
+												height={32}
+												width={32}
+												src={
+													isBot
+														? '/rosie.png'
+														: session?.user.image
+												}
+												alt='Avatar'
+												className='rounded-full'
+											/>
+										)}
 
-											<p
-												className='leading-normal'
-												style={{
-													whiteSpace: 'pre-wrap',
-												}}>
-												{chat.bot}
-											</p>
-										</div>
-										{/* <FileCopyLineIcon className='w-[16px] h-[16px] text-custom-white' /> */}
+										{/* <p className='leading-normal mt-2'>
+												{chat.content}
+											</p> */}
+										<p
+											className='leading-normal'
+											style={{
+												whiteSpace: 'pre-wrap',
+											}}>
+											{chat.content}
+										</p>
 									</div>
-								)
-							}
+								</div>
+							)
 						})}
 					</div>
 
