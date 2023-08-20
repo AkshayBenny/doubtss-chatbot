@@ -37,7 +37,7 @@ export const getMessagesByUserEmailDexie = async (
 ): Promise<Message[]> => {
 	const user = await getUserByEmailDexie(email)
 	if (user) {
-		return await db.messages.where('userId').equals(user.email).toArray()
+		return await db.messages.where('userEmail').equals(user.email).toArray()
 	}
 	return []
 }
@@ -51,4 +51,8 @@ export const updateMessageDexie = async (
 
 export const deleteMessageByIdDexie = async (id: number) => {
 	await db.messages.delete(id)
+}
+
+export const deleteAllMessagesByUserEmailDexie = async (email: string) => {
+	await db.messages.where('userEmail').equals(email).delete()
 }

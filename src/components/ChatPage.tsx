@@ -3,62 +3,36 @@
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
-import { RecoilRoot } from 'recoil'
-import axios from 'axios'
+import { RecoilRoot, useRecoilState } from 'recoil'
 import Logo from './Logo'
-import { useSession } from 'next-auth/react'
 import { addUserDexie } from '@/app/dexie/crud'
 
-export default async function ChatPage({ session: serverSession }: any) {
-	const { data: session, status } = useSession()
-	const [userDataState, setUserDataState] = useState({})
-
+export default async function ChatPage({ session }: any) {
 	useEffect(() => {
 		const addNewUserDexie = async () => {
-			if (serverSession) {
+			if (session) {
 				let newDexieUser = {
-					name: serverSession.user.name,
-					email: serverSession.user.email,
+					name: session.user.name,
+					email: session.user.email,
 				}
 				await addUserDexie(newDexieUser)
 			}
 		}
 
-		if (!('indexedDB' in window)) {
+		if (window && !('indexedDB' in window)) {
 			console.log('IndexedDB not supported')
 		} else {
 			addNewUserDexie()
 		}
-	}, [serverSession])
-	
-	useEffect(() => {
-		const createOrUpdateUser = async () => {
-			if (session) {
-				const { data } = await axios.post(
-					'/api/create-or-update',
-					{
-						user_clerk_id: session?.user.email || '',
-						email: session?.user.email || '',
-					},
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Accept: 'application/json',
-						},
-					}
-				)
-				console.log('response>>>', data.data.user)
-				setUserDataState(data?.data?.user)
-			}
-		}
-		// createOrUpdateUser()
-	}, [session, status])
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [session])
 
 	return (
 		<RecoilRoot>
 			<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
 				<Navbar />
-				<Chat userDataState={userDataState} />
+				<Chat userSessionData={session} />
 			</div>
 			<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
 				<Logo />
