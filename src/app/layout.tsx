@@ -6,8 +6,8 @@ import AuthProvider from './context/AuthProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-	title: 'Doubtss',
-	description: 'Help you pass UPSC exam with ease',
+	title: 'Doubtss.com',
+	description: 'Help you pass UPSC CSE exam with ease',
 }
 
 export default async function RootLayout({
