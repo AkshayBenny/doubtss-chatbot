@@ -37,7 +37,7 @@ export default function Chatbox({
 
 				{/* <ChatTypeDropDown /> */}
 				<div className='rounded-xl border border-white border-opacity-[12%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full focus-within:border-[1.5px] focus-within:border-custom-white focus-within:border-opacity-[36%] transition'>
-					<SearchLineIcon />
+					<SearchLineIcon className='w-[18px] h-[18px]' />
 					<input
 						type='text'
 						className='bg-custom-gray py-[15px] ring-0 outline-none border-none focus:ring-0 focus:border-none focus:outline-none w-full disabled:cursor-not-allowed placeholder:text-[14px] placeholder:text-custom-white placeholder:text-opacity-60'
@@ -58,10 +58,10 @@ export default function Chatbox({
 					type='submit'
 					className={`${
 						(isLoading && !completion) || input === ''
-							? 'cursor-not-allowed'
-							: ''
-					} p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full`}>
-					<SendPlane2FillIcon />
+							? 'cursor-not-allowed text-custom-white'
+							: 'text-custom-green'
+					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full`}>
+					<SendPlane2FillIcon className='w-[18px] h-[18px]' />
 				</button>
 			</form>
 		</div>
