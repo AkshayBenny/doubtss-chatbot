@@ -191,9 +191,10 @@ export default function Chat({ userSessionData }: any) {
 										)}
 
 										<p
-											className={`leading-normal !whitespace-pre-line ${
+											className={`leading-normal !whitespace-pre-wrap ${
 												!isBot && 'pt-[4px]'
-											}`}>
+											}`}
+											style={{ whiteSpace: 'pre-line' }}>
 											{chat.content}
 										</p>
 									</div>

@@ -45,7 +45,7 @@ export default function Chatbox({
 						onChange={(e) => {
 							setInput(e.target.value)
 						}}
-						placeholder='Ask me anything on UPSC'
+						placeholder='Ask me anything on UPSC CSE'
 						disabled={isLoading && !completion}
 					/>
 				</div>

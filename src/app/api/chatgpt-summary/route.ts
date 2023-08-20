@@ -18,7 +18,7 @@ function countTokens(text: string) {
 }
 
 export async function POST(req: Request) {
-	const { prompt, userId, userName, isText } = await req.json()
+	const { prompt, userId, userName } = await req.json()
 	try {
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
