@@ -28,7 +28,7 @@ export default function AuthButton({
 				width={18}
 				alt={`${name} logo`}
 			/>
-			<p>Continue with {name}</p>
+			<p className='text-[14px]'>Continue with {name}</p>
 		</button>
 	)
 }
