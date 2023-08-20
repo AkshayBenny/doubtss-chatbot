@@ -12,3 +12,13 @@
 	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 46.88%, #000 100%);
 	background-blend-mode: hard-light, normal;
 }
+
+.chat-input-focus-animation:focus-within {
+	border-radius: 12px !important;
+	border: 1.5px solid rgba(255, 255, 255, 0.36) !important;
+	background: #1e231e !important;
+	-webkit-border-radius: 12px !important;
+	-moz-border-radius: 12px !important;
+	-ms-border-radius: 12px !important;
+	-o-border-radius: 12px !important;
+}

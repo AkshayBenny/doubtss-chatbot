@@ -30,29 +30,29 @@ export default function Chatbox({
 					}}
 					name='type'
 					id=''
-					className='px-[15px] py-[17px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[36%] h-full min-w-[116px]'>
+					className='px-[15px] py-[17px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full min-w-[116px]'>
 					<option value='Summary'>Summary</option>
 					<option value='Question'>Question</option>
 				</select>
 
 				{/* <ChatTypeDropDown /> */}
-				<div className='rounded-xl border border-white border-opacity-[36%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full'>
+				<div className='rounded-xl border border-white border-opacity-[12%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full focus-within:border-[1.5px] focus-within:border-custom-white focus-within:border-opacity-[36%] transition'>
 					<SearchLineIcon />
 					<input
 						type='text'
-						className='bg-custom-gray py-[15px] ring-0 outline-none border-none focus:ring-0 focus:border-none focus:outline-none w-full disabled:cursor-not-allowed'
+						className='bg-custom-gray py-[15px] ring-0 outline-none border-none focus:ring-0 focus:border-none focus:outline-none w-full disabled:cursor-not-allowed placeholder:text-[14px] placeholder:text-custom-white placeholder:text-opacity-60'
 						value={input}
 						onChange={(e) => {
 							setInput(e.target.value)
-							console.log(e.target.value)
 						}}
+						placeholder='Ask me anything on UPSC'
 						disabled={isLoading && !completion}
 					/>
 				</div>
 				<button
 					disabled={isLoading && !completion ? true : false}
 					type='submit'
-					className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[36%] h-full'>
+					className='p-[15px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full'>
 					<SendPlane2FillIcon />
 				</button>
 			</form>
