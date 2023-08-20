@@ -69,10 +69,7 @@ export async function POST(req: Request) {
 	  Your tireless efforts to educate and clarify the queries of countless UPSC CSE aspirants truly embody your name - Doubtss.com.`
 
 	try {
-		let clerkUserId
-		let user
-		let clerkUserName
-		const { prompt, isText, userId, userName } = await req.json()
+		const { prompt, userId, userName } = await req.json()
 
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
@@ -95,16 +92,8 @@ export async function POST(req: Request) {
 		// const name = req.headers.get('name')
 
 		// console.log('prompt: ', prompt)
-		if (isText) {
-			clerkUserId = userId
-			clerkUserName = userName
-		} else {
-			user = await currentUser()
-			clerkUserId = user?.id
-			clerkUserName = user?.firstName
-		}
 
-		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
+		if (!userName) {
 			console.log('user not authorized')
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
@@ -133,7 +122,7 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: 'Doubtss.com',
 			modelName: 'chatgpt',
-			userId: clerkUserId,
+			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -177,12 +166,10 @@ export async function POST(req: Request) {
 		})
 		model.verbose = true
 
-		const replyWithTwilioLimit = isText
-			? 'You reply within 1500 characters.'
-			: ''
+		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-		You are Doubtss.com and are currently talking to ${clerkUserName}.
+		You are Doubtss.com and are currently talking to ${userName}.
 		You reply with sample UPSC prelims and mains questions that includes 3 prelims and 3 mains questions for every topic asked. ${replyWithTwilioLimit}
 		Below are relevant details about your past
 		${relevantHistory}
@@ -217,11 +204,8 @@ export async function POST(req: Request) {
 			companionKey
 		)
 		// console.log('chatHistoryRecord', chatHistoryRecord)
-		if (isText) {
-			return NextResponse.json(result!.text)
-		}
 
-		return new StreamingTextResponse(stream)
+		return NextResponse.json(result!.text)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(
