@@ -6,19 +6,17 @@ import { useEffect, useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import axios from 'axios'
 import Logo from './Logo'
-import { useSession } from 'next-auth/react'
 import { addUserDexie } from '@/app/dexie/crud'
 
-export default async function ChatPage({ session: serverSession }: any) {
-	const { data: session, status } = useSession()
+export default async function ChatPage({ session }: any) {
 	const [userDataState, setUserDataState] = useState({})
-
+	console.log('rendering chatpage')
 	useEffect(() => {
 		const addNewUserDexie = async () => {
-			if (serverSession) {
+			if (session) {
 				let newDexieUser = {
-					name: serverSession.user.name,
-					email: serverSession.user.email,
+					name: session.user.name,
+					email: session.user.email,
 				}
 				await addUserDexie(newDexieUser)
 			}
@@ -29,8 +27,8 @@ export default async function ChatPage({ session: serverSession }: any) {
 		} else {
 			addNewUserDexie()
 		}
-	}, [serverSession])
-	
+	}, [session])
+
 	useEffect(() => {
 		const createOrUpdateUser = async () => {
 			if (session) {
@@ -52,10 +50,11 @@ export default async function ChatPage({ session: serverSession }: any) {
 			}
 		}
 		// createOrUpdateUser()
-	}, [session, status])
+	}, [session])
 
 	return (
 		<RecoilRoot>
+			<div>hellow</div>
 			<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
 				<Navbar />
 				<Chat userDataState={userDataState} />

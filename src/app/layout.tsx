@@ -1,7 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
-// import { RecoilRoot } from 'recoil'
 import AuthProvider from './context/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,8 +15,8 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
+	console.log('layout')
 	return (
-		// <RecoilRoot>
 		<html
 			lang='en'
 			className='bg-custom-black'>
@@ -49,6 +48,5 @@ export default async function RootLayout({
 				</AuthProvider>
 			</body>
 		</html>
-		// </RecoilRoot>
 	)
 }

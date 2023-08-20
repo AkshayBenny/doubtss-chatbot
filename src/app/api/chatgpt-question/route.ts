@@ -69,9 +69,6 @@ export async function POST(req: Request) {
 	  Your tireless efforts to educate and clarify the queries of countless UPSC CSE aspirants truly embody your name - Doubtss.com.`
 
 	try {
-		console.log(
-			'-----------------------------------QUESTION-----------------------------------'
-		)
 		let clerkUserId
 		let user
 		let clerkUserName

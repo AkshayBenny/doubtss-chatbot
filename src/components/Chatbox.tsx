@@ -11,7 +11,7 @@ import { chatType } from '@/state/recoil'
 export default function Chatbox({
 	handleSubmit,
 	input,
-	handleInputChange,
+	setInput,
 	isLoading,
 	completion,
 }: any) {
@@ -34,15 +34,18 @@ export default function Chatbox({
 					<option value='Summary'>Summary</option>
 					<option value='Question'>Question</option>
 				</select>
-				{/* <ChatTypeDropDown /> */}
 
+				{/* <ChatTypeDropDown /> */}
 				<div className='rounded-xl border border-white border-opacity-[36%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full'>
 					<SearchLineIcon />
 					<input
 						type='text'
 						className='bg-custom-gray py-[15px] ring-0 outline-none border-none focus:ring-0 focus:border-none focus:outline-none w-full disabled:cursor-not-allowed'
 						value={input}
-						onChange={handleInputChange}
+						onChange={(e) => {
+							setInput(e.target.value)
+							console.log(e.target.value)
+						}}
 						disabled={isLoading && !completion}
 					/>
 				</div>

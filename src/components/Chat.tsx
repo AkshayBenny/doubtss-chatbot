@@ -4,14 +4,10 @@ import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect } from 'react'
-import { useUser } from '@clerk/nextjs'
 import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
-import axios from 'axios'
-import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
 import { useSession } from 'next-auth/react'
-import { addMessageDexie } from '@/app/dexie/crud'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -45,42 +41,6 @@ export default function Chat({ userDataState }: any) {
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
 	if (completion) console.log(completion, '----------------completion')
 	const addMessage = async (message: any) => {
-		// if (session && recoilUser) {
-		// 	try {
-		// 		await axios.post(
-		// 			'/api/create-message',
-		// 			{
-		// 				// @ts-ignore
-		// 				uid: recoilUser?.id || '',
-		// 				email: session?.user.email || '',
-		// 				isUser: true,
-		// 				content: message.human,
-		// 			},
-		// 			{
-		// 				headers: {
-		// 					'Content-Type': 'application/json',
-		// 					Accept: 'application/json',
-		// 				},
-		// 			}
-		// 		)
-		// 	} catch (error) {
-		// 		console.error(error)
-		// 	}
-		// }
-		// setChats((oldChats) => {
-		// 	const messageExists = oldChats.some(
-		// 		(chat) => chat.id === message.id
-		// 	)
-		// 	if (messageExists) {
-		// 		return oldChats
-		// 	} else {
-		// 		return [...oldChats, message]
-		// 	}
-		// })
-
-		// addMessageDexie({})
-		// restructure the objects for storing user data and messages
-
 		setChats((oldChats) => [...oldChats, message])
 	}
 
@@ -117,28 +77,6 @@ export default function Chat({ userDataState }: any) {
 	useEffect(() => {
 		const addBotMessage = async () => {
 			if (completion && isLoading) {
-				// if (session) {
-				// 	try {
-				// 		const { data } = await axios.post(
-				// 			'/api/create-message',
-				// 			{
-				// 				// @ts-ignore
-				// 				uid: recoilUser?.id || '',
-				// 				email: session?.user.email || '',
-				// 				isUser: false,
-				// 				content: `${completion}`,
-				// 			},
-				// 			{
-				// 				headers: {
-				// 					'Content-Type': 'application/json',
-				// 					Accept: 'application/json',
-				// 				},
-				// 			}
-				// 		)
-				// 	} catch (error) {
-				// 		console.error(error)
-				// 	}
-				// }
 				// Check if last message is by a human
 				const lastMessage = chats[chats.length - 1]
 				if (lastMessage && lastMessage.role === 'human') {
@@ -170,7 +108,7 @@ export default function Chat({ userDataState }: any) {
 					<Chatbox
 						handleSubmit={handleSubmit}
 						input={input}
-						handleInputChange={handleInputChange}
+						setInput={setInput}
 						isLoading={isLoading}
 						completion={completion}
 					/>
@@ -251,7 +189,7 @@ export default function Chat({ userDataState }: any) {
 						<Chatbox
 							handleSubmit={handleSubmit}
 							input={input}
-							handleInputChange={handleInputChange}
+							setInput={setInput}
 							isLoading={isLoading}
 							completion={completion}
 						/>
