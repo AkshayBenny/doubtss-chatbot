@@ -85,7 +85,7 @@ export default async function AuthPage({ type }: { type: string }) {
 						</span>
 					</p>
 				</div>
-				<div className='opacity-60 flex items-center justify-center gap-6'>
+				<div className='opacity-60 flex items-center justify-center gap-6 text-[14px]'>
 					<h4>Terms of Service</h4>
 					<h4>Privacy Policy</h4>
 				</div>
