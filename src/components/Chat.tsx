@@ -8,17 +8,19 @@ import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import { useSession } from 'next-auth/react'
+import { addMessageDexie, getMessagesByUserEmailDexie } from '@/app/dexie/crud'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
 	'What are the main factors that led to the decline of the Indus Valley Civilisation?',
 ]
 
-export default function Chat({ userDataState }: any) {
-	const { data: session, status } = useSession()
+export default function Chat({ userSessionData }: any) {
+	console.log('userSessionData', userSessionData)
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
-	const [recoilUser, setRecoilUser] = useRecoilState(userData)
+	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
+
 	let {
 		completion,
 		input,
@@ -34,14 +36,21 @@ export default function Chat({ userDataState }: any) {
 		headers: { name: 'Alex' },
 		body: {
 			isText: true,
-			userId: session?.user.email || '',
-			userName: session?.user.name || '',
+			userId: userSessionData?.user.email || '',
+			userName: userSessionData?.user.name || '',
 		},
 	})
+
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
-	if (completion) console.log(completion, '----------------completion')
+
 	const addMessage = async (message: any) => {
 		setChats((oldChats) => [...oldChats, message])
+		const dixieMessage = {
+			...message,
+			userEmail: userSessionData.user.email,
+			createdAt: new Date(),
+		}
+		addMessageDexie(dixieMessage)
 	}
 
 	const handleSubmit = async (e: any) => {
@@ -52,27 +61,35 @@ export default function Chat({ userDataState }: any) {
 	}
 
 	useEffect(() => {
-		if (userDataState) {
-			setRecoilUser(userDataState)
-			if (userDataState?.messages?.length > 0) {
-				userDataState.messages.forEach((message: any) => {
-					if (message.isUser) {
-						addMessage({
-							role: 'human',
-							content: message.content,
-							id: Date.now(),
-						})
-					} else {
-						addMessage({
-							role: 'bot',
-							content: message.content,
-							id: Date.now(),
-						})
-					}
-				})
+		if (userSessionData) {
+			setRecoilUserState(userSessionData.user)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userSessionData])
+
+	useEffect(() => {
+		const updateHistory = async () => {
+			if (userSessionData?.user.email) {
+				const chatHistory = await getMessagesByUserEmailDexie(
+					userSessionData?.user.email
+				)
+
+				console.log('ChatHistory: ', chatHistory)
+
+				chatHistory.length > 0 &&
+					chatHistory.map((history) => {
+						let oldMessage: any = {
+							role: history.role,
+							content: history.content,
+							id: history.id,
+						}
+						setChats((oldChats) => [...oldChats, oldMessage])
+					})
 			}
 		}
-	}, [userDataState])
+		updateHistory()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userSessionData])
 
 	useEffect(() => {
 		const addBotMessage = async () => {
@@ -155,14 +172,14 @@ export default function Chat({ userDataState }: any) {
 									}`}>
 									<div
 										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto p-7`}>
-										{session && (
+										{recoilUserState && (
 											<Image
 												height={32}
 												width={32}
 												src={
 													isBot
 														? '/rosie.png'
-														: session?.user.image
+														: recoilUserState?.image
 												}
 												alt='Avatar'
 												className='rounded-full'

@@ -3,14 +3,11 @@
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
-import { RecoilRoot } from 'recoil'
-import axios from 'axios'
+import { RecoilRoot, useRecoilState } from 'recoil'
 import Logo from './Logo'
 import { addUserDexie } from '@/app/dexie/crud'
 
 export default async function ChatPage({ session }: any) {
-	const [userDataState, setUserDataState] = useState({})
-	console.log('rendering chatpage')
 	useEffect(() => {
 		const addNewUserDexie = async () => {
 			if (session) {
@@ -22,42 +19,20 @@ export default async function ChatPage({ session }: any) {
 			}
 		}
 
-		if (!('indexedDB' in window)) {
+		if (window && !('indexedDB' in window)) {
 			console.log('IndexedDB not supported')
 		} else {
 			addNewUserDexie()
 		}
-	}, [session])
 
-	useEffect(() => {
-		const createOrUpdateUser = async () => {
-			if (session) {
-				const { data } = await axios.post(
-					'/api/create-or-update',
-					{
-						user_clerk_id: session?.user.email || '',
-						email: session?.user.email || '',
-					},
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Accept: 'application/json',
-						},
-					}
-				)
-				console.log('response>>>', data.data.user)
-				setUserDataState(data?.data?.user)
-			}
-		}
-		// createOrUpdateUser()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [session])
 
 	return (
 		<RecoilRoot>
-			<div>hellow</div>
 			<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
 				<Navbar />
-				<Chat userDataState={userDataState} />
+				<Chat userSessionData={session} />
 			</div>
 			<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
 				<Logo />

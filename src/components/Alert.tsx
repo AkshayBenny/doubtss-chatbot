@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil'
 import axios from 'axios'
 import { useUser } from '@clerk/nextjs'
 import { useSession } from 'next-auth/react'
+import { deleteAllMessagesByUserEmailDexie } from '@/app/dexie/crud'
 
 export default function Alert() {
 	const { data: session, status } = useSession()
@@ -17,21 +18,7 @@ export default function Alert() {
 	const [recoilUser, setRecoilUser] = useRecoilState(userData)
 	const clearChatHandler = async () => {
 		setChats([])
-		if (session && recoilUser) {
-			await axios.post(
-				'/api/delete-message',
-				{
-					// @ts-ignore
-					uid: recoilUser?.id,
-				},
-				{
-					headers: {
-						'Content-Type': 'application/json',
-						Accept: 'application/json',
-					},
-				}
-			)
-		}
+		recoilUser.email && deleteAllMessagesByUserEmailDexie(recoilUser.email)
 	}
 
 	return (

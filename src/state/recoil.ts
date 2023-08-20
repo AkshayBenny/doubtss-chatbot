@@ -5,6 +5,14 @@ type Message = {
 	role: 'human' | 'bot'
 	content: string
 	id: number
+	createdAt?: string
+	userEmail?: string
+}
+
+type User = {
+	email: string
+	name: string
+	image: string
 }
 type ChatType = 'Summary' | 'Question'
 // Define the chat history type as an array of Message objects
@@ -16,9 +24,13 @@ export const chatHistory = atom<ChatHistory>({
 	default: [], // Default is an empty array
 })
 
-export const userData = atom({
+export const userData = atom<User>({
 	key: 'userData',
-	default: {},
+	default: {
+		name: '',
+		email: '',
+		image: '',
+	},
 })
 
 export const chatType = atom<ChatType>({
