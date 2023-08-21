@@ -1,21 +1,26 @@
 import { OpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
-import { StreamingTextResponse, LangChainStream } from 'ai'
-import clerk from '@clerk/clerk-sdk-node'
+import { LangChainStream } from 'ai'
 import { CallbackManager } from 'langchain/callbacks'
 import { PromptTemplate } from 'langchain/prompts'
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
-import { question_template_prompt } from '@/app/utils/prompts'
+import { summary_template_prompt } from '@/app/utils/prompts'
 
 export const runtime = 'edge'
 
-export async function POST(req: Request) {
-	try {
-		const { prompt, userId, userName } = await req.json()
+function countTokens(text: string) {
+	// Use a regular expression to match words and punctuation
+	const tokens = text.match(/\b\w+\b/g)
 
+	// If no tokens are found, return 0, otherwise return the count
+	return tokens ? tokens.length : 0
+}
+
+export async function POST(req: Request) {
+	const { prompt, userId, userName } = await req.json()
+	try {
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
 
@@ -33,8 +38,8 @@ export async function POST(req: Request) {
 			)
 		}
 
+		const name = req.headers.get('name')
 		if (!userName) {
-			console.log('user not authorized')
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
 				{
@@ -48,7 +53,7 @@ export async function POST(req: Request) {
 
 		let data
 		try {
-			data = question_template_prompt
+			data = summary_template_prompt
 		} catch (err) {
 			console.error('Error reading companion file:', err)
 			throw err
@@ -60,7 +65,7 @@ export async function POST(req: Request) {
 		const seedchat = seedsplit[0]
 
 		const companionKey = {
-			companionName: 'Doubtss.com',
+			companionName: name!,
 			modelName: 'chatgpt',
 			userId: userId,
 		}
@@ -81,11 +86,13 @@ export async function POST(req: Request) {
 			companionKey
 		)
 		let relevantHistory = ''
+		let pineconeSimilarDocs: any = []
 		// query Pinecone
 		try {
-			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
+			pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
 				recentChatHistory
 			)
+
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
@@ -98,8 +105,8 @@ export async function POST(req: Request) {
 		const { stream, handlers } = LangChainStream()
 
 		const model = new OpenAI({
-			temperature: 0.5,
 			streaming: true,
+			temperature: 0.7,
 			modelName: 'gpt-3.5-turbo-16k',
 			openAIApiKey: process.env.OPENAI_API_KEY,
 			callbackManager: CallbackManager.fromHandlers(handlers),
@@ -109,13 +116,11 @@ export async function POST(req: Request) {
 		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-		You are Doubtss.com and are currently talking to ${userName}.
-		You reply with sample UPSC prelims and mains questions that includes 3 prelims and 3 mains questions for every topic asked. ${replyWithTwilioLimit}
-		Below are relevant details about your past
-		${relevantHistory}
-		Below is a relevant conversation history
-		${recentChatHistory}
-        `)
+			You are ${name} and are currently talking to ${userName}.
+			${preamble}
+			
+            ${replyWithTwilioLimit}
+            Your previous conversation: "${prompt}" I did not find the your previous response satisfactory so regenerate it.`)
 
 		const chain = new LLMChain({
 			llm: model,
@@ -123,26 +128,17 @@ export async function POST(req: Request) {
 		})
 
 		let result
-		try {
-			result = await chain
-				.call({
-					recentChatHistory: recentChatHistory,
-				})
-				.catch((err) => {
-					console.error('Error calling chain:', err)
-					throw err
-				})
-		} catch (err) {
-			console.error('Error processing chain:', err)
-			throw err
-		}
 
-		const chatHistoryRecord = await memoryManager.writeToHistory(
-			result!.text + '\n',
-			companionKey
-		)
+		result = await chain
+			.call({ relevantHistory, recentChatHistory: recentChatHistory })
+			.catch((err) => {
+				console.error('Error calling chain:', err)
+				throw err
+			})
 
+		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
 		return NextResponse.json(result!.text)
+		// return new StreamingTextResponse(stream)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(
