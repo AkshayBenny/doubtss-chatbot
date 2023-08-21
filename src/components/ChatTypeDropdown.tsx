@@ -54,7 +54,7 @@ export default function ChatTypeDropDown({
 								className={`cursor-pointer absolute ${
 									continuation
 										? 'top-[-55px] rounded-t-[12px]'
-										: 'rounded-b-[12px]'
+										: 'top-[55px] rounded-b-[12px]'
 								} right-0 w-full origin-top-right  bg-custom-gray shadow-lg focus:outline-none px-[15px] py-[17px] text-custom-white text-sm font-medium border-[1.5px] border-custom-white border-opacity-[36%]`}>
 								<Menu.Item>
 									{({ active }) => (
