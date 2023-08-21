@@ -3,12 +3,17 @@
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { chatHistory, chatType, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import { useSession } from 'next-auth/react'
 import { addMessageDexie, getMessagesByUserEmailDexie } from '@/app/dexie/crud'
+import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
+import ThumbUpLineIcon from 'remixicon-react/ThumbUpLineIcon'
+import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
+import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
+import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -16,10 +21,10 @@ const questions = [
 ]
 
 export default function Chat({ userSessionData }: any) {
-	console.log('userSessionData', userSessionData)
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
+	const [isCopied, setIsCopied] = useState(false)
 
 	let {
 		completion,
@@ -58,6 +63,12 @@ export default function Chat({ userSessionData }: any) {
 		handleAISubmit(e)
 		addMessage({ role: 'human', content: input, id: Date.now() })
 		setInput('')
+	}
+
+	const handleCopyClick = (text: string) => {
+		navigator.clipboard.writeText(text).then(() => {
+			setIsCopied(true)
+		})
 	}
 
 	useEffect(() => {
@@ -186,13 +197,48 @@ export default function Chat({ userSessionData }: any) {
 											/>
 										)}
 
-										<p
-											className={`leading-normal !whitespace-pre-wrap ${
-												!isBot && 'pt-[4px]'
-											}`}
-											style={{ whiteSpace: 'pre-line' }}>
-											{chat.content}
-										</p>
+										<div className='flex flex-col items-start justify-start'>
+											<p
+												className={`leading-normal !whitespace-pre-wrap ${
+													!isBot && 'pt-[4px]'
+												}`}
+												style={{
+													whiteSpace: 'pre-line',
+												}}>
+												{chat.content}
+											</p>
+											{isBot && (
+												<div className='pt-[20px] flex gap-[8px]'>
+													<div
+														onClick={() =>
+															handleCopyClick(
+																chat.content
+															)
+														}
+														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+														<FileCopyLineIcon className='h-[16px] w-[16px] text-custom-white' />
+													</div>
+													<div className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+														<ThumbUpLineIcon className='h-[16px] w-[16px] text-custom-white' />
+													</div>
+													<div className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
+													</div>
+													<div className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+														<RefreshLineIcon className='h-[16px] w-[16px] text-custom-white group-hover:animate-spin' />
+														<p className='font-medium text-xs'>
+															Regenerate
+														</p>
+													</div>
+													<div className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+														<SpeedMiniLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<p className='font-medium text-xs'>
+															Continue Generating
+														</p>
+													</div>
+												</div>
+											)}
+										</div>
 									</div>
 								</div>
 							)

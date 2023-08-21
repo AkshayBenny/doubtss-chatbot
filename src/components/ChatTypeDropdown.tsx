@@ -36,12 +36,12 @@ export default function ChatTypeDropDown({
 						</Menu.Button>
 						<Transition
 							as={Fragment}
-							enter='transition ease-out duration-100'
-							enterFrom='transform opacity-0 '
-							enterTo='transform opacity-100 scale-100'
+							enter='transition ease-out duration-50'
+							enterFrom='transform  h-0'
+							enterTo='transform  h-full '
 							leave='transition ease-in duration-75'
-							leaveFrom='transform opacity-100 scale-100'
-							leaveTo='transform opacity-0 scale-95'>
+							leaveFrom='transform'
+							leaveTo='transform  '>
 							<Menu.Items
 								onClick={() =>
 									setRecoilChatType(
