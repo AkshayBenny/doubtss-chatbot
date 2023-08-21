@@ -6,9 +6,9 @@ import Image from 'next/image'
 export default async function AuthPage({ type }: { type: string }) {
 	const providers = [
 		{
-			id: 'github',
+			id: 'google',
 			img: '/google-logo.svg',
-			name: 'Github',
+			name: 'Google',
 		},
 		{
 			id: 'github',

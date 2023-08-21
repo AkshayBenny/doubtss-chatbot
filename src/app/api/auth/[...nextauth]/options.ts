@@ -1,6 +1,6 @@
 import type { NextAuthOptions } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
-import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 
 export const options: NextAuthOptions = {
 	providers: [
@@ -8,6 +8,11 @@ export const options: NextAuthOptions = {
 			id: 'github',
 			clientId: process.env.NEXT_PUBLIC_GITHUB_ID as string,
 			clientSecret: process.env.NEXT_PUBLIC_GITHUB_SECRET as string,
+		}),
+		GoogleProvider({
+			id: 'google',
+			clientId: process.env.NEXT_PUBLIC_GOOGLE_ID as string,
+			clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET as string,
 		}),
 		// CredentialsProvider({
 		// 	id: 'credentials',
@@ -43,6 +48,5 @@ export const options: NextAuthOptions = {
 	],
 	pages: {
 		signIn: '/signin',
-		
 	},
 }
