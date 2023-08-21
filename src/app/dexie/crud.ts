@@ -49,6 +49,23 @@ export const updateMessageDexie = async (
 	await db.messages.update(id, updatedMessage)
 }
 
+export const appendToMessageDexie = async (
+	id: number,
+	contentToAppend: string
+) => {
+	// Get the message by ID
+	const message = await db.messages.get(id)
+
+	// If the message is found, append the content and update the message
+	if (message) {
+		message.content += contentToAppend // Appending the content
+		await db.messages.update(id, { content: message.content })
+	} else {
+		console.error(`Message with ID ${id} not found.`)
+		throw new Error(`Message with ID ${id} not found.`)
+	}
+}
+
 export const deleteMessageByIdDexie = async (id: number) => {
 	await db.messages.delete(id)
 }

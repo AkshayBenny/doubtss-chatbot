@@ -5,8 +5,7 @@ import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
 import Loader from './Loader'
 import { useRecoilState } from 'recoil'
 import { chatType } from '@/state/recoil'
-
-// import ChatTypeDropDown from './ChatTypeDropdown'
+import ChatTypeDropDown from './ChatTypeDropdown'
 
 export default function Chatbox({
 	handleSubmit,
@@ -14,6 +13,7 @@ export default function Chatbox({
 	setInput,
 	isLoading,
 	completion,
+	continuation,
 }: any) {
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	return (
@@ -22,20 +22,7 @@ export default function Chatbox({
 			<form
 				onSubmit={handleSubmit}
 				className='flex items-center justify-center gap-3 w-full max-w-[770px] '>
-				<select
-					onChange={(e) => {
-						e.target.value === 'Summary'
-							? setRecoilChatType('Summary')
-							: setRecoilChatType('Question')
-					}}
-					name='type'
-					id=''
-					className='px-[15px] py-[17px] text-custom-green text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full min-w-[116px]'>
-					<option value='Summary'>Summary</option>
-					<option value='Question'>Question</option>
-				</select>
-
-				{/* <ChatTypeDropDown /> */}
+				<ChatTypeDropDown continuation={continuation} />
 				<div className='rounded-xl border border-white border-opacity-[12%] flex items-center justify-start gap-3 bg-custom-gray px-[15px] w-full focus-within:border-[1.5px] focus-within:border-custom-white focus-within:border-opacity-[36%] transition'>
 					<SearchLineIcon className='w-[18px] h-[18px]' />
 					<input
@@ -60,7 +47,9 @@ export default function Chatbox({
 						(isLoading && !completion) || input === ''
 							? 'cursor-not-allowed text-custom-white'
 							: 'text-custom-green'
-					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full aspect-square flex items-center justify-center`}>
+					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full  aspect-square flex items-center justify-center ${
+						continuation ? 'scale-[117%]' : 'scale-100'
+					}`}>
 					<SendPlane2FillIcon className='w-[18px] h-[18px]' />
 				</button>
 			</form>
