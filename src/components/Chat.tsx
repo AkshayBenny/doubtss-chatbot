@@ -205,6 +205,7 @@ export default function Chat({ userSessionData }: any) {
 
 					<div className='w-full flex items-center justify-center pt-7 pb-6 '>
 						<Chatbox
+							continuation={chats?.length > 0 ? true : false}
 							handleSubmit={handleSubmit}
 							input={input}
 							setInput={setInput}
