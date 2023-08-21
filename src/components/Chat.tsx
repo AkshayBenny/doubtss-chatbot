@@ -71,6 +71,11 @@ export default function Chat({ userSessionData }: any) {
 		})
 	}
 
+	const handleContinueGenerating = () => {
+		setInput('Continue')
+		
+	}
+
 	useEffect(() => {
 		if (userSessionData) {
 			setRecoilUserState(userSessionData.user)
@@ -209,7 +214,7 @@ export default function Chat({ userSessionData }: any) {
 											</p>
 											{isBot && (
 												<div className='pt-[20px] flex gap-[8px]'>
-													<div
+													<button
 														onClick={() =>
 															handleCopyClick(
 																chat.content
@@ -217,25 +222,25 @@ export default function Chat({ userSessionData }: any) {
 														}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<FileCopyLineIcon className='h-[16px] w-[16px] text-custom-white' />
-													</div>
-													<div className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+													</button>
+													<button className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ThumbUpLineIcon className='h-[16px] w-[16px] text-custom-white' />
-													</div>
-													<div className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+													</button>
+													<button className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
-													</div>
-													<div className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+													</button>
+													<button className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 														<RefreshLineIcon className='h-[16px] w-[16px] text-custom-white group-hover:animate-spin' />
 														<p className='font-medium text-xs'>
 															Regenerate
 														</p>
-													</div>
-													<div className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+													</button>
+													<button onClick={handleContinueGenerating} className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 														<SpeedMiniLineIcon className='h-[16px] w-[16px] text-custom-white' />
 														<p className='font-medium text-xs'>
 															Continue Generating
 														</p>
-													</div>
+													</button>
 												</div>
 											)}
 										</div>
