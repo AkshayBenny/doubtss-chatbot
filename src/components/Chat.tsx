@@ -135,24 +135,20 @@ export default function Chat({ userSessionData }: any) {
 							<p>Try an example</p>
 							<ArrowRightLineIcon className='w-[18px] h-[18px]' />
 						</div>
-						<form onSubmit={handleSubmit}>
-							<button
-								onClick={() => {
-									setInput(questions[0])
-								}}
-								className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
-								{questions[0]}
-							</button>
-						</form>
-						<form onSubmit={handleSubmit}>
-							<button
-								onClick={() => {
-									setInput(questions[1])
-								}}
-								className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
-								{questions[1]}
-							</button>
-						</form>
+						<button
+							onClick={() => {
+								setInput(questions[0])
+							}}
+							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
+							{questions[0]}
+						</button>
+						<button
+							onClick={() => {
+								setInput(questions[1])
+							}}
+							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
+							{questions[1]}
+						</button>
 					</div>
 				</>
 			) : (
