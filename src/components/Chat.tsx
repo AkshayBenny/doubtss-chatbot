@@ -324,6 +324,28 @@ export default function Chat({ userSessionData }: any) {
 															Continue Generating
 														</p>
 													</button>
+													{/* <button
+														onClick={() =>
+															generateQuestion(
+																chat.id,
+																chat.content
+															)
+														}
+														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+														<Image
+															src='/gen-ques.svg'
+															height={16}
+															width={16}
+															alt='Decoration icon'
+															className={`text-custom-white ${
+																continueLoading &&
+																'animate-pulse'
+															}`}
+														/>
+														<p className='font-medium text-xs text-custom-green'>
+															Generate Questions
+														</p>
+													</button> */}
 												</div>
 											)}
 										</div>
