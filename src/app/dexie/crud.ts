@@ -27,7 +27,6 @@ export const deleteUserByEmailDexie = async (email: string) => {
 	await db.users.delete(email)
 }
 
-// Message crud
 export const addMessageDexie = async (message: Message) => {
 	await db.messages.add(message)
 }

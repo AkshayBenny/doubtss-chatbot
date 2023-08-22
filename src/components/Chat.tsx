@@ -25,6 +25,15 @@ const questions = [
 	'What are the main factors that led to the decline of the Indus Valley Civilisation?',
 ]
 
+function formatContent(content: string) {
+	return content
+		.replace(/\\n/g, '\n\n')
+		.replace(/\\"/g, '"')
+		.replace(/\\'/g, "'")
+		.replace(/^"/, '')
+		.replace(/"$/, '')
+}
+
 export default function Chat({ userSessionData }: any) {
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
@@ -187,7 +196,7 @@ export default function Chat({ userSessionData }: any) {
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
 			{chats.length === 0 ? (
-				<>
+				<div>
 					{/* FIRST CHAT */}
 					<div className='relative w-fit mb-10'>
 						<p className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-opacity-80'>
@@ -225,7 +234,7 @@ export default function Chat({ userSessionData }: any) {
 							{questions[1]}
 						</button>
 					</div>
-				</>
+				</div>
 			) : (
 				<>
 					{/* CHAT CONTINUATION */}
@@ -262,15 +271,15 @@ export default function Chat({ userSessionData }: any) {
 										)}
 
 										<div className='flex flex-col items-start justify-start'>
-											<p
-												className={`leading-normal !whitespace-pre-wrap ${
+											<div
+												className={`whitespace-pre-line leading-normal  ${
 													!isBot && 'pt-[4px]'
 												}`}
 												style={{
 													whiteSpace: 'pre-line',
 												}}>
-												{chat.content}
-											</p>
+												{formatContent(chat.content)}
+											</div>
 											{isBot && (
 												<div className='pt-[20px] flex gap-[8px]'>
 													<button
