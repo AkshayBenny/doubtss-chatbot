@@ -8,3 +8,8 @@ export default async function MainChatPage() {
 	const session = await getServerSession(options)
 	return <ChatPage session={session} />
 }
+
+// \n
+// generate question
+// signin
+// regenerate and continue generate loading bug
