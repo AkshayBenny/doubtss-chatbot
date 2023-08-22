@@ -27,7 +27,7 @@ const questions = [
 
 function formatContent(content: string) {
 	return content
-		.replace(/\\n/g, '\n\n')
+		.replace(/\\n/g, '\n')
 		.replace(/\\"/g, '"')
 		.replace(/\\'/g, "'")
 		.replace(/^"/, '')
@@ -40,8 +40,8 @@ export default function Chat({ userSessionData }: any) {
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [isCopied, setIsCopied] = useState(false)
 	const [text, setText] = useState('')
-	const [continueLoading, setContinueLoading] = useState(false)
-	const [regenLoading, setRegenLoading] = useState(false)
+	const [continueLoading, setContinueLoading] = useState({})
+	const [regenLoading, setRegenLoading] = useState({})
 	let {
 		completion,
 		input,
@@ -91,7 +91,11 @@ export default function Chat({ userSessionData }: any) {
 		messageId: number,
 		text: string
 	) => {
-		setContinueLoading(true)
+		setContinueLoading({
+			...continueLoading,
+			[messageId]: true,
+		})
+
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-continue', {
 			prompt: text,
@@ -114,11 +118,17 @@ export default function Chat({ userSessionData }: any) {
 				return chat
 			})
 		})
-		setContinueLoading(false)
+		setContinueLoading({
+			...continueLoading,
+			[messageId]: false,
+		})
 	}
 
 	const handleRegenerate = async (messageId: number, text: string) => {
-		setRegenLoading(true)
+		setRegenLoading({
+			...regenLoading,
+			[messageId]: true,
+		})
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-regenerate', {
 			prompt: text,
@@ -141,7 +151,10 @@ export default function Chat({ userSessionData }: any) {
 				return chat
 			})
 		})
-		setRegenLoading(false)
+		setRegenLoading({
+			...regenLoading,
+			[messageId]: false,
+		})
 	}
 
 	useEffect(() => {
@@ -281,7 +294,9 @@ export default function Chat({ userSessionData }: any) {
 												{formatContent(chat.content)}
 											</div>
 											{isBot && (
-												<div className='pt-[20px] flex gap-[8px]'>
+												<div
+													key={index}
+													className='pt-[20px] flex gap-[8px]'>
 													<button
 														onClick={() =>
 															handleCopyClick(
@@ -307,7 +322,9 @@ export default function Chat({ userSessionData }: any) {
 														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 														<RefreshLineIcon
 															className={`h-[16px] w-[16px] text-custom-white ${
-																regenLoading &&
+																regenLoading[
+																	chat.id
+																] &&
 																'animate-spin'
 															}`}
 														/>
@@ -325,7 +342,9 @@ export default function Chat({ userSessionData }: any) {
 														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 														<SpeedMiniLineIcon
 															className={`h-[16px] w-[16px] text-custom-white ${
-																continueLoading &&
+																continueLoading[
+																	chat.id
+																] &&
 																'animate-pulse'
 															}`}
 														/>
