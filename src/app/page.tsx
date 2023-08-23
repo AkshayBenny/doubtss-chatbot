@@ -9,7 +9,5 @@ export default async function MainChatPage() {
 	return <ChatPage session={session} />
 }
 
-// \n
 // generate question
 // signin
-// regenerate and continue generate loading bug

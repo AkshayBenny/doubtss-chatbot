@@ -10,6 +10,7 @@ interface Message {
 	role: string
 	userEmail: string
 	content: string
+	type: 'question' | 'summary' | 'genq'
 	createdAt: string
 }
 
