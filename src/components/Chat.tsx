@@ -251,7 +251,7 @@ export default function Chat({ userSessionData }: any) {
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}
-					<div className='relative w-fit mb-10'>
+					<div className='relative w-fit mb-10 mx-auto'>
 						<p className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-opacity-80'>
 							Experimental
 						</p>
