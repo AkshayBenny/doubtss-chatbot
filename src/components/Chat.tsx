@@ -11,7 +11,6 @@ import {
 	addMessageDexie,
 	appendToMessageDexie,
 	getMessagesByUserEmailDexie,
-	updateMessageDexie,
 } from '@/app/dexie/crud'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
 import ThumbUpLineIcon from 'remixicon-react/ThumbUpLineIcon'
@@ -40,8 +39,10 @@ export default function Chat({ userSessionData }: any) {
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [isCopied, setIsCopied] = useState(false)
 	const [text, setText] = useState('')
-	const [continueLoading, setContinueLoading] = useState({})
-	const [regenLoading, setRegenLoading] = useState({})
+	const [continueLoading, setContinueLoading] = useState<any>({})
+	const [regenLoading, setRegenLoading] = useState<any>({})
+	const [generateQuestionLoading, setGenerateQuestionLoading] =
+		useState(false)
 	let {
 		completion,
 		input,
@@ -65,10 +66,17 @@ export default function Chat({ userSessionData }: any) {
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
 
 	const addMessage = async (message: any) => {
-		setChats((oldChats) => [...oldChats, message])
+		setChats((oldChats) => [
+			...oldChats,
+			{
+				...message,
+				type: recoilChatType,
+			},
+		])
 		const dixieMessage = {
 			...message,
 			userEmail: userSessionData.user.email,
+			type: recoilChatType,
 			createdAt: new Date(),
 		}
 		addMessageDexie(dixieMessage)
@@ -157,6 +165,38 @@ export default function Chat({ userSessionData }: any) {
 		})
 	}
 
+	const generateQuestion = async (messageId: number, text: string) => {
+		setGenerateQuestionLoading(true)
+		setText(text)
+		const { data } = await axios.post('/api/chatgpt-genq', {
+			prompt: text,
+			userId: userSessionData?.user.email || '',
+			userName: userSessionData?.user.name || '',
+		})
+
+		// Update the message in the Dexie DB
+		addMessage({
+			role: 'bot',
+			content: completion,
+			type: 'genq',
+			id: Date.now(),
+		})
+
+		// Find the message in the chats array and update it
+		setChats((prevChats) => {
+			return prevChats.map((chat) => {
+				if (chat.id === messageId) {
+					return {
+						...chat,
+						content: data, // Assuming the response data is the updated content
+					}
+				}
+				return chat
+			})
+		})
+		setGenerateQuestionLoading(true)
+	}
+
 	useEffect(() => {
 		if (userSessionData) {
 			setRecoilUserState(userSessionData.user)
@@ -211,7 +251,7 @@ export default function Chat({ userSessionData }: any) {
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}
-					<div className='relative w-fit mb-10'>
+					<div className='relative w-fit mb-10 mx-auto'>
 						<p className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-opacity-80'>
 							Experimental
 						</p>
@@ -352,28 +392,34 @@ export default function Chat({ userSessionData }: any) {
 															Continue Generating
 														</p>
 													</button>
-													{/* <button
-														onClick={() =>
-															generateQuestion(
-																chat.id,
-																chat.content
-															)
-														}
-														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
-														<Image
-															src='/gen-ques.svg'
-															height={16}
-															width={16}
-															alt='Decoration icon'
-															className={`text-custom-white ${
-																continueLoading &&
-																'animate-pulse'
-															}`}
-														/>
-														<p className='font-medium text-xs text-custom-green'>
-															Generate Questions
-														</p>
-													</button> */}
+													{chats.length - 1 ===
+														index &&
+														chat.type ===
+															'summary' && (
+															<button
+																onClick={() =>
+																	generateQuestion(
+																		chat.id,
+																		chat.content
+																	)
+																}
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																<Image
+																	src='/gen-ques.svg'
+																	height={16}
+																	width={16}
+																	alt='Decoration icon'
+																	className={`text-custom-white ${
+																		generateQuestionLoading &&
+																		'animate-pulse'
+																	}`}
+																/>
+																<p className='font-medium text-xs text-custom-green'>
+																	Generate
+																	Questions
+																</p>
+															</button>
+														)}
 												</div>
 											)}
 										</div>

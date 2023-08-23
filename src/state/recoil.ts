@@ -5,6 +5,7 @@ type Message = {
 	role: 'human' | 'bot'
 	content: string
 	id: number
+	type: 'question' | 'summary' | 'genq'
 	createdAt?: string
 	userEmail?: string
 }
@@ -14,7 +15,7 @@ type User = {
 	name: string
 	image: string
 }
-type ChatType = 'Summary' | 'Question'
+type ChatType = 'summary' | 'question'
 // Define the chat history type as an array of Message objects
 type ChatHistory = Message[]
 
@@ -35,5 +36,5 @@ export const userData = atom<User>({
 
 export const chatType = atom<ChatType>({
 	key: 'chatType',
-	default: 'Summary',
+	default: 'summary',
 })

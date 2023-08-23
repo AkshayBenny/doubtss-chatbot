@@ -2,7 +2,7 @@
 
 import { chatType } from '@/state/recoil'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import ArrowDownSFillIcon from 'remixicon-react/ArrowDownSFillIcon'
 
@@ -13,7 +13,6 @@ export default function ChatTypeDropDown({
 }) {
 	const [isOpen, setIsOpen] = useState(false)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
-	console.log(continuation)
 	return (
 		<div className='text-right text-sm text-custom-white'>
 			<Menu
@@ -31,7 +30,9 @@ export default function ChatTypeDropDown({
 									  } border-[1.5px] border-white border-opacity-[36%]`
 									: 'rounded-xl border border-white border-opacity-[12%]'
 							} px-[15px] py-[17px] text-custom-green text-sm font-medium  bg-custom-gray  h-full min-w-[116px] flex items-center justify-between gap-1`}>
-							{recoilChatType}
+							{recoilChatType === 'question'
+								? 'Question'
+								: 'Summary'}
 							<ArrowDownSFillIcon className='text-custom-white w-[18px] h-[18px]' />
 						</Menu.Button>
 						<Transition
@@ -45,9 +46,9 @@ export default function ChatTypeDropDown({
 							<Menu.Items
 								onClick={() =>
 									setRecoilChatType(
-										recoilChatType === 'Question'
-											? 'Summary'
-											: 'Question'
+										recoilChatType === 'question'
+											? 'summary'
+											: 'question'
 									)
 								}
 								as='div'
@@ -59,7 +60,7 @@ export default function ChatTypeDropDown({
 								<Menu.Item>
 									{({ active }) => (
 										<p>
-											{recoilChatType === 'Question'
+											{recoilChatType === 'question'
 												? 'Summary'
 												: 'Question'}
 										</p>
