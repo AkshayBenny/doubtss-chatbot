@@ -13,10 +13,10 @@ export default function Navbar() {
 				<Options />
 				{chats.length > 0 && (
 					<div className='flex flex-col justify-center items-end w-fit'>
-						<div className='font-normal text-[11px] w-fit p-[5px] rounded-[4px] bg-custom-light-gray  text-white text-opacity-80 scale-[90%] -mb-1'>
+						<div className='font-normal text-[11px] w-fit p-[5px] rounded-[4px] bg-custom-light-gray  text-white text-opacity-80 scale-[90%] -mb-[3px]'>
 							Exp.
 						</div>
-						<h3 className='text-custom-green font-bold text-[20px]'>
+						<h3 className='text-custom-green font-bold text-[16px]'>
 							Doubtss
 						</h3>
 					</div>
