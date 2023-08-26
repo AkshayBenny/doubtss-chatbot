@@ -18,6 +18,7 @@ import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 import axios from 'axios'
+import Identicon from 'react-identicons'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -310,19 +311,24 @@ export default function Chat({ userSessionData }: any) {
 												? 'pt-[40px] px-7 pb-7'
 												: 'p-7'
 										}`}>
-										{recoilUserState && (
-											<Image
-												height={32}
-												width={32}
-												src={
-													isBot
-														? '/doubtss-pfp.svg'
-														: recoilUserState?.image
-												}
-												alt='Avatar'
-												className='rounded-full'
-											/>
-										)}
+										{recoilUserState &&
+											(isBot ? (
+												<Image
+													height={32}
+													width={32}
+													src='/doubtss-pfp.svg'
+													alt='Avatar'
+													className='rounded-full'
+												/>
+											) : (
+												<Identicon
+													string={
+														recoilUserState.name
+													}
+													size={32}
+													className='rounded-full'
+												/>
+											))}
 
 										<div className='flex flex-col items-start justify-start'>
 											<div

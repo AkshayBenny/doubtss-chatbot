@@ -2,12 +2,12 @@
 
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
-import { useEffect, useState } from 'react'
-import { RecoilRoot, useRecoilState } from 'recoil'
+import { useEffect } from 'react'
+import { RecoilRoot } from 'recoil'
 import Logo from './Logo'
 import { addUserDexie } from '@/app/dexie/crud'
 
-export default async function ChatPage({ session }: any) {
+export default function ChatPage({ session }: any) {
 	useEffect(() => {
 		const addNewUserDexie = async () => {
 			if (session) {
@@ -30,17 +30,22 @@ export default async function ChatPage({ session }: any) {
 
 	return (
 		<RecoilRoot>
-			<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
-				<Navbar />
-				<Chat userSessionData={session} />
-			</div>
-			<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
-				<Logo />
-				<p className='text-[16px] text-white text-center pt-[20px]'>
-					Under construction! Sorry for the inconvenience. We do not
-					support mobile devices at the moment. Stay tuned.
-				</p>
-			</div>
+			{session && (
+				<>
+					<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
+						<Navbar />
+						<Chat userSessionData={session} />
+					</div>
+					<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
+						<Logo />
+						<p className='text-[16px] text-white text-center pt-[20px]'>
+							Under construction! Sorry for the inconvenience. We
+							do not support mobile devices at the moment. Stay
+							tuned.
+						</p>
+					</div>
+				</>
+			)}
 		</RecoilRoot>
 	)
 }
