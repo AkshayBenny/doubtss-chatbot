@@ -38,3 +38,8 @@ export const chatType = atom<ChatType>({
 	key: 'chatType',
 	default: 'summary',
 })
+
+export const showClearChatModal = atom({
+	key: 'showClearChatModal',
+	default: false,
+})

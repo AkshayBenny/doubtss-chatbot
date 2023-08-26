@@ -24,7 +24,7 @@ class ChatDatabase extends Dexie {
 		// Define tables and indexes
 		this.version(1).stores({
 			users: 'email, name', // Set email as the primary key
-			messages: '++id, userEmail, role, content, createdAt',
+			messages: '++id, *userEmail, role, content, createdAt',
 		})
 
 		// Define tables

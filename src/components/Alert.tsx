@@ -1,31 +1,21 @@
 'use client'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { Bars3Icon } from '@heroicons/react/20/solid'
-import Image from 'next/image'
+import { Fragment } from 'react'
 import Notification3LineIcon from 'remixicon-react/Notification3LineIcon'
 import DeleteBinLineIcon from 'remixicon-react/DeleteBinLineIcon'
-import { chatHistory, userData } from '@/state/recoil'
+import { chatHistory, showClearChatModal, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
-import axios from 'axios'
-import { useUser } from '@clerk/nextjs'
-import { useSession } from 'next-auth/react'
-import { deleteAllMessagesByUserEmailDexie } from '@/app/dexie/crud'
 
 export default function Alert() {
-	const { data: session, status } = useSession()
 	const [chats, setChats] = useRecoilState(chatHistory)
-	const [recoilUser, setRecoilUser] = useRecoilState(userData)
-	const clearChatHandler = async () => {
-		setChats([])
-		recoilUser.email && deleteAllMessagesByUserEmailDexie(recoilUser.email)
-	}
+	const [clearChatModal, setClearChatModal] =
+		useRecoilState(showClearChatModal)
 
 	return (
 		<div className='text-right text-sm text-custom-white flex items-center justify-end gap-2'>
 			{chats.length > 0 && (
 				<button
-					onClick={clearChatHandler}
+					onClick={() => setClearChatModal(true)}
 					className='p-3 border border-custom-gray rounded-xl flex items-center justify-center group gap-1 transition-all duration-200 ease-in-out'>
 					<DeleteBinLineIcon
 						className='h-[18px] w-[18px] text-custom-red'
