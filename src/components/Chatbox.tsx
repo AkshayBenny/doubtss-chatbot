@@ -3,8 +3,6 @@
 import SearchLineIcon from 'remixicon-react/SearchLineIcon'
 import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
 import Loader from './Loader'
-import { useRecoilState } from 'recoil'
-import { chatType } from '@/state/recoil'
 import ChatTypeDropDown from './ChatTypeDropdown'
 
 export default function Chatbox({
@@ -15,7 +13,6 @@ export default function Chatbox({
 	completion,
 	continuation,
 }: any) {
-	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	return (
 		<div className='w-full flex flex-col items-center justify-center mx-auto gap-3 '>
 			{isLoading && !completion && <Loader />}
@@ -47,8 +44,8 @@ export default function Chatbox({
 						(isLoading && !completion) || input === ''
 							? 'cursor-not-allowed text-custom-white'
 							: 'text-custom-green'
-					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full  aspect-square flex items-center justify-center ${
-						continuation ? 'scale-[117%]' : 'scale-100'
+					} p-[15px]  text-sm font-medium rounded-xl bg-custom-gray border border-white border-opacity-[12%] h-full  aspect-square flex items-center justify-center  ${
+						continuation ? 'scale-[117%]' : 'scale-[115%]'
 					}`}>
 					<SendPlane2FillIcon className='w-[18px] h-[18px]' />
 				</button>
