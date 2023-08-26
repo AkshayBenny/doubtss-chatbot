@@ -37,8 +37,8 @@ export default function ChatPage({ session }: any) {
 		<RecoilRoot>
 			{session && (
 				<>
-					{showModal && <Modal closeModal={closeModal} />}
 					<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
+						{showModal && <Modal closeModal={closeModal} />}
 						<Navbar />
 						<Chat userSessionData={session} />
 					</div>
