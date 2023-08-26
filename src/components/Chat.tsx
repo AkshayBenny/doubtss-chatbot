@@ -18,6 +18,8 @@ import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 import axios from 'axios'
+
+// @ts-ignore
 import Identicon from 'react-identicons'
 
 const questions = [
