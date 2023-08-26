@@ -91,7 +91,7 @@ export default function AuthLoginForm() {
 					value={formValues.email}
 					onChange={handleChange}
 					placeholder='Email Address'
-					className='appearance-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full'
+					className='appearance-none ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full'
 				/>
 				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
 					<input
@@ -101,7 +101,7 @@ export default function AuthLoginForm() {
 						name='password'
 						value={formValues.password}
 						onChange={handleChange}
-						className='appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
+						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
 					/>
 					<div
 						onClick={() => setShowPassword(!showPassword)}
