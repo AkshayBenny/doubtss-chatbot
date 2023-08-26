@@ -2,7 +2,8 @@ import 'server-only'
 
 import Logo from './Logo'
 import Image from 'next/image'
-import AuthForm from './AuthForm'
+import AuthLoginForm from './AuthLoginForm'
+import AuthRegisterForm from './AuthRegisterForm'
 
 export default async function AuthPage({ type }: { type: string }) {
 	return (
@@ -41,7 +42,11 @@ export default async function AuthPage({ type }: { type: string }) {
 					<p className='text-center leading-[18px] pt-2 text-sm'>
 						Let&apos;s get started by filling up.
 					</p>
-					<AuthForm type={type} />
+					{type === 'login' ? (
+						<AuthLoginForm />
+					) : (
+						<AuthRegisterForm />
+					)}
 				</div>
 				<div className='opacity-60 flex items-center justify-center gap-6 text-[14px]'>
 					<h4>Terms of Service</h4>

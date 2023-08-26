@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
@@ -30,40 +30,37 @@ import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 // 	},
 // ]
 
-export default function AuthForm({ type }: { type: string }) {
-	const router = useRouter()
+export default function AuthRegisterForm() {
 	const [showPassword, setShowPassword] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [formValues, setFormValues] = useState({
+		name: '',
 		email: '',
 		password: '',
 	})
 	const [error, setError] = useState('')
 
-	const searchParams = useSearchParams()
-	const callbackUrl = searchParams.get('callbackUrl') || '/profile'
-
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		try {
-			setLoading(true)
-			setFormValues({ email: '', password: '' })
+		setLoading(true)
+		setFormValues({ name: '', email: '', password: '' })
 
-			const res = await signIn('credentials', {
-				redirect: false,
-				email: formValues.email,
-				password: formValues.password,
-				callbackUrl,
+		try {
+			const res = await fetch('/api/register', {
+				method: 'POST',
+				body: JSON.stringify(formValues),
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			})
 
 			setLoading(false)
-
-			console.log(res)
-			if (!res?.error) {
-				router.push(callbackUrl)
-			} else {
-				setError('invalid email or password')
+			if (!res.ok) {
+				setError((await res.json()).message)
+				return
 			}
+
+			signIn(undefined, { callbackUrl: '/' })
 		} catch (error: any) {
 			setLoading(false)
 			setError(error)
@@ -104,8 +101,7 @@ export default function AuthForm({ type }: { type: string }) {
 						onChange={handleChange}
 						className='border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
 					/>
-					<button
-						type='submit'
+					<div
 						onClick={() => setShowPassword(!showPassword)}
 						className='hover:cursor-pointer'>
 						{showPassword ? (
@@ -113,28 +109,11 @@ export default function AuthForm({ type }: { type: string }) {
 						) : (
 							<EyeLineIcon className='h-[18px] w-[18px] text-custom-white' />
 						)}
-					</button>
+					</div>
 				</div>
-				{type === 'login' && (
-					<p className='text-sm text-center'>
-						Forgot password?{' '}
-						<span className='text-custom-green font-medium '>
-							Reset now
-						</span>
-					</p>
-				)}
-				{/* {providers.map((provider, index) => {
-                    return (
-								<AuthButton
-									key={index}
-									img={provider.img}
-									name={provider.name}
-									id={provider.id}
-                                    />
-                                    )
-                                })} */}
 			</div>
 			<button
+				type='submit'
 				disabled={loading}
 				className={`${
 					loading && 'cursor-wait'
@@ -142,13 +121,9 @@ export default function AuthForm({ type }: { type: string }) {
 				{loading ? 'Loading' : 'Continue'}
 			</button>
 			<button className='text-sm text-center pt-6'>
-				{type === 'login'
-					? 'Dont have an account?'
-					: 'Already have an account?'}{' '}
+				Already have an account?
 				<span className='text-custom-green font-medium'>
-					<Link href={type === 'login' ? '/signup' : '/signin'}>
-						{type === 'login' ? 'Sign up' : 'Log in'}
-					</Link>
+					<Link href='/signin'> Log in</Link>
 				</span>
 			</button>
 		</form>
