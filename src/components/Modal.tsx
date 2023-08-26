@@ -6,10 +6,10 @@ export default function Modal({ closeModal }: { closeModal: () => void }) {
 	const subjects = [
 		'Economics',
 		'Geography',
+		'Polity',
 		'History',
 		'Indian Society',
 		'Physics',
-		'Politics',
 		'Science',
 	]
 	return (
@@ -36,8 +36,8 @@ export default function Modal({ closeModal }: { closeModal: () => void }) {
 							displayed or seem inconsistent.
 						</li>
 						<li>
-							If you experience issues, click
-							&quot;Regenerate&quot; to refresh.
+							If you experience any issues, try refreshing the
+							page.
 						</li>
 						<li>
 							We value your feedback; please share suggestions or
@@ -55,8 +55,8 @@ export default function Modal({ closeModal }: { closeModal: () => void }) {
 					</h4>
 					<ul className='list-disc list-inside text-sm font-normal leading-[18px] pt-[18px] px-8 border-t border-custom-white border-opacity-[12%]'>
 						<li>
-							At the moment doubtss.com can provides answers and
-							insights on the following UPSCE subjects:
+							At the moment doubtss.com can provide answers and
+							insights on the following UPSCE CSE subjects:
 						</li>
 						<div className='flex flex-wrap gap-1 mt-[6px] mb-3 px-3'>
 							{subjects.map((sub, index) => (
