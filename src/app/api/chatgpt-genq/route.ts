@@ -6,7 +6,7 @@ import { PromptTemplate } from 'langchain/prompts'
 import { NextResponse } from 'next/server'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
-import { summary_template_prompt } from '@/app/utils/prompts'
+import { generate_question_template } from '@/app/utils/prompts'
 
 export const runtime = 'edge'
 
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
 		let data
 		try {
-			data = summary_template_prompt
+			data = generate_question_template
 		} catch (err) {
 			console.error('Error reading companion file:', err)
 			throw err
