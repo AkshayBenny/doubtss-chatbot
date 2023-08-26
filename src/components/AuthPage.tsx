@@ -1,35 +1,10 @@
-import Link from 'next/link'
-import AuthButton from './AuthButton'
 import Logo from './Logo'
 import Image from 'next/image'
+import AuthForm from './AuthForm'
 
 export default async function AuthPage({ type }: { type: string }) {
-	const providers = [
-		{
-			id: 'google',
-			img: '/google-logo.svg',
-			name: 'Google',
-		},
-		{
-			id: 'github',
-			img: '/microsoft-logo.svg',
-			name: 'Microsoft',
-		},
-		{
-			id: 'github',
-			img: '/facebook-logo.svg',
-			name: 'Facebook',
-		},
-		{
-			id: 'github',
-			img: '/apple-logo.svg',
-			name: 'Apple',
-		},
-	]
-
 	return (
 		<div className='w-screen h-screen max-w-screen max-w-screen overflow-clip flex text-custom-white'>
-			{/* <div className="bg-[url('/testimonial.jpg')] w-full h-full max-w-[70%]"></div> */}
 			<div className='max-w-[65%] w-full h-full relative  pb-[52px]'>
 				<Image
 					unoptimized
@@ -58,32 +33,13 @@ export default async function AuthPage({ type }: { type: string }) {
 			<div className='w-full h-full max-w-[35%] flex flex-col items-center justify-between py-[52px]'>
 				<Logo />
 				<div className='w-full'>
-					<h2 className='font-semibold text-[28px] text-center pb-6'>
+					<h2 className='font-semibold text-[28px] text-center '>
 						{type === 'login' ? 'Welcome' : 'Create account'}
 					</h2>
-					<div className='space-y-[16px] w-full max-w-[320px] mx-auto'>
-						{providers.map((provider, index) => {
-							return (
-								<AuthButton
-									key={index}
-									img={provider.img}
-									name={provider.name}
-									id={provider.id}
-								/>
-							)
-						})}
-					</div>
-					<p className='text-sm text-center pt-6'>
-						{type === 'login'
-							? 'Dont have an account?'
-							: 'Already have an account?'}{' '}
-						<span className='text-custom-green font-medium'>
-							<Link
-								href={type === 'login' ? '/signup' : '/signin'}>
-								{type === 'login' ? 'Sign up' : 'Log in'}
-							</Link>{' '}
-						</span>
+					<p className='text-center leading-[18px] pt-2 text-sm'>
+						Let&apos;s get started by filling up.
 					</p>
+					<AuthForm type={type} />
 				</div>
 				<div className='opacity-60 flex items-center justify-center gap-6 text-[14px]'>
 					<h4>Terms of Service</h4>

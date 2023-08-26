@@ -22,3 +22,7 @@
 	-ms-border-radius: 12px !important;
 	-o-border-radius: 12px !important;
 }
+
+.signin-btn-shadow {
+	box-shadow: 0px 2px 8px 0px rgba(204, 255, 51, 0.25);
+}

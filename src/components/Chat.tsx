@@ -34,6 +34,7 @@ function formatContent(content: string) {
 }
 
 export default function Chat({ userSessionData }: any) {
+	console.log('UserSessionData: ', userSessionData)
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
@@ -352,46 +353,54 @@ export default function Chat({ userSessionData }: any) {
 													<button className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
 													</button>
-													<button
-														onClick={() =>
-															handleRegenerate(
-																chat.id,
-																chat.content
-															)
-														}
-														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
-														<RefreshLineIcon
-															className={`h-[16px] w-[16px] text-custom-white ${
-																regenLoading[
-																	chat.id
-																] &&
-																'animate-spin'
-															}`}
-														/>
-														<p className='font-medium text-xs'>
-															Regenerate
-														</p>
-													</button>
-													<button
-														onClick={() =>
-															handleContinueGenerating(
-																chat.id,
-																chat.content
-															)
-														}
-														className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
-														<SpeedMiniLineIcon
-															className={`h-[16px] w-[16px] text-custom-white ${
-																continueLoading[
-																	chat.id
-																] &&
-																'animate-pulse'
-															}`}
-														/>
-														<p className='font-medium text-xs'>
-															Continue Generating
-														</p>
-													</button>
+													{chats.length - 1 ===
+														index && (
+														<>
+															<button
+																onClick={() =>
+																	handleRegenerate(
+																		chat.id,
+																		chat.content
+																	)
+																}
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																<RefreshLineIcon
+																	className={`h-[16px] w-[16px] text-custom-white ${
+																		regenLoading[
+																			chat
+																				.id
+																		] &&
+																		'animate-spin'
+																	}`}
+																/>
+																<p className='font-medium text-xs'>
+																	Regenerate
+																</p>
+															</button>
+															<button
+																onClick={() =>
+																	handleContinueGenerating(
+																		chat.id,
+																		chat.content
+																	)
+																}
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																<SpeedMiniLineIcon
+																	className={`h-[16px] w-[16px] text-custom-white ${
+																		continueLoading[
+																			chat
+																				.id
+																		] &&
+																		'animate-pulse'
+																	}`}
+																/>
+																<p className='font-medium text-xs'>
+																	Continue
+																	Generating
+																</p>
+															</button>
+														</>
+													)}
 													{chats.length - 1 ===
 														index &&
 														chat.type ===
