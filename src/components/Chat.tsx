@@ -4,7 +4,12 @@ import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { chatHistory, chatType, userData } from '@/state/recoil'
+import {
+	chatHistory,
+	chatType,
+	showClearChatModal,
+	userData,
+} from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
 import {
@@ -21,6 +26,7 @@ import axios from 'axios'
 
 // @ts-ignore
 import Identicon from 'react-identicons'
+import ClearChatModal from './ClearChatModal'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -37,7 +43,6 @@ function formatContent(content: string) {
 }
 
 export default function Chat({ userSessionData }: any) {
-	console.log('UserSessionData: ', userSessionData)
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
@@ -45,6 +50,8 @@ export default function Chat({ userSessionData }: any) {
 	const [text, setText] = useState('')
 	const [continueLoading, setContinueLoading] = useState<any>({})
 	const [regenLoading, setRegenLoading] = useState<any>({})
+	const [clearChatModal, setClearChatModal] =
+		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
 	let {
@@ -294,6 +301,7 @@ export default function Chat({ userSessionData }: any) {
 				</div>
 			) : (
 				<>
+					{clearChatModal && <ClearChatModal stop={stop} />}
 					{/* CHAT CONTINUATION */}
 					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
 						{chats.map((chat, index) => {

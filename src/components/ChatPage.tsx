@@ -45,7 +45,7 @@ export default function ChatPage({ session }: any) {
 						<Chat userSessionData={session} />
 					</div>
 					<div className='flex flex-col items-center justify-center md:hidden bg-custom-black h-screen w-screen p-[20px]'>
-						<Logo />
+						<Logo type='md' />
 						<p className='text-[16px] text-white text-center pt-[20px]'>
 							Under construction! Sorry for the inconvenience. We
 							do not support mobile devices at the moment. Stay

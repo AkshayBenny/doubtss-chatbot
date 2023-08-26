@@ -34,7 +34,14 @@ export default async function AuthPage({ type }: { type: string }) {
 				</div>
 			</div>
 			<div className='w-full h-full max-w-[35%] flex flex-col items-center justify-between py-[52px]'>
-				<Logo />
+				<div className='relative w-fit'>
+					<div className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-white text-opacity-80 scale-[90%]'>
+						Experimental
+					</div>
+					<h3 className='text-custom-green font-bold text-[20px]'>
+						Doubtss.com
+					</h3>
+				</div>
 				<div className='w-full'>
 					<h2 className='font-semibold text-[28px] text-center '>
 						{type === 'login' ? 'Welcome' : 'Create account'}
