@@ -15,7 +15,7 @@ export default function Modal({ closeModal }: { closeModal: () => void }) {
 	return (
 		<div
 			onClick={closeModal}
-			className='w-screen h-screen bg-custom-black bg-opacity-80 text-custom-white flex items-center justify-center relative z-[100]'>
+			className='w-screen h-screen bg-custom-black bg-opacity-80 text-custom-white flex items-center justify-center relative z-[100] overflow-clip'>
 			<div className='relative rounded-[20px]  bg-custom-gray p-10'>
 				<button
 					onClick={closeModal}

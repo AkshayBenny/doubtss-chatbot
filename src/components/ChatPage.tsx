@@ -38,7 +38,9 @@ export default function ChatPage({ session }: any) {
 			{session && (
 				<>
 					<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
-						{showModal && <Modal closeModal={closeModal} />}
+						<div className='absolute'>
+							{showModal && <Modal closeModal={closeModal} />}
+						</div>
 						<Navbar />
 						<Chat userSessionData={session} />
 					</div>
