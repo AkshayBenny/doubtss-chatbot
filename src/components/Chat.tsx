@@ -298,11 +298,10 @@ export default function Chat({ userSessionData }: any) {
 					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
 						{chats.map((chat, index) => {
 							const isBot = chat.role === 'bot' ? true : false
-
 							return (
 								<div
 									key={index}
-									className={`w-full ${
+									className={`w-full  ${
 										isBot
 											? 'bg-white bg-opacity-5'
 											: 'bg-custom-black'
@@ -310,8 +309,8 @@ export default function Chat({ userSessionData }: any) {
 									<div
 										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
 											!isBot && index === 0
-												? 'pt-[40px] px-7 pb-7'
-												: 'p-7'
+												? 'pt-[40px]  pb-7'
+												: 'py-7'
 										}`}>
 										{recoilUserState &&
 											(isBot ? (
