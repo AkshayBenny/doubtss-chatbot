@@ -1,3 +1,5 @@
+import 'server-only'
+
 import Logo from './Logo'
 import Image from 'next/image'
 import AuthForm from './AuthForm'
