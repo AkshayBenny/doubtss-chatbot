@@ -5,6 +5,7 @@ import { Fragment } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
+// @ts-ignore
 import Identicon from 'react-identicons'
 import { userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
