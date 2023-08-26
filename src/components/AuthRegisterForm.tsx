@@ -84,6 +84,15 @@ export default function AuthRegisterForm() {
 			<div className='space-y-[16px] w-full'>
 				<input
 					required
+					type='text'
+					name='name'
+					value={formValues.name}
+					onChange={handleChange}
+					placeholder='Full Name'
+					className='px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full'
+				/>
+				<input
+					required
 					type='email'
 					name='email'
 					value={formValues.email}

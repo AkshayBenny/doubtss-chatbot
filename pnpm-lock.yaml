@@ -101,6 +101,9 @@ dependencies:
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
+  react-identicons:
+    specifier: ^1.2.5
+    version: 1.2.5(react-dom@18.2.0)(react@18.2.0)
   recoil:
     specifier: ^0.7.7
     version: 0.7.7(react-dom@18.2.0)(react@18.2.0)
@@ -3658,6 +3661,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-identicons@1.2.5(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-x7prkDoc2pD7wSl2C1pGxS+XAoSdq1ABWJWTBUimVTDVJArKOLd0B4wRUJpDm4r+9y7pgf8ylyPGsmlWSV5n2g==}
+    peerDependencies:
+      react: ^17.0.1
+      react-dom: ^17.0.1
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-is@16.13.1:

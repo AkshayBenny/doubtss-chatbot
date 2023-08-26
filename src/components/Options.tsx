@@ -1,12 +1,17 @@
 'use client'
+
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
+import Identicon from 'react-identicons'
+import { userData } from '@/state/recoil'
+import { useRecoilState } from 'recoil'
 
 export default function Options() {
-	const { data: session, status } = useSession()
+	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
+	const { data: session } = useSession()
 	return (
 		<div className='text-right text-sm text-custom-white w-full'>
 			<Menu
@@ -30,21 +35,26 @@ export default function Options() {
 					leaveTo='transform opacity-0 scale-95'>
 					<Menu.Items className='absolute left-0 mt-2  origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none '>
 						<div className='flex items-center justify-start gap-[10px] px-[15px] py-[16px] w-full'>
-							{session && (
-								<Image
-									src={session?.user.image}
-									height={36}
-									width={36}
+							{recoilUserState && (
+								// <Image
+								// 	src={recoilUserState?.user?.image}
+								// 	height={36}
+								// 	width={36}
+								// 	className='rounded-lg'
+								// 	alt='Profile picture of user'
+								// />
+								<Identicon
+									string={recoilUserState?.name}
+									size={36}
 									className='rounded-lg'
-									alt='Profile picture of user'
 								/>
 							)}
 							<div>
 								<p className='font-semibold'>
-									{session?.user.name}
+									{recoilUserState?.name}
 								</p>
 								<p className='text-xs opacity-60'>
-									{session?.user.email}
+									{recoilUserState?.email}
 								</p>
 							</div>
 						</div>
