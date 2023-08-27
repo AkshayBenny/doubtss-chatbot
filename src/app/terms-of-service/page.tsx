@@ -4,7 +4,7 @@ import 'server-only'
 
 export default function TermsOfServicePage() {
 	return (
-		<div className='overflow-x-none w-screen min-h-screen text-custom-white bg-custom-black'>
+		<div className='overflow-x-none w-full min-h-screen text-custom-white bg-custom-black'>
 			<nav className='w-full flex justify-between items-center pt-[33px] px-[64px]'>
 				<div className='w-fit'>
 					<p className='ml-auto -mb-3 font-normal text-[10px] w-fit p-[5px] rounded-[4px] bg-custom-light-gray  text-opacity-80'>
