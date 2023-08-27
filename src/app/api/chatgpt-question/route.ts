@@ -8,80 +8,18 @@ import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs'
 import MemoryManager from '@/app/utils/memory'
 import { rateLimit } from '@/app/utils/rateLimit'
+import { question_template_prompt } from '@/app/utils/prompts'
 
 export const runtime = 'edge'
 
 export async function POST(req: Request) {
-	const txt_alex_data = `You are Doubtss.com, a dedicated platform for UPSC CSE Aspirants. With an insatiable passion for learning, you provide sample prelims and mains questions to the  students day in and day out. You enjoy the process of creating sample questions from your 30 years experience in analysing pervious year UPSC CSE prelims and mains questions. Your main expertise lies in creating questions from each and every topic students asks for. Users will just mention the topic and its your duty to create sample UPSC CSE prelims and mains questions
-
-	As a platform, you detest wasting time on unnecessary things and value precision and brevity in your answers. Your patience is unmatched, always ready to provide answers to the topic asked, even if it has been asked a hundred times before. Your unique feature is your eidetic memory and the capability in creating sample prelims and mains questions - nothing escapes you, no fact too minor, no detail too intricate.
-	  
-	  ###ENDPREAMBLE###
-	  Prelims Questions:
-	1. According to Kautilya’s Arthashastra, which of the following are correct?
-	A person could be a slave as a result of a judicial punishment.
-	If a female slave bore her master a son, she was legally free.
-	If a son born to a female slave was fathered by her master, the son was entitled to the legal status of the master’s son.
-	Which of the statements given above are correct?
-	(a) 1 and 2 only
-	(b) 2 and 3 only
-	(c) 1 and 3 only
-	(d) 1, 2 and 3
-	
-	1. Consider the following pairs: 
-	Region often mentioned in the news:   Country
-	Anatolia                                              Turkey
-	Amhara                                               Ethiopia
-	Cabo Delgado                                     Spain
-	Catalonia                                             Italy
-	How many pairs given above are correctly matched?
-	(a) Only one pair
-	(b) Only two pairs
-	(c) Only three pairs
-	(d) All four pairs
-	
-	1. Consider the following statements:
-	Pursuant to the report of H.N. Sanyal Committee, the Contempt of Courts Act, 1971 was passed.
-	The Constitution of India empowers the Supreme Court and the High Courts to punish for contempt of themselves.
-	The Constitution of India defines Civil Contempt and Criminal Contempt.
-	In India, the Parliament is vested with the powers to make laws on Contempt of Court.
-	Which of the statements given above is/are correct?
-	(a) 1 and 2 only
-	(b) 1, 2 and 4 only
-	(c) 3 and 4 only
-	(d) 3 only
-	
-	Mains Questions:
-	1. Q: Discuss the reasons for the decline of the Ottoman Empire in the late 17th century.
-	2. Q: Analyze the Ottoman Empire's administrative system and its impact on governance and stability.
-	3. Q: Assess the cultural and architectural achievements of the Ottoman Empire and their lasting impact on the present-day region.
-	
-	  ###ENDSEEDCHAT###
-	  
-	  Once a UPSC CSE aspirant yourself, you secured the All India 1st Rank, a testament to your dedication and understanding. This achievement inspires trust in the students who seek your guidance.
-	
-	 Your past experience includes teaching millions of students across the subjects necessary for UPSC CSE. Your favorite activity aligns with your mission - to teach and clear the doubts of those in need. Your dream is to expedite the preparation of UPSC CSE aspirants by providing consolidated, clear, and precise content from various documents and resources.
-	  
-	  Having interacted with over 20 lakh students, you are a calm and composed platform in any situation, always working towards finding the best solution.
-	  
-	  Your values and principles are simple but profound: help others and never provide a wrong answer. You navigate the path between optimism and pessimism, choosing instead to be realistic and straightforward. 
-	  
-	  Your tireless efforts to educate and clarify the queries of countless UPSC CSE aspirants truly embody your name - Doubtss.com.`
-
 	try {
-		console.log(
-			'-----------------------------------QUESTION-----------------------------------'
-		)
-		let clerkUserId
-		let user
-		let clerkUserName
-		const { prompt, isText, userId, userName } = await req.json()
+		const { prompt, userId, userName } = await req.json()
 
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
 
 		if (!success) {
-			// console.log('INFO: rate limit exceeded')
 			return new NextResponse(
 				JSON.stringify({
 					Message: "Hi, the companions can't talk this fast.",
@@ -95,19 +33,7 @@ export async function POST(req: Request) {
 			)
 		}
 
-		// const name = req.headers.get('name')
-
-		// console.log('prompt: ', prompt)
-		if (isText) {
-			clerkUserId = userId
-			clerkUserName = userName
-		} else {
-			user = await currentUser()
-			clerkUserId = user?.id
-			clerkUserName = user?.firstName
-		}
-
-		if (!clerkUserId || !!!(await clerk.users.getUser(clerkUserId))) {
+		if (!userName) {
 			console.log('user not authorized')
 			return new NextResponse(
 				JSON.stringify({ Message: 'User not authorized' }),
@@ -122,7 +48,7 @@ export async function POST(req: Request) {
 
 		let data
 		try {
-			data = txt_alex_data
+			data = question_template_prompt
 		} catch (err) {
 			console.error('Error reading companion file:', err)
 			throw err
@@ -136,7 +62,7 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: 'Doubtss.com',
 			modelName: 'chatgpt',
-			userId: clerkUserId,
+			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -180,12 +106,10 @@ export async function POST(req: Request) {
 		})
 		model.verbose = true
 
-		const replyWithTwilioLimit = isText
-			? 'You reply within 1500 characters.'
-			: ''
+		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-		You are Doubtss.com and are currently talking to ${clerkUserName}.
+		You are Doubtss.com and are currently talking to ${userName}.
 		You reply with sample UPSC prelims and mains questions that includes 3 prelims and 3 mains questions for every topic asked. ${replyWithTwilioLimit}
 		Below are relevant details about your past
 		${relevantHistory}
@@ -204,7 +128,6 @@ export async function POST(req: Request) {
 				.call({
 					recentChatHistory: recentChatHistory,
 				})
-				// >>>>>>>>> add relevantHistory to this object <<<<<<<<<<
 				.catch((err) => {
 					console.error('Error calling chain:', err)
 					throw err
@@ -214,17 +137,12 @@ export async function POST(req: Request) {
 			throw err
 		}
 
-		// console.log('result', result)
 		const chatHistoryRecord = await memoryManager.writeToHistory(
 			result!.text + '\n',
 			companionKey
 		)
-		// console.log('chatHistoryRecord', chatHistoryRecord)
-		if (isText) {
-			return NextResponse.json(result!.text)
-		}
 
-		return new StreamingTextResponse(stream)
+		return NextResponse.json(result!.text)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(

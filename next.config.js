@@ -9,9 +9,11 @@ const nextConfig = {
 	},
 	experimental: {
 		serverActions: true,
+		serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
 	},
+
 	images: {
-		domains: ['img.clerk.com'],
+		domains: ['img.clerk.com', 'lh3.googleusercontent.com'],
 		remotePatterns: [
 			{
 				protocol: 'https',

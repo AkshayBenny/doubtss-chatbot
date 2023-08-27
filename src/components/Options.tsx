@@ -1,12 +1,18 @@
 'use client'
+
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
-import { useUser, SignOutButton } from '@clerk/nextjs'
+import { signOut, useSession } from 'next-auth/react'
+// @ts-ignore
+import Identicon from 'react-identicons'
+import { userData } from '@/state/recoil'
+import { useRecoilState } from 'recoil'
 
 export default function Options() {
-	const { user } = useUser()
+	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
+	const { data: session } = useSession()
 	return (
 		<div className='text-right text-sm text-custom-white w-full'>
 			<Menu
@@ -30,21 +36,26 @@ export default function Options() {
 					leaveTo='transform opacity-0 scale-95'>
 					<Menu.Items className='absolute left-0 mt-2  origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none '>
 						<div className='flex items-center justify-start gap-[10px] px-[15px] py-[16px] w-full'>
-							{user && (
-								<Image
-									src={`${user.imageUrl}`}
-									height={36}
-									width={36}
+							{recoilUserState && (
+								// <Image
+								// 	src={recoilUserState?.user?.image}
+								// 	height={36}
+								// 	width={36}
+								// 	className='rounded-lg'
+								// 	alt='Profile picture of user'
+								// />
+								<Identicon
+									string={recoilUserState?.name}
+									size={36}
 									className='rounded-lg'
-									alt='Profile picture of user'
 								/>
 							)}
 							<div>
 								<p className='font-semibold'>
-									{user?.fullName}
+									{recoilUserState?.name}
 								</p>
 								<p className='text-xs opacity-60'>
-									{user?.emailAddresses[0].emailAddress}
+									{recoilUserState?.email}
 								</p>
 							</div>
 						</div>
@@ -114,19 +125,18 @@ export default function Options() {
 							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
-									<SignOutButton>
-										<button
-											className={`group flex w-full items-center rounded-md pt-[10.25px] text-sm`}>
-											<Image
-												src='/options/logout.svg'
-												className='mr-2'
-												height={18}
-												width={18}
-												alt='Star icon'
-											/>
-											Logout
-										</button>
-									</SignOutButton>
+									<button
+										onClick={() => signOut()}
+										className={`group flex w-full items-center rounded-md pt-[10.25px] text-sm`}>
+										<Image
+											src='/options/logout.svg'
+											className='mr-2'
+											height={18}
+											width={18}
+											alt='Star icon'
+										/>
+										Logout
+									</button>
 								)}
 							</Menu.Item>
 						</div>

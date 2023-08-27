@@ -1,43 +1,21 @@
 'use client'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { Bars3Icon } from '@heroicons/react/20/solid'
-import Image from 'next/image'
-import NotificationIcon from 'remixicon-react/NotificationLineIcon'
+import { Fragment } from 'react'
+import Notification3LineIcon from 'remixicon-react/Notification3LineIcon'
 import DeleteBinLineIcon from 'remixicon-react/DeleteBinLineIcon'
-import { chatHistory, userData } from '@/state/recoil'
+import { chatHistory, showClearChatModal, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
-import axios from 'axios'
-import { useUser } from '@clerk/nextjs'
 
 export default function Alert() {
-	const { user } = useUser()
 	const [chats, setChats] = useRecoilState(chatHistory)
-	const [recoilUser, setRecoilUser] = useRecoilState(userData)
-	const clearChatHandler = async () => {
-		setChats([])
-		if (user && recoilUser) {
-			await axios.post(
-				'/api/delete-message',
-				{
-					// @ts-ignore
-					uid: recoilUser?.id,
-				},
-				{
-					headers: {
-						'Content-Type': 'application/json',
-						Accept: 'application/json',
-					},
-				}
-			)
-		}
-	}
+	const [clearChatModal, setClearChatModal] =
+		useRecoilState(showClearChatModal)
 
 	return (
 		<div className='text-right text-sm text-custom-white flex items-center justify-end gap-2'>
 			{chats.length > 0 && (
 				<button
-					onClick={clearChatHandler}
+					onClick={() => setClearChatModal(true)}
 					className='p-3 border border-custom-gray rounded-xl flex items-center justify-center group gap-1 transition-all duration-200 ease-in-out'>
 					<DeleteBinLineIcon
 						className='h-[18px] w-[18px] text-custom-red'
@@ -54,7 +32,7 @@ export default function Alert() {
 				className='relative inline-block text-left'>
 				<div>
 					<Menu.Button className='p-3 border border-custom-gray rounded-xl flex items-center justify-center'>
-						<NotificationIcon
+						<Notification3LineIcon
 							className='h-[18px] w-[18px] text-violet-200 hover:text-violet-100'
 							aria-hidden='true'
 						/>
@@ -79,7 +57,7 @@ export default function Alert() {
 											10 Free Trials
 										</span>{' '}
 										to your account. Explore now &#128640;
-										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px]'>
+										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px] text-[12px]'>
 											Upgrade to Plus
 										</button>
 									</div>
@@ -96,7 +74,7 @@ export default function Alert() {
 											30 Free Trials
 										</span>{' '}
 										. Try now &#128293;
-										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px]'>
+										<button className='mt-4 w-fit px-2 py-[10px] border border-custom-white border-opacity-80 rounded-[9px] text-[12px]'>
 											Refer a Friend
 										</button>
 									</div>
