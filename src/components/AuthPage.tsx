@@ -4,6 +4,7 @@ import Logo from './Logo'
 import Image from 'next/image'
 import AuthLoginForm from './AuthLoginForm'
 import AuthRegisterForm from './AuthRegisterForm'
+import Link from 'next/link'
 
 export default async function AuthPage({ type }: { type: string }) {
 	return (
@@ -56,8 +57,12 @@ export default async function AuthPage({ type }: { type: string }) {
 					)}
 				</div>
 				<div className='opacity-60 flex items-center justify-center gap-6 text-[14px]'>
-					<h4>Terms of Service</h4>
-					<h4>Privacy Policy</h4>
+					<Link href='terms-of-service'>
+						<h4>Terms of Service</h4>
+					</Link>
+					<Link href='privacy-policy'>
+						<h4>Privacy Policy</h4>
+					</Link>
 				</div>
 			</div>
 		</div>
