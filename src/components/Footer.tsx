@@ -27,12 +27,21 @@ export default function Footer() {
 				<div className='flex flex-col gap-6'>
 					<h4 className='font-semibold text-2xl'>Socials</h4>
 
-					<p>Instagram</p>
-					<p>Twitter</p>
+					<a
+						href='https://www.instagram.com/doubtss.com_official/'
+						target='_blank'>
+						Instagram
+					</a>
+					<a
+						href='https://twitter.com/doubtss_dot_com/'
+						target='_blank'>
+						Twitter
+					</a>
+
 					<p>Linkedin</p>
 				</div>
 				<p className='font-medium text-base text-opacity-60 text-custom-white'>
-					Doutbtss.com © 2023
+					Doubtss.com © 2023
 				</p>
 			</div>
 		</div>
