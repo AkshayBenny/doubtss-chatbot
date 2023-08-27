@@ -37,8 +37,11 @@ export default function Footer() {
 						target='_blank'>
 						Twitter
 					</a>
-
-					<p>Linkedin</p>
+					<a
+						href='https://www.linkedin.com/company/doubtss-com/'
+						target='_blank'>
+						Linkedin
+					</a>
 				</div>
 				<p className='font-medium text-base text-opacity-60 text-custom-white'>
 					Doubtss.com © 2023
