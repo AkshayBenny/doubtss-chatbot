@@ -11,7 +11,7 @@ interface Message {
 	role: string
 	content: string
 	createdAt: string
-	type: 'question' | 'summary' | 'genq'
+	type: 'question' | 'summary' | 'genq' | 'loading'
 }
 
 class ChatDatabase extends Dexie {
@@ -24,7 +24,10 @@ class ChatDatabase extends Dexie {
 		// Define tables and indexes
 		this.version(1).stores({
 			users: 'email, name', // Set email as the primary key
-			messages: '++id, *userEmail, role, content, createdAt',
+		})
+
+		this.version(2).stores({
+			messages: '++id, *userEmail, role, content, createdAt, type', // Added 'type' to the indexes
 		})
 
 		// Define tables

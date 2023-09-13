@@ -15,6 +15,7 @@ import { useCompletion } from 'ai/react'
 import {
 	addMessageDexie,
 	appendToMessageDexie,
+	deleteAllLoadingMessagesDexie,
 	getMessagesByUserEmailDexie,
 } from '@/app/dexie/crud'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
@@ -256,6 +257,36 @@ export default function Chat({ userSessionData }: any) {
 		addBotMessage()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
+
+	useEffect(() => {
+		const addLoadingMessage = async () => {
+			const loadingMessage = {
+				role: 'bot',
+				content: 'Reasearching. Please wait...',
+				id: Math.random(),
+				type: 'loading',
+			}
+			setChats([...chats, loadingMessage])
+		}
+
+		const removeLoadingMessage = async () => {
+			try {
+				deleteAllLoadingMessagesDexie()
+			} catch (error) {
+				console.log(error)
+			}
+		}
+
+		if (isLoading) {
+			addLoadingMessage()
+			console.log('adding loading message...')
+		} else {
+			removeLoadingMessage()
+			console.log('removing loading message...')
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading])
 
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
