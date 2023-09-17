@@ -5,6 +5,7 @@ import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import {
+	Message,
 	chatHistory,
 	chatType,
 	showClearChatModal,
@@ -24,6 +25,7 @@ import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 import axios from 'axios'
+import StopLineIcon from 'remixicon-react/StopLineIcon'
 
 // @ts-ignore
 import Identicon from 'react-identicons'
@@ -85,6 +87,7 @@ export default function Chat({ userSessionData }: any) {
 				type: recoilChatType,
 			},
 		])
+
 		const dixieMessage = {
 			...message,
 			userEmail: userSessionData.user.email,
@@ -130,9 +133,10 @@ export default function Chat({ userSessionData }: any) {
 		setChats((prevChats) => {
 			return prevChats.map((chat) => {
 				if (chat.id === messageId) {
+					console.log(chat)
 					return {
 						...chat,
-						content: data, // Assuming the response data is the updated content
+						content: chat.content.replace('"', ' ') + '\n\n' + data, // Assuming the response data is the updated content
 					}
 				}
 				return chat
@@ -258,35 +262,37 @@ export default function Chat({ userSessionData }: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 
-	useEffect(() => {
-		const addLoadingMessage = async () => {
-			const loadingMessage = {
-				role: 'bot',
-				content: 'Reasearching. Please wait...',
-				id: Math.random(),
-				type: 'loading',
-			}
-			setChats([...chats, loadingMessage])
-		}
+	// useEffect(() => {
+	// 	const addLoadingMessage = async () => {
+	// 		const loadingMessage: Message = {
+	// 			role: `bot`,
+	// 			content: 'Reasearching. Please wait...',
+	// 			id: Math.random(),
+	// 			type: 'loading',
+	// 		}
 
-		const removeLoadingMessage = async () => {
-			try {
-				deleteAllLoadingMessagesDexie()
-			} catch (error) {
-				console.log(error)
-			}
-		}
+	// 		setChats([...chats, loadingMessage])
+	// 	}
 
-		if (isLoading) {
-			addLoadingMessage()
-			console.log('adding loading message...')
-		} else {
-			removeLoadingMessage()
-			console.log('removing loading message...')
-		}
+	// 	const removeLoadingMessage = async () => {
+	// 		const chatsWithLoading = [...chats]
+	// 		const removedLoadingMessage: any = chatsWithLoading.filter(
+	// 			(ch) => ch.type !== 'loading'
+	// 		)
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading])
+	// 		setChats([...removedLoadingMessage])
+	// 	}
+
+	// 	if (isLoading) {
+	// 		addLoadingMessage()
+	// 		console.log('adding loading message...')
+	// 	} else {
+	// 		removeLoadingMessage()
+	// 		console.log(chats)
+	// 	}
+
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [isLoading])
 
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
@@ -337,6 +343,7 @@ export default function Chat({ userSessionData }: any) {
 					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
 						{chats.map((chat, index) => {
 							const isBot = chat.role === 'bot' ? true : false
+
 							return (
 								<div
 									key={index}
@@ -482,6 +489,30 @@ export default function Chat({ userSessionData }: any) {
 								</div>
 							)
 						})}
+						{isLoading && (
+							<div className='bg-white bg-opacity-5 py-[28px]'>
+								<div className='flex items-start justify-start  gap-4 text-left  max-w-[770px] mx-auto '>
+									<Image
+										height={32}
+										width={32}
+										src='/doubtss-pfp.svg'
+										alt='Avatar'
+										className='rounded-full overflow-clip'
+									/>
+									<div className='space-y-[20px]'>
+										<p className=' leading-normal'>
+											Reasearching. Please wait...
+										</p>
+										<button
+											onClick={stop}
+											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
+											<StopLineIcon className='w-[18px] h-[18px]' />
+											<p>Stop Generating</p>
+										</button>
+									</div>
+								</div>
+							</div>
+						)}
 					</div>
 
 					<div className='w-full flex items-center justify-center pt-7 pb-6 '>
