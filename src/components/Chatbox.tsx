@@ -15,7 +15,7 @@ export default function Chatbox({
 }: any) {
 	return (
 		<div className='w-full flex flex-col items-center justify-center mx-auto gap-3 '>
-			{isLoading && !completion && <Loader />}
+			{/* {isLoading && !completion && <Loader />} */}
 			<form
 				onSubmit={handleSubmit}
 				className='flex items-center justify-center gap-3 w-full max-w-[770px] '>
