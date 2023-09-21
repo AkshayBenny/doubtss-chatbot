@@ -18,49 +18,27 @@ const splitter = new CharacterTextSplitter({
 	chunkOverlap: 100,
 })
 
-const langchainDocs = await Promise.all(
-	fileNames.map(async (fileName) => {
-		const filePath = path.join('documents', fileName)
-		console.log('Processing file:', filePath)
+function moveToErrorDir(filePath) {
+	const errorDirPath = path.join('.', 'error_files')
+	if (!fs.existsSync(errorDirPath)) {
+		fs.mkdirSync(errorDirPath)
+	}
+	const destinationPath = path.join(errorDirPath, path.basename(filePath))
+	fs.renameSync(filePath, destinationPath)
+}
 
-		let fileContent = ''
+function appendFileNameToJson(fileName) {
+	const outputPath = path.join('fileNames.json')
+	let processedFiles = []
 
-		if (fileName.endsWith('.txt')) {
-			fileContent = fs.readFileSync(filePath, 'utf8')
-		} else if (fileName.endsWith('.pdf')) {
-			const fileBuffer = fs.readFileSync(filePath)
-			const pdfData = await pdfParse(fileBuffer)
-			fileContent = pdfData.text // Reading the entire content of the PDF
-		} else {
-			// Ignore other file types
-			return
-		}
+	if (fs.existsSync(outputPath)) {
+		const existingData = fs.readFileSync(outputPath, 'utf8')
+		processedFiles = JSON.parse(existingData)
+	}
 
-		const splitDocs = await splitter.createDocuments([fileContent])
-
-		const splitData = splitDocs.map((doc) => {
-			return new Document({
-				metadata: { fileName },
-				pageContent: doc.pageContent,
-			})
-		})
-		console.log(splitData)
-		console.log(splitData.flat().filter((doc) => doc !== undefined))
-
-		// Define the path where you want to save the JSON file
-		const outputPath = path.join('fileNames.json')
-
-		// Convert the fileNames array to a JSON string
-		const fileNamesJson = JSON.stringify(fileNames, null, 2) // 2 spaces indentation
-
-		// Write the JSON string to the file
-		fs.writeFileSync(outputPath, fileNamesJson)
-
-		console.log(`File names have been saved to ${outputPath}`)
-
-		return splitData
-	})
-)
+	processedFiles.push(fileName)
+	fs.writeFileSync(outputPath, JSON.stringify(processedFiles, null, 2))
+}
 
 const client = new PineconeClient()
 await client.init({
@@ -69,10 +47,44 @@ await client.init({
 })
 const pineconeIndex = client.Index(process.env.PINECONE_INDEX)
 
-await PineconeStore.fromDocuments(
-	langchainDocs.flat().filter((doc) => doc !== undefined),
-	new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
-	{
-		pineconeIndex,
+for (const fileName of fileNames) {
+	const filePath = path.join('documents', fileName)
+	console.log('Processing file:', filePath)
+
+	let fileContent = ''
+
+	if (fileName.endsWith('.txt')) {
+		fileContent = fs.readFileSync(filePath, 'utf8')
+	} else if (fileName.endsWith('.pdf')) {
+		const fileBuffer = fs.readFileSync(filePath)
+		const pdfData = await pdfParse(fileBuffer)
+		fileContent = pdfData.text
+	} else {
+		continue
 	}
-)
+
+	const splitDocs = await splitter.createDocuments([fileContent])
+	const splitData = splitDocs.map((doc) => {
+		return new Document({
+			metadata: { fileName },
+			pageContent: doc.pageContent,
+		})
+	})
+
+	try {
+		await PineconeStore.fromDocuments(
+			splitData.flat().filter((doc) => doc !== undefined),
+			new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
+			{
+				pineconeIndex,
+			}
+		)
+
+		fs.unlinkSync(filePath)
+		console.log(`Processed, uploaded, and deleted ${fileName}`)
+		appendFileNameToJson(fileName)
+	} catch (error) {
+		console.error(`Error uploading ${fileName}:`, error)
+		moveToErrorDir(filePath)
+	}
+}

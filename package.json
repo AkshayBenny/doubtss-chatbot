@@ -12,7 +12,8 @@
 		"generate-embeddings-supabase": "node src/scripts/indexPGVector.mjs",
 		"export-to-character": "node src/scripts/exportToCharacter.mjs",
 		"prisma:migrate:deploy": "pnpx prisma migrate deploy",
-		"prisma:generate": "pnpx prisma generate"
+		"prisma:generate": "pnpx prisma generate",
+		"vectorise": "node src/scripts/pineconeScript.js"
 	},
 	"dependencies": {
 		"@clerk/clerk-sdk-node": "^4.10.12",
