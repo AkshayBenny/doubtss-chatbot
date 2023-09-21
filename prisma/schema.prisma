@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = "postgresql://doubtss:doubtss123@doubtss-prod.cum2lhkyqa9p.ap-south-1.rds.amazonaws.com:5432/init" // uses connection pooling
+  provider = "postgresql"
+  url      = "postgresql://doubtss:doubtss123@doubtss-prod.cum2lhkyqa9p.ap-south-1.rds.amazonaws.com:5432/init" // uses connection pooling
   // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
@@ -92,6 +92,16 @@ model VerificationRequest {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+model TechnialPrompt {
+  id                               String @id @default(cuid())
+  generateQuestionForContentPrompt String
+  generateQuestionPrompt           String
+  regeneratePrompt                  String
+  summaryPrompt                    String
+
+  @@map("technial_prompts")
 }
 
 // model Message {

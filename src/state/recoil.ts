@@ -1,11 +1,11 @@
 import { atom } from 'recoil'
 
 // Define the message types
-type Message = {
+export type Message = {
 	role: 'human' | 'bot'
 	content: string
 	id: number
-	type: 'question' | 'summary' | 'genq'
+	type: 'question' | 'summary' | 'genq' | 'loading'
 	createdAt?: string
 	userEmail?: string
 }

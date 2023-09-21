@@ -10,7 +10,7 @@ interface Message {
 	role: string
 	userEmail: string
 	content: string
-	type: 'question' | 'summary' | 'genq'
+	type: 'question' | 'summary' | 'genq' | 'loading'
 	createdAt: string
 }
 
@@ -72,4 +72,8 @@ export const deleteMessageByIdDexie = async (id: number) => {
 
 export const deleteAllMessagesByUserEmailDexie = async (email: string) => {
 	await db.messages.where('userEmail').equals(email).delete()
+}
+
+export const deleteAllLoadingMessagesDexie = async () => {
+	await db.messages.where('type').equals('loading').delete()
 }
