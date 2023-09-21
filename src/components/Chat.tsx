@@ -45,6 +45,12 @@ function formatContent(content: string) {
 		.replace(/"$/, '')
 }
 
+function cleanString(filename: string) {
+	const baseName = filename.replace(/\.[^/.]+$/, '')
+	const cleanedString = baseName.replace(/[^a-zA-Z0-9 ]/g, '')
+	return cleanedString
+}
+
 export default function Chat({ userSessionData }: any) {
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
@@ -342,6 +348,17 @@ export default function Chat({ userSessionData }: any) {
 					{/* CHAT CONTINUATION */}
 					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
 						{chats.map((chat, index) => {
+							const formattedChatMessage = formatContent(
+								chat.content
+							)
+
+							const chatMessage =
+								formattedChatMessage.split('$$$')[0]
+							const referredFrom =
+								formattedChatMessage.split('$$$').length > 0 &&
+								formattedChatMessage.split('$$$')[1]
+
+							console.log(formattedChatMessage)
 							const isBot = chat.role === 'bot' ? true : false
 
 							return (
@@ -385,7 +402,18 @@ export default function Chat({ userSessionData }: any) {
 												style={{
 													whiteSpace: 'pre-line',
 												}}>
-												{formatContent(chat.content)}
+												<p> {chatMessage}</p>
+												{formattedChatMessage.split(
+													'$$$'
+												).length > 0 &&
+													referredFrom && (
+														<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
+															Referred from:{' '}
+															{cleanString(
+																referredFrom
+															)}
+														</p>
+													)}
 											</div>
 											{isBot && (
 												<div

@@ -1,3 +1,4 @@
+import { metadata } from './../../layout'
 import { OpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
 import { LangChainStream } from 'ai'
@@ -20,6 +21,7 @@ function countTokens(text: string) {
 
 export async function POST(req: Request) {
 	const { prompt, userId, userName } = await req.json()
+	let referredFromFileName = ''
 	try {
 		const identifier = req.url + '-' + (userId || 'anonymous')
 		const { success } = await rateLimit(identifier)
@@ -93,6 +95,10 @@ export async function POST(req: Request) {
 				recentChatHistory
 			)
 
+			if (pineconeSimilarDocs[0].metadata.fileName) {
+				referredFromFileName = pineconeSimilarDocs[0].metadata.fileName
+			}
+
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
@@ -140,7 +146,7 @@ export async function POST(req: Request) {
 			})
 
 		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
-		return NextResponse.json(result!.text)
+		return NextResponse.json(result!.text + '$$$' + referredFromFileName)
 		// return new StreamingTextResponse(stream)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
