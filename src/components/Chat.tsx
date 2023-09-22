@@ -317,7 +317,7 @@ export default function Chat({ userSessionData }: any) {
 						handleSubmit={handleSubmit}
 						input={input}
 						setInput={setInput}
-						isLoading={isLoadigenerate-embeddings-pineconeng}
+						isLoading={isLoading}
 						completion={completion}
 					/>
 					{/* suggestions */}
@@ -358,7 +358,6 @@ export default function Chat({ userSessionData }: any) {
 								formattedChatMessage.split('$$$').length > 0 &&
 								formattedChatMessage.split('$$$')[1]
 
-							console.log(formattedChatMessage)
 							const isBot = chat.role === 'bot' ? true : false
 
 							return (
@@ -402,7 +401,9 @@ export default function Chat({ userSessionData }: any) {
 												style={{
 													whiteSpace: 'pre-line',
 												}}>
-												<p> {chatMessage}</p>
+												<p>
+													{formatContent(chatMessage)}
+												</p>
 												{formattedChatMessage.split(
 													'$$$'
 												).length > 0 &&
