@@ -23,7 +23,7 @@ export default function Modal({ closeModal }: { closeModal: () => void }) {
 					<CloseLineIcon className='w-[18px] h-[18px]' />
 				</button>
 				<h2 className='font-semibold text-[26px] text-center pb-8'>
-					Welcom to{' '}
+					Welcome to{' '}
 					<span className='text-custom-green'>Doubtss.com</span> 🎉
 				</h2>
 				<div className='bg-custom-black bg-opacity-100 rounded-2xl py-8 '>
