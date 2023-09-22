@@ -317,7 +317,7 @@ export default function Chat({ userSessionData }: any) {
 						handleSubmit={handleSubmit}
 						input={input}
 						setInput={setInput}
-						isLoading={isLoading}
+						isLoading={isLoadigenerate-embeddings-pineconeng}
 						completion={completion}
 					/>
 					{/* suggestions */}
