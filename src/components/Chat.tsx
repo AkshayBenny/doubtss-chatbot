@@ -16,7 +16,6 @@ import { useCompletion } from 'ai/react'
 import {
 	addMessageDexie,
 	appendToMessageDexie,
-	deleteAllLoadingMessagesDexie,
 	getMessagesByUserEmailDexie,
 } from '@/app/dexie/crud'
 import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
@@ -351,7 +350,6 @@ export default function Chat({ userSessionData }: any) {
 							const formattedChatMessage = formatContent(
 								chat.content
 							)
-
 							const chatMessage =
 								formattedChatMessage.split('$$$')[0]
 							const referredFrom =
@@ -406,15 +404,14 @@ export default function Chat({ userSessionData }: any) {
 												</p>
 												{formattedChatMessage.split(
 													'$$$'
-												).length > 0 &&
-													referredFrom && (
-														<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
-															Referred from:{' '}
-															{cleanString(
-																referredFrom
-															)}
-														</p>
-													)}
+												).length > 0 && (
+													<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
+														Referred from:{' '}
+														{cleanString(
+															referredFrom || ''
+														)}
+													</p>
+												)}
 											</div>
 											{isBot && (
 												<div
