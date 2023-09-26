@@ -95,11 +95,13 @@ model VerificationRequest {
 }
 
 model TechnialPrompt {
-  id                               String @id @default(cuid())
-  generateQuestionForContentPrompt String
-  generateQuestionPrompt           String
-  regeneratePrompt                  String
-  summaryPrompt                    String
+  id                                   String @id @default(cuid())
+  generateQuestionForContentPrompt     String
+  generateQuestionPromptWithVectorData String
+  generateQuestionPrompt               String
+  regeneratePrompt                     String
+  summaryPrompt                        String
+  summaryPromptWithVectorData          String
 
   @@map("technial_prompts")
 }
