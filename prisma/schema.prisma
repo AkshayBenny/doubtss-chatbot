@@ -4,8 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://doubtss:doubtss123@doubtss-prod.cum2lhkyqa9p.ap-south-1.rds.amazonaws.com:5432/init" // uses connection pooling
-  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url      = "postgresql://doubtss:doubtss123@doubtss-prod.cum2lhkyqa9p.ap-south-1.rds.amazonaws.com:5432/init" 
 }
 
 model User {

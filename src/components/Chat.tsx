@@ -9,6 +9,7 @@ import {
 	chatHistory,
 	chatType,
 	showClearChatModal,
+	showFAQModal,
 	userData,
 } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -29,6 +30,7 @@ import StopLineIcon from 'remixicon-react/StopLineIcon'
 // @ts-ignore
 import Identicon from 'react-identicons'
 import ClearChatModal from './ClearChatModal'
+import FAQModal from './FAQModal'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -52,6 +54,7 @@ function cleanString(filename: string) {
 
 export default function Chat({ userSessionData }: any) {
 	const [chats, setChats] = useRecoilState(chatHistory)
+	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [isCopied, setIsCopied] = useState(false)
@@ -300,7 +303,13 @@ export default function Chat({ userSessionData }: any) {
 	// }, [isLoading])
 
 	return (
-		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
+		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
+			{showFaqModal && (
+				<>
+					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
+					<FAQModal />
+				</>
+			)}
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}

@@ -43,3 +43,8 @@ export const showClearChatModal = atom({
 	key: 'showClearChatModal',
 	default: false,
 })
+
+export const showFAQModal = atom({
+	key: 'showFAQModal',
+	default: false,
+})

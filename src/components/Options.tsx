@@ -7,12 +7,13 @@ import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
 // @ts-ignore
 import Identicon from 'react-identicons'
-import { userData } from '@/state/recoil'
+import { showFAQModal, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 
 export default function Options() {
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
-	const { data: session } = useSession()
+	const [FAQModal, setFAQModal] = useRecoilState(showFAQModal)
+
 	return (
 		<div className='text-right text-sm text-custom-white w-full'>
 			<Menu
@@ -111,6 +112,7 @@ export default function Options() {
 							<Menu.Item>
 								{({ active }) => (
 									<button
+										onClick={() => setFAQModal(true)}
 										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
 										<Image
 											src='/options/external-link.svg'
