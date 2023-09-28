@@ -270,38 +270,6 @@ export default function Chat({ userSessionData }: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 
-	// useEffect(() => {
-	// 	const addLoadingMessage = async () => {
-	// 		const loadingMessage: Message = {
-	// 			role: `bot`,
-	// 			content: 'Reasearching. Please wait...',
-	// 			id: Math.random(),
-	// 			type: 'loading',
-	// 		}
-
-	// 		setChats([...chats, loadingMessage])
-	// 	}
-
-	// 	const removeLoadingMessage = async () => {
-	// 		const chatsWithLoading = [...chats]
-	// 		const removedLoadingMessage: any = chatsWithLoading.filter(
-	// 			(ch) => ch.type !== 'loading'
-	// 		)
-
-	// 		setChats([...removedLoadingMessage])
-	// 	}
-
-	// 	if (isLoading) {
-	// 		addLoadingMessage()
-	// 		console.log('adding loading message...')
-	// 	} else {
-	// 		removeLoadingMessage()
-	// 		console.log(chats)
-	// 	}
-
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [isLoading])
-
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
 			{showFaqModal && (
