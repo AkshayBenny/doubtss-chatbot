@@ -30,7 +30,7 @@ import StopLineIcon from 'remixicon-react/StopLineIcon'
 // @ts-ignore
 import Identicon from 'react-identicons'
 import ClearChatModal from './ClearChatModal'
-import FAQModal from './FAQModal'
+import FeedbackModal from './FeedbackModal'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -275,7 +275,7 @@ export default function Chat({ userSessionData }: any) {
 			{showFaqModal && (
 				<>
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
-					<FAQModal />
+					<FeedbackModal />
 				</>
 			)}
 			{chats.length === 0 ? (

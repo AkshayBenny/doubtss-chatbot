@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRecoilState } from 'recoil'
 import CloseLineIcon from 'remixicon-react/CloseLineIcon'
 
-export default function FAQModal() {
+export default function FeedbackModal() {
 	const [feedback, setFeedback] = useState('')
 	const [FAQModal, setFAQModal] = useRecoilState(showFAQModal)
 
@@ -29,7 +29,7 @@ export default function FAQModal() {
 				value={feedback}
 				onChange={(e) => setFeedback(e.target.value)}
 				placeholder='Type your feedback here...'
-				className=' py-[15px] ring-0 outline-none  focus:ring-0 focus:border focus:border-white focus:border-opacity-[12%] focus:outline-none w-full disabled:cursor-not-allowed placeholder:text-[14px] placeholder:text-custom-white placeholder:text-opacity-60 border border-white border-opacity-[12%] rounded-xl  mt-[39px] mb-6 bg-white bg-opacity-5 min-h-[120px] '
+				className=' py-[15px] ring-0 outline-none  focus:ring-0 focus:border focus:border-white focus:border-opacity-[12%] focus:outline-none w-full disabled:cursor-not-allowed placeholder:text-[14px] placeholder:text-custom-white placeholder:text-opacity-60 border border-white border-opacity-[12%] rounded-xl  mt-[39px] mb-6 bg-white bg-opacity-5 min-h-[120px] max-h-[600px]'
 				name='feedback'
 				id='feedback'></textarea>
 			<button
