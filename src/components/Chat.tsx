@@ -32,6 +32,8 @@ import Identicon from 'react-identicons'
 import ClearChatModal from './ClearChatModal'
 import FeedbackModal from './FeedbackModal'
 
+import EditLineIcon from 'remixicon-react/EditLineIcon'
+
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
 	'What are the main factors that led to the decline of the Indus Valley Civilisation?',
@@ -86,6 +88,8 @@ export default function Chat({ userSessionData }: any) {
 	})
 
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
+
+	const editHandler = (chat: any) => setInput(chat.content)
 
 	const addMessage = async (message: any) => {
 		setChats((oldChats) => [
@@ -277,7 +281,7 @@ export default function Chat({ userSessionData }: any) {
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
 					<FeedbackModal />
 				</>
-			)}
+			)} 
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}
@@ -344,7 +348,7 @@ export default function Chat({ userSessionData }: any) {
 											: 'bg-custom-black'
 									}`}>
 									<div
-										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
+										className={`group flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
 											!isBot && index === 0
 												? 'pt-[40px]  pb-7'
 												: 'py-7'
@@ -368,28 +372,48 @@ export default function Chat({ userSessionData }: any) {
 												/>
 											))}
 
-										<div className='flex flex-col items-start justify-start'>
-											<div
-												className={`whitespace-pre-line leading-normal  ${
-													!isBot && 'pt-[4px]'
-												}`}
-												style={{
-													whiteSpace: 'pre-line',
-												}}>
-												<p>
-													{formatContent(chatMessage)}
-												</p>
-												{formattedChatMessage.split(
-													'$$$'
-												).length > 0 &&
-													referredFrom && (
-														<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
-															Referred from:{' '}
-															{cleanString(
-																referredFrom
-															)}
-														</p>
-													)}
+										<div className='flex flex-col items-start justify-start w-full '>
+											<div className='flex items-center justify-between w-full'>
+												<div
+													className={`whitespace-pre-line leading-normal  ${
+														!isBot && 'pt-[4px]'
+													}`}
+													style={{
+														whiteSpace: 'pre-line',
+													}}>
+													<p>
+														{formatContent(
+															chatMessage
+														)}
+													</p>
+													{formattedChatMessage.split(
+														'$$$'
+													).length > 0 &&
+														referredFrom && (
+															<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
+																Referred from:{' '}
+																{cleanString(
+																	referredFrom
+																)}
+															</p>
+														)}
+												</div>
+												{!isBot && (
+													<button
+														onClick={() =>
+															editHandler(chat)
+														}
+														className='relative z-20 group-hover:opacity-100  opacity-0 transition flex  items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+														<EditLineIcon
+															className={`h-[16px] w-[16px] text-custom-white ${
+																continueLoading[
+																	chat.id
+																] &&
+																'animate-pulse'
+															}`}
+														/>
+													</button>
+												)}
 											</div>
 											{isBot && (
 												<div
