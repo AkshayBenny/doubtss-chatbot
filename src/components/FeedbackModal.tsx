@@ -1,6 +1,7 @@
 'use client'
 
 import { showFAQModal } from '@/state/recoil'
+import axios from 'axios'
 import { useState } from 'react'
 import { useRecoilState } from 'recoil'
 import CloseLineIcon from 'remixicon-react/CloseLineIcon'
@@ -8,9 +9,28 @@ import CloseLineIcon from 'remixicon-react/CloseLineIcon'
 export default function FeedbackModal() {
 	const [feedback, setFeedback] = useState('')
 	const [FAQModal, setFAQModal] = useRecoilState(showFAQModal)
+	const [loading, setLoading] = useState(false)
 
-	const submitHandler = (e: any) => {
+	const submitHandler = async (e: any) => {
+		setLoading(true)
 		e.preventDefault()
+		try {
+			const { data } = await axios.post(
+				'/api/feedback',
+				{ feedback },
+				{
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+				}
+			)
+			console.log(data)
+		} catch (error) {
+			console.log(error)
+		}
+		setLoading(false)
+		setFAQModal(false)
 	}
 
 	return (
@@ -34,9 +54,8 @@ export default function FeedbackModal() {
 				id='feedback'></textarea>
 			<button
 				type='submit'
-				onClick={() => setFAQModal(false)}
 				className='bg-custom-green text-custom-black font-medium text-sm py-[18px] px-[31.5px] rounded-xl mx-auto'>
-				Submit Feedback
+				{loading ? 'Submitting...' : 'Submit Feedback'}
 			</button>
 		</form>
 	)
