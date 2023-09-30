@@ -9,6 +9,7 @@ import {
 	chatHistory,
 	chatType,
 	showClearChatModal,
+	showFAQModal,
 	userData,
 } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -29,6 +30,9 @@ import StopLineIcon from 'remixicon-react/StopLineIcon'
 // @ts-ignore
 import Identicon from 'react-identicons'
 import ClearChatModal from './ClearChatModal'
+import FeedbackModal from './FeedbackModal'
+
+import EditLineIcon from 'remixicon-react/EditLineIcon'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -52,6 +56,7 @@ function cleanString(filename: string) {
 
 export default function Chat({ userSessionData }: any) {
 	const [chats, setChats] = useRecoilState(chatHistory)
+	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [isCopied, setIsCopied] = useState(false)
@@ -83,6 +88,8 @@ export default function Chat({ userSessionData }: any) {
 	})
 
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
+
+	const editHandler = (chat: any) => setInput(chat.content)
 
 	const addMessage = async (message: any) => {
 		setChats((oldChats) => [
@@ -196,12 +203,7 @@ export default function Chat({ userSessionData }: any) {
 		})
 
 		// Update the message in the Dexie DB
-		addMessage({
-			role: 'bot',
-			content: completion,
-			type: 'genq',
-			id: Date.now(),
-		})
+		await appendToMessageDexie(messageId, data)
 
 		// Find the message in the chats array and update it
 		setChats((prevChats) => {
@@ -209,7 +211,7 @@ export default function Chat({ userSessionData }: any) {
 				if (chat.id === messageId) {
 					return {
 						...chat,
-						content: data, // Assuming the response data is the updated content
+						content: chat.content.replace('"', ' ') + '\n\n' + data, // Assuming the response data is the updated content
 					}
 				}
 				return chat
@@ -267,40 +269,14 @@ export default function Chat({ userSessionData }: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 
-	// useEffect(() => {
-	// 	const addLoadingMessage = async () => {
-	// 		const loadingMessage: Message = {
-	// 			role: `bot`,
-	// 			content: 'Reasearching. Please wait...',
-	// 			id: Math.random(),
-	// 			type: 'loading',
-	// 		}
-
-	// 		setChats([...chats, loadingMessage])
-	// 	}
-
-	// 	const removeLoadingMessage = async () => {
-	// 		const chatsWithLoading = [...chats]
-	// 		const removedLoadingMessage: any = chatsWithLoading.filter(
-	// 			(ch) => ch.type !== 'loading'
-	// 		)
-
-	// 		setChats([...removedLoadingMessage])
-	// 	}
-
-	// 	if (isLoading) {
-	// 		addLoadingMessage()
-	// 		console.log('adding loading message...')
-	// 	} else {
-	// 		removeLoadingMessage()
-	// 		console.log(chats)
-	// 	}
-
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [isLoading])
-
 	return (
-		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center'>
+		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
+			{showFaqModal && (
+				<>
+					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
+					<FeedbackModal />
+				</>
+			)}
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}
@@ -345,7 +321,7 @@ export default function Chat({ userSessionData }: any) {
 				<>
 					{clearChatModal && <ClearChatModal stop={stop} />}
 					{/* CHAT CONTINUATION */}
-					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
+					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll relative z-50'>
 						{chats.map((chat, index) => {
 							const formattedChatMessage = formatContent(
 								chat.content
@@ -367,7 +343,7 @@ export default function Chat({ userSessionData }: any) {
 											: 'bg-custom-black'
 									}`}>
 									<div
-										className={`flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
+										className={`group flex items-start justify-start gap-4 text-left  max-w-[770px] mx-auto  ${
 											!isBot && index === 0
 												? 'pt-[40px]  pb-7'
 												: 'py-7'
@@ -391,28 +367,48 @@ export default function Chat({ userSessionData }: any) {
 												/>
 											))}
 
-										<div className='flex flex-col items-start justify-start'>
-											<div
-												className={`whitespace-pre-line leading-normal  ${
-													!isBot && 'pt-[4px]'
-												}`}
-												style={{
-													whiteSpace: 'pre-line',
-												}}>
-												<p>
-													{formatContent(chatMessage)}
-												</p>
-												{formattedChatMessage.split(
-													'$$$'
-												).length > 0 &&
-													referredFrom && (
-														<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
-															Referred from:{' '}
-															{cleanString(
-																referredFrom
-															)}
-														</p>
-													)}
+										<div className='flex flex-col items-start justify-start w-full '>
+											<div className='flex items-center justify-between w-full'>
+												<div
+													className={`whitespace-pre-line leading-normal  ${
+														!isBot && 'pt-[4px]'
+													}`}
+													style={{
+														whiteSpace: 'pre-line',
+													}}>
+													<p>
+														{formatContent(
+															chatMessage
+														)}
+													</p>
+													{formattedChatMessage.split(
+														'$$$'
+													).length > 0 &&
+														referredFrom && (
+															<p className='text-sm font-normal italic text-custom-white text-opacity-80 pt-[20px]'>
+																Referred from:{' '}
+																{cleanString(
+																	referredFrom
+																)}
+															</p>
+														)}
+												</div>
+												{!isBot && (
+													<button
+														onClick={() =>
+															editHandler(chat)
+														}
+														className='relative z-20 group-hover:opacity-100  opacity-0 transition flex  items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+														<EditLineIcon
+															className={`h-[16px] w-[16px] text-custom-white ${
+																continueLoading[
+																	chat.id
+																] &&
+																'animate-pulse'
+															}`}
+														/>
+													</button>
+												)}
 											</div>
 											{isBot && (
 												<div

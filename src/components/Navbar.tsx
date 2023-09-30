@@ -8,7 +8,7 @@ import { chatHistory } from '@/state/recoil'
 export default function Navbar() {
 	const [chats, setChats] = useRecoilState(chatHistory)
 	return (
-		<div className='flex items-center justify-between px-[39px] py-[32px] fixed top-0 left-0 w-full'>
+		<div className='flex items-center justify-between px-[39px] py-[32px] fixed top-0 left-0 w-full z-[200]'>
 			<div className='flex items-center justify-start gap-4'>
 				<Options />
 				{chats.length > 0 && (
