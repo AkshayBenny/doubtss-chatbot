@@ -112,7 +112,6 @@ export default function Options() {
 							<Menu.Item>
 								{({ active }) => (
 									<button
-										onClick={() => setFAQModal(true)}
 										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
 										<Image
 											src='/options/external-link.svg'
@@ -122,6 +121,22 @@ export default function Options() {
 											alt='Star icon'
 										/>
 										Help & FAQ
+									</button>
+								)}
+							</Menu.Item>
+							<Menu.Item>
+								{({ active }) => (
+									<button
+										onClick={() => setFAQModal(true)}
+										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
+										<Image
+											src='/options/external-link.svg'
+											className='mr-2'
+											height={18}
+											width={18}
+											alt='Star icon'
+										/>
+										Feedback
 									</button>
 								)}
 							</Menu.Item>
