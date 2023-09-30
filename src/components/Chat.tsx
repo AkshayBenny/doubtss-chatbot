@@ -203,12 +203,7 @@ export default function Chat({ userSessionData }: any) {
 		})
 
 		// Update the message in the Dexie DB
-		addMessage({
-			role: 'bot',
-			content: completion,
-			type: 'genq',
-			id: Date.now(),
-		})
+		await appendToMessageDexie(messageId, data)
 
 		// Find the message in the chats array and update it
 		setChats((prevChats) => {
@@ -216,7 +211,7 @@ export default function Chat({ userSessionData }: any) {
 				if (chat.id === messageId) {
 					return {
 						...chat,
-						content: data, // Assuming the response data is the updated content
+						content: chat.content.replace('"', ' ') + '\n\n' + data, // Assuming the response data is the updated content
 					}
 				}
 				return chat
