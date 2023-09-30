@@ -281,7 +281,7 @@ export default function Chat({ userSessionData }: any) {
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
 					<FeedbackModal />
 				</>
-			)} 
+			)}
 			{chats.length === 0 ? (
 				<div>
 					{/* FIRST CHAT */}
@@ -326,7 +326,7 @@ export default function Chat({ userSessionData }: any) {
 				<>
 					{clearChatModal && <ClearChatModal stop={stop} />}
 					{/* CHAT CONTINUATION */}
-					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll'>
+					<div className='text-custom-white text-sm font-normal w-full h-full overflow-y-scroll relative z-50'>
 						{chats.map((chat, index) => {
 							const formattedChatMessage = formatContent(
 								chat.content
