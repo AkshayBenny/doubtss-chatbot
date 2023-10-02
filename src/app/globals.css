@@ -26,3 +26,31 @@
 .signin-btn-shadow {
 	box-shadow: 0px 2px 8px 0px rgba(204, 255, 51, 0.25);
 }
+
+@keyframes loadingDots {
+	0%,
+	50% {
+		opacity: 1;
+	}
+
+	51%,
+	100% {
+		opacity: 0;
+	}
+}
+
+.dot1,
+.dot2,
+.dot3 {
+	display: inline-block;
+	animation: loadingDots 0.9s infinite;
+	-webkit-animation: loadingDots 0.9s infinite;
+}
+
+.dot2 {
+	animation-delay: 0.3s;
+}
+
+.dot3 {
+	animation-delay: 0.6s;
+}
