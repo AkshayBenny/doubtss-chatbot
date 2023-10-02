@@ -54,6 +54,13 @@ function cleanString(filename: string) {
 	return cleanedString
 }
 
+function pushBeforeDelimitter(first: string, second: any) {
+	const firstContent = first.split('$$$')[0].replace('"', ' ') + '\n\n'
+	const referredFromContent = first.split('$$$')[1]
+
+	return firstContent + second + '$$$' + referredFromContent
+}
+
 export default function Chat({ userSessionData }: any) {
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
@@ -148,7 +155,7 @@ export default function Chat({ userSessionData }: any) {
 					console.log(chat)
 					return {
 						...chat,
-						content: chat.content.replace('"', ' ') + '\n\n' + data, // Assuming the response data is the updated content
+						content: pushBeforeDelimitter(chat.content, data), // Assuming the response data is the updated content
 					}
 				}
 				return chat
@@ -211,7 +218,7 @@ export default function Chat({ userSessionData }: any) {
 				if (chat.id === messageId) {
 					return {
 						...chat,
-						content: chat.content.replace('"', ' ') + '\n\n' + data, // Assuming the response data is the updated content
+						content: pushBeforeDelimitter(chat.content, data), // Assuming the response data is the updated content
 					}
 				}
 				return chat
