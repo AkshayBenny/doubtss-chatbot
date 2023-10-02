@@ -519,6 +519,7 @@ export default function Chat({ userSessionData }: any) {
 								</div>
 							)
 						})}
+
 						{isLoading && (
 							<div className='bg-white bg-opacity-5 py-[28px]'>
 								<div className='flex items-start justify-start  gap-4 text-left  max-w-[770px] mx-auto '>
@@ -531,8 +532,12 @@ export default function Chat({ userSessionData }: any) {
 									/>
 									<div className='space-y-[20px]'>
 										<p className=' leading-normal'>
-											Reasearching. Please wait...
+											Researching. Please wait
+											<span className='dot1'>.</span>
+											<span className='dot2'>.</span>
+											<span className='dot3'>.</span>
 										</p>
+
 										<button
 											onClick={stop}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
