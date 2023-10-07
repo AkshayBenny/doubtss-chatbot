@@ -130,6 +130,25 @@ export default function Chat({ userSessionData }: any) {
 		})
 	}
 
+	const likeOrDislikeHandler = async (type: any, chat: any) => {
+		try {
+			await axios.post(
+				`/api/${type === 'like' ? 'like' : 'dislike'}`,
+				{
+					messageContent: chat.content,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Accept: 'application/json',
+					},
+				}
+			)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	const handleContinueGenerating = async (
 		messageId: number,
 		text: string
@@ -439,6 +458,10 @@ export default function Chat({ userSessionData }: any) {
 													</button>
 													<button
 														onClick={() => {
+															likeOrDislikeHandler(
+																'like',
+																chat
+															)
 															logEvent(
 																'Button Click',
 																'like_button'
@@ -449,6 +472,10 @@ export default function Chat({ userSessionData }: any) {
 													</button>
 													<button
 														onClick={() => {
+															likeOrDislikeHandler(
+																'dislike',
+																chat
+															)
 															logEvent(
 																'Button Click',
 																'dislike_button'

@@ -16,7 +16,7 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
-	useGoogleAnalytics()
+	// useGoogleAnalytics()
 	return (
 		<html
 			lang='en'

@@ -1,4 +1,5 @@
 // @ts-nocheck
+'use client'
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -35,13 +36,14 @@ export const logEvent = (
 	label?: string,
 	value?: number
 ) => {
-	if (!GA_MEASUREMENT_ID) return
+	// if (!GA_MEASUREMENT_ID) return
 
-	window['gtag']('event', action, {
-		event_category: category,
-		event_label: label,
-		value: value,
-	})
+	// window['gtag']('event', action, {
+	// 	event_category: category,
+	// 	event_label: label,
+	// 	value: value,
+	// })
+	console.log('Event')
 }
 
 // Use this hook in your _app.tsx for tracking page views
