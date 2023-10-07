@@ -33,6 +33,7 @@ import ClearChatModal from './ClearChatModal'
 import FeedbackModal from './FeedbackModal'
 
 import EditLineIcon from 'remixicon-react/EditLineIcon'
+import { logEvent } from '@/app/utils/analytics'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -310,6 +311,7 @@ export default function Chat({ userSessionData }: any) {
 						</div>
 						<button
 							onClick={() => {
+								logEvent('Example', 'Example_1')
 								setInput(questions[0])
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
@@ -317,6 +319,7 @@ export default function Chat({ userSessionData }: any) {
 						</button>
 						<button
 							onClick={() => {
+								logEvent('Example', 'Example_1')
 								setInput(questions[1])
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
@@ -422,30 +425,52 @@ export default function Chat({ userSessionData }: any) {
 													key={index}
 													className='pt-[20px] flex gap-[8px]'>
 													<button
-														onClick={() =>
+														onClick={() => {
 															handleCopyClick(
 																chat.content
 															)
-														}
+															logEvent(
+																'Button Click',
+																'Copy_button'
+															)
+														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<FileCopyLineIcon className='h-[16px] w-[16px] text-custom-white' />
 													</button>
-													<button className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+													<button
+														onClick={() => {
+															logEvent(
+																'Button Click',
+																'like_button'
+															)
+														}}
+														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ThumbUpLineIcon className='h-[16px] w-[16px] text-custom-white' />
 													</button>
-													<button className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
+													<button
+														onClick={() => {
+															logEvent(
+																'Button Click',
+																'dislike_button'
+															)
+														}}
+														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
 													</button>
 													{chats.length - 1 ===
 														index && (
 														<>
 															<button
-																onClick={() =>
+																onClick={() => {
+																	logEvent(
+																		'Button Click',
+																		'regenerate_button'
+																	)
 																	handleRegenerate(
 																		chat.id,
 																		chat.content
 																	)
-																}
+																}}
 																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 																<RefreshLineIcon
 																	className={`h-[16px] w-[16px] text-custom-white ${
@@ -461,12 +486,16 @@ export default function Chat({ userSessionData }: any) {
 																</p>
 															</button>
 															<button
-																onClick={() =>
+																onClick={() => {
+																	logEvent(
+																		'Button Click',
+																		'continue_generating_button'
+																	)
 																	handleContinueGenerating(
 																		chat.id,
 																		chat.content
 																	)
-																}
+																}}
 																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 																<SpeedMiniLineIcon
 																	className={`h-[16px] w-[16px] text-custom-white ${
@@ -489,12 +518,16 @@ export default function Chat({ userSessionData }: any) {
 														chat.type ===
 															'summary' && (
 															<button
-																onClick={() =>
+																onClick={() => {
+																	logEvent(
+																		'Button Click',
+																		'generate_question_button'
+																	)
 																	generateQuestion(
 																		chat.id,
 																		chat.content
 																	)
-																}
+																}}
 																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
 																<Image
 																	src='/gen-ques.svg'
@@ -539,7 +572,13 @@ export default function Chat({ userSessionData }: any) {
 										</p>
 
 										<button
-											onClick={stop}
+											onClick={() => {
+												stop()
+												logEvent(
+													'Button Click',
+													'stop_generation_button'
+												)
+											}}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
 											<StopLineIcon className='w-[18px] h-[18px]' />
 											<p>Stop Generating</p>
