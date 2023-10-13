@@ -85,23 +85,25 @@ export default function AuthLoginForm() {
 			<div className='space-y-[16px] w-full'>
 				<input
 					autoFocus={true}
+					autoComplete='off'
 					required
 					type='email'
 					name='email'
 					value={formValues.email}
 					onChange={handleChange}
 					placeholder='Email Address'
-					className='appearance-none ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full'
+					className=' appearance-none ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full !text-sm !font-normal'
 				/>
 				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
 					<input
 						required
+						autoComplete='new-password'
 						type={showPassword ? 'text' : 'password'}
 						placeholder='Password'
 						name='password'
 						value={formValues.password}
 						onChange={handleChange}
-						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
+						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray !text-sm !font-normal'
 					/>
 					<div
 						onClick={() => setShowPassword(!showPassword)}
