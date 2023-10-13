@@ -114,7 +114,6 @@ export default function HelpAndFAQ() {
 						</Link>
 					</div>
 				</div>
-				F
 			</div>
 			<Footer />
 		</div>
