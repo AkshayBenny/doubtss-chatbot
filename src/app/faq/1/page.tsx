@@ -2,12 +2,21 @@ import 'server-only'
 import Footer from '@/components/Footer'
 import ArrowRightSLineIcon from 'remixicon-react/ArrowRightSLineIcon'
 import Link from 'next/link'
+import FAQNavbar from '@/components/FAQNavbar'
 
 export default function HelpAndFAQ() {
 	return (
 		<div className='text-custom-white overflow-x-none w-full min-h-screen'>
+			<FAQNavbar />
 			<div className='max-w-6xl mx-auto'>
-				<div className='w-full h-full max-w-6xl mx-auto'>
+				<div className='flex items-center justify-between gap-2 text-custom-white w-fit text-sm opacity-60 mt-[32px]'>
+					<p>Collections</p>
+					<p>&gt;</p>
+					<p>Doubtss.com</p>
+					<p>&gt;</p>
+					<p>What is Doubtss.com</p>
+				</div>
+				<div className='w-full h-full max-w-6xl mx-auto mt-[80px]'>
 					<h2 className='font-extrabold text-[44px] '>
 						What is Doubtss.com?
 					</h2>
@@ -105,6 +114,7 @@ export default function HelpAndFAQ() {
 						</Link>
 					</div>
 				</div>
+				F
 			</div>
 			<Footer />
 		</div>

@@ -7,28 +7,28 @@ import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 
-// const providers = [
-// 	{
-// 		id: 'google',
-// 		img: '/google-logo.svg',
-// 		name: 'Google',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/microsoft-logo.svg',
-// 		name: 'Microsoft',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/facebook-logo.svg',
-// 		name: 'Facebook',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/apple-logo.svg',
-// 		name: 'Apple',
-// 	},
-// ]
+const providers = [
+	{
+		id: 'google',
+		img: '/google-logo.svg',
+		name: 'Google',
+	},
+	{
+		id: 'github',
+		img: '/microsoft-logo.svg',
+		name: 'Microsoft',
+	},
+	{
+		id: 'github',
+		img: '/facebook-logo.svg',
+		name: 'Facebook',
+	},
+	{
+		id: 'github',
+		img: '/apple-logo.svg',
+		name: 'Apple',
+	},
+]
 
 export default function AuthLoginForm() {
 	const router = useRouter()
@@ -131,7 +131,7 @@ export default function AuthLoginForm() {
 			<button className='text-sm text-center pt-6'>
 				Dont have an account?
 				<span className='text-custom-green font-medium'>
-					<Link href='/signup'> Sign up</Link>
+					<Link href='/signup'>Sign up</Link>
 				</span>
 			</button>
 		</form>
