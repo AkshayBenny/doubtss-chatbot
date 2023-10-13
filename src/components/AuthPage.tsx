@@ -5,8 +5,41 @@ import Image from 'next/image'
 import AuthLoginForm from './AuthLoginForm'
 import AuthRegisterForm from './AuthRegisterForm'
 import Link from 'next/link'
+import prisma from '@/app/db/prisma'
+
+async function getNumberOfUsers() {
+	const count = await prisma.user.count()
+	console.log(`Total number of users: ${count}`)
+	return count
+}
 
 export default async function AuthPage({ type }: { type: string }) {
+	// let userCount: any = 0
+	// if (type === 'signup') {
+	// 	userCount = await getNumberOfUsers()
+	// 		.catch((e) => {
+	// 			console.error(e)
+	// 		})
+	// 		.finally(async () => {
+	// 			await prisma.$disconnect()
+	// 		})
+	// }
+
+	// if (userCount < 100) {
+	// 	return (
+	// 		<div className='text-custom-white'>
+	// 			<h2 className='font-extrabold text-[64px] text-center'>
+	// 				Join our beta to enhance your preparation speed and get
+	// 				ahead of competitors{' '}
+	// 				<span className='text-custom-green font-extrabold text-[64px]'>
+	// 					.
+	// 				</span>
+	// 			</h2>
+	// 			<div></div>
+	// 		</div>
+	// 	)
+	// }
+
 	return (
 		<div className='w-screen h-screen max-w-screen max-w-screen overflow-clip flex text-custom-white'>
 			<div className='max-w-[65%] w-full h-full relative  pb-[52px]'>

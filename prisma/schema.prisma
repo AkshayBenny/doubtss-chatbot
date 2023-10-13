@@ -20,6 +20,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Feedback      Feedback[]
+  FirstLogin    Boolean    @default(true)
 
   @@map("users")
 }
