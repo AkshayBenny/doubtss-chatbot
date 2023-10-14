@@ -33,6 +33,8 @@ import Image from 'next/image'
 
 export default function AuthRegisterForm() {
 	const [showPassword, setShowPassword] = useState(false)
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+	const [confirmPassword, setConfirmPassword] = useState('')
 	const [loading, setLoading] = useState(false)
 	const [formValues, setFormValues] = useState({
 		name: '',
@@ -121,17 +123,19 @@ export default function AuthRegisterForm() {
 				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
 					<input
 						required
-						type={showPassword ? 'text' : 'password'}
-						placeholder='Password'
+						type={showConfirmPassword ? 'text' : 'password'}
+						placeholder='Confirm password'
 						name='password'
-						value={formValues.password}
-						onChange={handleChange}
+						value={confirmPassword}
+						onChange={(e) => setConfirmPassword(e.target.value)}
 						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
 					/>
 					<div
-						onClick={() => setShowPassword(!showPassword)}
+						onClick={() =>
+							setShowConfirmPassword(!showConfirmPassword)
+						}
 						className='hover:cursor-pointer'>
-						{showPassword ? (
+						{showConfirmPassword ? (
 							<EyeOffLineIcon className='h-[18px] w-[18px] text-custom-white' />
 						) : (
 							<EyeLineIcon className='h-[18px] w-[18px] text-custom-white' />
