@@ -45,6 +45,10 @@ export default function AuthRegisterForm() {
 
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
+		if (formValues.password !== confirmPassword) {
+			setError('Password Missmatch!')
+			return
+		}
 		setLoading(true)
 		setFormValues({ name: '', email: '', password: '' })
 
