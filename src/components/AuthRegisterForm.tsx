@@ -2,34 +2,10 @@
 
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 import Image from 'next/image'
-
-// const providers = [
-// 	{
-// 		id: 'google',
-// 		img: '/google-logo.svg',
-// 		name: 'Google',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/microsoft-logo.svg',
-// 		name: 'Microsoft',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/facebook-logo.svg',
-// 		name: 'Facebook',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/apple-logo.svg',
-// 		name: 'Apple',
-// 	},
-// ]
 
 export default function AuthRegisterForm() {
 	const [showPassword, setShowPassword] = useState(false)

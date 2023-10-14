@@ -8,29 +8,6 @@ import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 import Image from 'next/image'
 
-const providers = [
-	{
-		id: 'google',
-		img: '/google-logo.svg',
-		name: 'Google',
-	},
-	{
-		id: 'github',
-		img: '/microsoft-logo.svg',
-		name: 'Microsoft',
-	},
-	{
-		id: 'github',
-		img: '/facebook-logo.svg',
-		name: 'Facebook',
-	},
-	{
-		id: 'github',
-		img: '/apple-logo.svg',
-		name: 'Apple',
-	},
-]
-
 export default function AuthLoginForm() {
 	const router = useRouter()
 	const [showPassword, setShowPassword] = useState(false)
