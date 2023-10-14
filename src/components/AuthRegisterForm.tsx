@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
+import Image from 'next/image'
 
 // const providers = [
 // 	{
@@ -117,6 +118,26 @@ export default function AuthRegisterForm() {
 						)}
 					</div>
 				</div>
+				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
+					<input
+						required
+						type={showPassword ? 'text' : 'password'}
+						placeholder='Password'
+						name='password'
+						value={formValues.password}
+						onChange={handleChange}
+						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
+					/>
+					<div
+						onClick={() => setShowPassword(!showPassword)}
+						className='hover:cursor-pointer'>
+						{showPassword ? (
+							<EyeOffLineIcon className='h-[18px] w-[18px] text-custom-white' />
+						) : (
+							<EyeLineIcon className='h-[18px] w-[18px] text-custom-white' />
+						)}
+					</div>
+				</div>
 			</div>
 			<button
 				type='submit'
@@ -131,6 +152,22 @@ export default function AuthRegisterForm() {
 				<span className='text-custom-green font-medium'>
 					<Link href='/signin'> Log in</Link>
 				</span>
+			</button>
+			<div className='w-full flex items-center justify-center gap-4 pt-6'>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+				<p>OR</p>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+			</div>
+			<button
+				onClick={() => signIn('google', { callbackUrl: '/' })}
+				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
+				<Image
+					src='/google-logo.svg'
+					height={18}
+					width={18}
+					alt='Google logo'
+				/>
+				<p>Continue with Google</p>
 			</button>
 		</form>
 	)
