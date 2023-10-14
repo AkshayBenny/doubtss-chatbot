@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
+import Image from 'next/image'
 
 const providers = [
 	{
@@ -133,8 +134,24 @@ export default function AuthLoginForm() {
 			<button className='text-sm text-center pt-6'>
 				Dont have an account?
 				<span className='text-custom-green font-medium'>
-					<Link href='/signup'>Sign up</Link>
+					<Link href='/signup'> Sign up</Link>
 				</span>
+			</button>
+			<div className='w-full flex items-center justify-center gap-4 pt-6'>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+				<p>OR</p>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+			</div>
+			<button
+				onClick={() => signIn('google', { callbackUrl: '/' })}
+				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
+				<Image
+					src='/google-logo.svg'
+					height={18}
+					width={18}
+					alt='Google logo'
+				/>
+				<p>Continue with Google</p>
 			</button>
 		</form>
 	)
