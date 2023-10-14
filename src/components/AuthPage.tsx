@@ -42,7 +42,7 @@ export default async function AuthPage({ type }: { type: string }) {
 
 	return (
 		<div className='w-screen h-screen max-w-screen max-w-screen overflow-clip flex text-custom-white'>
-			<div className='max-w-[65%] w-full h-full relative  pb-[52px]'>
+			{/* <div className='max-w-[65%] w-full h-full relative  pb-[52px]'>
 				<Image
 					unoptimized
 					src='/finalTestimonial.png'
@@ -66,8 +66,8 @@ export default async function AuthPage({ type }: { type: string }) {
 						</div>
 					</div>
 				</div>
-			</div>
-			<div className='w-full h-full max-w-[35%] flex flex-col items-center justify-between py-[52px]'>
+			</div> */}
+			<div className='w-full h-full max-w-[320px] flex flex-col items-center justify-between py-[52px] mx-auto'>
 				<div className='relative w-fit'>
 					<div className='font-normal text-[11px] w-fit p-[6px] rounded-[4px] bg-custom-light-gray absolute right-0 top-[-20px] text-white text-opacity-80 scale-[90%]'>
 						Experimental
