@@ -3,7 +3,7 @@
 import Chatbox from './Chatbox'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
 	Message,
 	chatHistory,
@@ -63,6 +63,7 @@ function pushBeforeDelimitter(first: string, second: any) {
 }
 
 export default function Chat({ userSessionData }: any) {
+	const chatEndRef = useRef(null)
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
@@ -98,6 +99,14 @@ export default function Chat({ userSessionData }: any) {
 	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
 
 	const editHandler = (chat: any) => setInput(chat.content)
+
+	const scrollToBottom = () => {
+		try {
+			chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+		} catch (error: any) {
+			console.error(error.message)
+		}
+	}
 
 	const addMessage = async (message: any) => {
 		setChats((oldChats) => [
@@ -246,6 +255,10 @@ export default function Chat({ userSessionData }: any) {
 		})
 		setGenerateQuestionLoading(true)
 	}
+
+	useEffect(() => {
+		scrollToBottom()
+	}, [chats])
 
 	useEffect(() => {
 		if (userSessionData) {
@@ -614,6 +627,7 @@ export default function Chat({ userSessionData }: any) {
 								</div>
 							</div>
 						)}
+						<div ref={chatEndRef} />
 					</div>
 
 					<div className='w-full flex items-center justify-center pt-7 pb-6 '>

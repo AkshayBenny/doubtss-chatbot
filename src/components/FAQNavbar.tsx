@@ -1,26 +1,33 @@
 import Image from 'next/image'
 import 'server-only'
 import SearchLineIcon from 'remixicon-react/SearchLineIcon'
+import Link from 'next/link'
 
 export default function FAQNavbar() {
 	return (
 		<div className='px-[64px] pt-[33px] pb-[64px] bg-custom-white bg-opacity-[12%] rounded-b-[16px]'>
 			<nav className='flex items-center justify-between'>
-				<Image
-					src='/doubtss-exp-logo.svg'
-					height={42}
-					width={131}
-					alt='Doubtss logo'
-				/>
+				<Link href='/'>
+					<Image
+						src='/doubtss-exp-logo.svg'
+						height={42}
+						width={131}
+						alt='Doubtss logo'
+					/>
+				</Link>
 				<div className='flex items-center justify-center gap-12'>
 					<p>Collections</p>
-					<p>Website</p>
+					<Link href='/'>
+						<p>Website</p>
+					</Link>
 					<p>English</p>
 				</div>
 
-				<button className='px-[15px] py-[10px] border rounded-[10px] border-custom-white text-base font-semibold'>
+				<Link
+					href='/'
+					className='px-[15px] py-[10px] border rounded-[10px] border-custom-white text-base font-semibold'>
 					Go to Chat
-				</button>
+				</Link>
 			</nav>
 			<div className='flex items-center justify-start mx-auto w-full max-w-6xl p-[20px] border border-white border-opacity-[12%] h-[58px] rounded-[12px] mt-[92px] '>
 				<SearchLineIcon className='w-[18px] h-[18px]' />
