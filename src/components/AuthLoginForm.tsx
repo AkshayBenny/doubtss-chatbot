@@ -6,29 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
-
-// const providers = [
-// 	{
-// 		id: 'google',
-// 		img: '/google-logo.svg',
-// 		name: 'Google',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/microsoft-logo.svg',
-// 		name: 'Microsoft',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/facebook-logo.svg',
-// 		name: 'Facebook',
-// 	},
-// 	{
-// 		id: 'github',
-// 		img: '/apple-logo.svg',
-// 		name: 'Apple',
-// 	},
-// ]
+import Image from 'next/image'
 
 export default function AuthLoginForm() {
 	const router = useRouter()
@@ -85,23 +63,25 @@ export default function AuthLoginForm() {
 			<div className='space-y-[16px] w-full'>
 				<input
 					autoFocus={true}
+					autoComplete='off'
 					required
 					type='email'
 					name='email'
 					value={formValues.email}
 					onChange={handleChange}
 					placeholder='Email Address'
-					className='appearance-none ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full'
+					className=' appearance-none ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none px-5 py-[15px] leading-[18px] rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray placeholder:text-sm w-full !text-sm !font-normal'
 				/>
 				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
 					<input
 						required
+						autoComplete='new-password'
 						type={showPassword ? 'text' : 'password'}
 						placeholder='Password'
 						name='password'
 						value={formValues.password}
 						onChange={handleChange}
-						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray'
+						className='ring-0 outline-none  focus:ring-0 focus:outline-none focus:border-none appearance-none border-none px-0 py-[15px] w-full h-full placeholder:text-sm bg-custom-gray !text-sm !font-normal'
 					/>
 					<div
 						onClick={() => setShowPassword(!showPassword)}
@@ -133,6 +113,22 @@ export default function AuthLoginForm() {
 				<span className='text-custom-green font-medium'>
 					<Link href='/signup'> Sign up</Link>
 				</span>
+			</button>
+			<div className='w-full flex items-center justify-center gap-4 pt-6'>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+				<p>OR</p>
+				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
+			</div>
+			<button
+				onClick={() => signIn('google', { callbackUrl: '/' })}
+				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
+				<Image
+					src='/google-logo.svg'
+					height={18}
+					width={18}
+					alt='Google logo'
+				/>
+				<p>Continue with Google</p>
 			</button>
 		</form>
 	)

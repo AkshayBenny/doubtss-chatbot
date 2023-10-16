@@ -9,6 +9,7 @@ import { signOut, useSession } from 'next-auth/react'
 import Identicon from 'react-identicons'
 import { showFAQModal, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
+import Link from 'next/link'
 
 export default function Options() {
 	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
@@ -111,17 +112,19 @@ export default function Options() {
 							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
-									<button
-										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
-										<Image
-											src='/options/external-link.svg'
-											className='mr-2'
-											height={18}
-											width={18}
-											alt='Star icon'
-										/>
-										Help & FAQ
-									</button>
+									<Link href='/faq'>
+										<button
+											className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
+											<Image
+												src='/options/external-link.svg'
+												className='mr-2'
+												height={18}
+												width={18}
+												alt='Star icon'
+											/>
+											Help & FAQ
+										</button>
+									</Link>
 								)}
 							</Menu.Item>
 							<Menu.Item>
