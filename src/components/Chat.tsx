@@ -102,7 +102,9 @@ export default function Chat({ userSessionData }: any) {
 
 	const scrollToBottom = () => {
 		try {
-			chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+			chatEndRef &&
+				chatEndRef.current &&
+				chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 		} catch (error: any) {
 			console.error(error.message)
 		}
