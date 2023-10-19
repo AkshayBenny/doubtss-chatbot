@@ -12,6 +12,7 @@ import {
 	showFAQModal,
 	showFeedbackSubmitConfirmation,
 	userData,
+	welcomeModal,
 } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
@@ -36,6 +37,7 @@ import FeedbackModal from './FeedbackModal'
 import EditLineIcon from 'remixicon-react/EditLineIcon'
 import { logEvent } from '@/app/utils/analytics'
 import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
+import Modal from './Modal'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -78,6 +80,8 @@ export default function Chat({ userSessionData }: any) {
 		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
+	const [recoilShowWelcomeModal, setRecoilShowWelcomeModal] =
+		useRecoilState(welcomeModal)
 	const [
 		recoilSubmitConfimationFeedback,
 		setRecoilSubmitConfirmationFeedbacl,
@@ -116,6 +120,10 @@ export default function Chat({ userSessionData }: any) {
 		} catch (error: any) {
 			console.error(error.message)
 		}
+	}
+
+	const closeWelcomeModal = () => {
+		setRecoilShowWelcomeModal(false)
 	}
 
 	const addMessage = async (message: any) => {
@@ -321,6 +329,13 @@ export default function Chat({ userSessionData }: any) {
 
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
+			{recoilShowWelcomeModal && (
+				<div className='absolute'>
+					{recoilShowWelcomeModal && (
+						<Modal closeModal={closeWelcomeModal} />
+					)}
+				</div>
+			)}
 			{showFaqModal && (
 				<>
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>

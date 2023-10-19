@@ -7,6 +7,8 @@ import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 import Image from 'next/image'
+import { useRecoilState } from 'recoil'
+import { welcomeModal } from '@/state/recoil'
 
 export default function AuthLoginForm() {
 	const router = useRouter()
@@ -17,6 +19,8 @@ export default function AuthLoginForm() {
 		password: '',
 	})
 	const [error, setError] = useState('')
+	const [recoilWelcomeModal, setRecoilWelcomeModal] =
+		useRecoilState(welcomeModal)
 
 	const searchParams = useSearchParams()
 	const callbackUrl = searchParams.get('callbackUrl') || '/'
@@ -38,6 +42,7 @@ export default function AuthLoginForm() {
 
 			if (!res?.error) {
 				router.push(callbackUrl)
+				setRecoilWelcomeModal(true)
 			} else {
 				setError('invalid email or password')
 			}
@@ -119,7 +124,10 @@ export default function AuthLoginForm() {
 				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
 			</div>
 			<button
-				onClick={() => signIn('google', { callbackUrl: '/' })}
+				onClick={() => {
+					signIn('google', { callbackUrl: '/' })
+					setRecoilWelcomeModal(true)
+				}}
 				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
 				<Image
 					src='/google-logo.svg'

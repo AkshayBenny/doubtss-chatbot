@@ -2,17 +2,12 @@
 
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { RecoilRoot } from 'recoil'
 import Logo from './Logo'
 import { addUserDexie } from '@/app/dexie/crud'
-import Modal from './Modal'
 
 export default function ChatPage({ session }: any) {
-	const [showModal, setShowModal] = useState(true)
-	const closeModal = () => {
-		setShowModal(false)
-	}
 	useEffect(() => {
 		const addNewUserDexie = async () => {
 			if (session) {
@@ -34,13 +29,10 @@ export default function ChatPage({ session }: any) {
 	}, [session])
 
 	return (
-		<RecoilRoot>
+		<>
 			{session && (
 				<>
 					<div className='bg-custom-black h-screen w-screen relative md:block hidden'>
-						<div className='absolute'>
-							{showModal && <Modal closeModal={closeModal} />}
-						</div>
 						<Navbar />
 						<Chat userSessionData={session} />
 					</div>
@@ -54,6 +46,6 @@ export default function ChatPage({ session }: any) {
 					</div>
 				</>
 			)}
-		</RecoilRoot>
+		</>
 	)
 }
