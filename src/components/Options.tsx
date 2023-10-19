@@ -112,7 +112,7 @@ export default function Options() {
 							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
-									<Link href='/faq'>
+									<Link href='/faq/1'>
 										<button
 											className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
 											<Image
