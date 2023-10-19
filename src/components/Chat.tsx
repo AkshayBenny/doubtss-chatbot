@@ -38,6 +38,7 @@ import EditLineIcon from 'remixicon-react/EditLineIcon'
 import { logEvent } from '@/app/utils/analytics'
 import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
 import Modal from './Modal'
+import { useRouter } from 'next/navigation'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -68,6 +69,7 @@ function pushBeforeDelimitter(first: string, second: any) {
 
 export default function Chat({ userSessionData }: any) {
 	const chatEndRef = useRef(null)
+	const router = useRouter()
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
@@ -80,8 +82,8 @@ export default function Chat({ userSessionData }: any) {
 		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
-	const [recoilShowWelcomeModal, setRecoilShowWelcomeModal] =
-		useRecoilState(welcomeModal)
+	const [showWelcomeModal, setShowWelcomeModal] = useState(false)
+	console.log('showWelcomeModal', showWelcomeModal)
 	const [
 		recoilSubmitConfimationFeedback,
 		setRecoilSubmitConfirmationFeedbacl,
@@ -123,7 +125,8 @@ export default function Chat({ userSessionData }: any) {
 	}
 
 	const closeWelcomeModal = () => {
-		setRecoilShowWelcomeModal(false)
+		setShowWelcomeModal(false)
+		localStorage.setItem('recentSignin', 'False')
 	}
 
 	const addMessage = async (message: any) => {
@@ -327,13 +330,17 @@ export default function Chat({ userSessionData }: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 
+	useEffect(() => {
+		const recentSigninValue = localStorage.getItem('recentSignin')
+		if (recentSigninValue && recentSigninValue === 'True')
+			setShowWelcomeModal(true)
+	}, [])
+
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
-			{recoilShowWelcomeModal && (
-				<div className='absolute'>
-					{recoilShowWelcomeModal && (
-						<Modal closeModal={closeWelcomeModal} />
-					)}
+			{showWelcomeModal && (
+				<div className='absolute z-[40]'>
+					<Modal closeModal={closeWelcomeModal} />
 				</div>
 			)}
 			{showFaqModal && (

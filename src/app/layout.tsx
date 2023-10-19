@@ -1,17 +1,15 @@
-'use client'
-
+import 'server-only'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import AuthProvider from './context/AuthProvider'
-import { RecoilRoot } from 'recoil'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// export const metadata = {
-// 	title: 'Doubtss.com',
-// 	description: 'Help you pass UPSC CSE exam with ease',
-// }
+export const metadata = {
+	title: 'Doubtss.com',
+	description: 'Help you pass UPSC CSE exam with ease',
+}
 
 export default async function RootLayout({
 	children,
@@ -40,16 +38,14 @@ export default async function RootLayout({
 			/>
 			<body className={inter.className}>
 				<AuthProvider>
-					<RecoilRoot>
-						<noscript
-							dangerouslySetInnerHTML={{
-								__html: `<iframe
+					<noscript
+						dangerouslySetInnerHTML={{
+							__html: `<iframe
 						src='https://www.googletagmanager.com/ns.html?id=GTM-54BQ247G'
 						height='0'
 						width='0'></iframe>`,
-							}}></noscript>
-						<main>{children}</main>
-					</RecoilRoot>
+						}}></noscript>
+					<main>{children}</main>
 				</AuthProvider>
 			</body>
 		</html>

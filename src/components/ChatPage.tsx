@@ -3,7 +3,6 @@
 import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useEffect } from 'react'
-import { RecoilRoot } from 'recoil'
 import Logo from './Logo'
 import { addUserDexie } from '@/app/dexie/crud'
 

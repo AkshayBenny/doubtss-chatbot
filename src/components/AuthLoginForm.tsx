@@ -7,8 +7,6 @@ import { ChangeEvent, useState } from 'react'
 import EyeLineIcon from 'remixicon-react/EyeLineIcon'
 import EyeOffLineIcon from 'remixicon-react/EyeOffLineIcon'
 import Image from 'next/image'
-import { useRecoilState } from 'recoil'
-import { welcomeModal } from '@/state/recoil'
 
 export default function AuthLoginForm() {
 	const router = useRouter()
@@ -19,8 +17,6 @@ export default function AuthLoginForm() {
 		password: '',
 	})
 	const [error, setError] = useState('')
-	const [recoilWelcomeModal, setRecoilWelcomeModal] =
-		useRecoilState(welcomeModal)
 
 	const searchParams = useSearchParams()
 	const callbackUrl = searchParams.get('callbackUrl') || '/'
@@ -42,7 +38,7 @@ export default function AuthLoginForm() {
 
 			if (!res?.error) {
 				router.push(callbackUrl)
-				setRecoilWelcomeModal(true)
+				localStorage.setItem('recentSignin', 'True')
 			} else {
 				setError('invalid email or password')
 			}
@@ -126,7 +122,7 @@ export default function AuthLoginForm() {
 			<button
 				onClick={() => {
 					signIn('google', { callbackUrl: '/' })
-					setRecoilWelcomeModal(true)
+					localStorage.setItem('recentSignin', 'True')
 				}}
 				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
 				<Image
