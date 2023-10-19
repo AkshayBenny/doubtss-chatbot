@@ -10,6 +10,7 @@ import {
 	chatType,
 	showClearChatModal,
 	showFAQModal,
+	showFeedbackSubmitConfirmation,
 	userData,
 } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
@@ -34,6 +35,7 @@ import FeedbackModal from './FeedbackModal'
 
 import EditLineIcon from 'remixicon-react/EditLineIcon'
 import { logEvent } from '@/app/utils/analytics'
+import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -76,6 +78,11 @@ export default function Chat({ userSessionData }: any) {
 		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
+	const [
+		recoilSubmitConfimationFeedback,
+		setRecoilSubmitConfirmationFeedbacl,
+	] = useRecoilState(showFeedbackSubmitConfirmation)
+
 	let {
 		completion,
 		input,
@@ -104,6 +111,7 @@ export default function Chat({ userSessionData }: any) {
 		try {
 			chatEndRef &&
 				chatEndRef.current &&
+				// @ts-expect-error
 				chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 		} catch (error: any) {
 			console.error(error.message)
@@ -317,6 +325,12 @@ export default function Chat({ userSessionData }: any) {
 				<>
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
 					<FeedbackModal />
+				</>
+			)}
+			{recoilSubmitConfimationFeedback && (
+				<>
+					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
+					<ConfirmFeedbackSubmission />
 				</>
 			)}
 			{chats.length === 0 ? (

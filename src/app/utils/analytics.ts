@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // Replace with your Google Analytics tracking ID
-const GA_MEASUREMENT_ID = 'YOUR_GOOGLE_ANALYTICS_MEASUREMENT_ID'
+const GA_MEASUREMENT_ID = process.env.GOOGLE_ANALYTICS_ID
 
 // Initialize GA by inserting the necessary script tag
 const initGA = () => {
