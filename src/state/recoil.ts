@@ -48,3 +48,8 @@ export const showFAQModal = atom({
 	key: 'showFAQModal',
 	default: false,
 })
+
+export const showFeedbackSubmitConfirmation = atom({
+	key: 'showFeedbackSubmitConfirmation',
+	default: false,
+})
