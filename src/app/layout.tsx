@@ -1,3 +1,4 @@
+import 'server-only'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
@@ -15,7 +16,6 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
-	// useGoogleAnalytics()
 	return (
 		<html
 			lang='en'

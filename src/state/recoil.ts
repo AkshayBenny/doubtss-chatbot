@@ -53,3 +53,8 @@ export const showFeedbackSubmitConfirmation = atom({
 	key: 'showFeedbackSubmitConfirmation',
 	default: false,
 })
+
+export const welcomeModal = atom({
+	key: 'welcomeModal',
+	default: false,
+})
