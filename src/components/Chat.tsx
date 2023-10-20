@@ -5,14 +5,12 @@ import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import {
-	Message,
 	chatHistory,
 	chatType,
 	showClearChatModal,
 	showFAQModal,
 	showFeedbackSubmitConfirmation,
 	userData,
-	welcomeModal,
 } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import { useCompletion } from 'ai/react'
@@ -21,9 +19,6 @@ import {
 	appendToMessageDexie,
 	getMessagesByUserEmailDexie,
 } from '@/app/dexie/crud'
-import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
-import ThumbUpLineIcon from 'remixicon-react/ThumbUpLineIcon'
-import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 import axios from 'axios'
@@ -35,11 +30,11 @@ import ClearChatModal from './ClearChatModal'
 import FeedbackModal from './FeedbackModal'
 
 import EditLineIcon from 'remixicon-react/EditLineIcon'
-import { logEvent } from '@/app/utils/analytics'
 import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
 import Modal from './Modal'
 import { useRouter } from 'next/navigation'
 import ButtonWithPopover from './ButtonWithPopover'
+import { event } from 'nextjs-google-analytics'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -128,6 +123,10 @@ export default function Chat({ userSessionData }: any) {
 	const closeWelcomeModal = () => {
 		setShowWelcomeModal(false)
 		localStorage.setItem('recentSignin', 'False')
+
+		event('close_welcome_modal', {
+			category: 'Toggles',
+		})
 	}
 
 	const addMessage = async (message: any) => {
@@ -153,11 +152,21 @@ export default function Chat({ userSessionData }: any) {
 		handleAISubmit(e)
 		addMessage({ role: 'human', content: input, id: Date.now() })
 		setInput('')
+
+		event('query_ai', {
+			category: 'Chat',
+			label: input,
+		})
 	}
 
 	const handleCopyClick = (text: string) => {
 		navigator.clipboard.writeText(text).then(() => {
 			setIsCopied(true)
+		})
+
+		event('text_copied', {
+			category: 'Click',
+			label: text,
 		})
 	}
 
@@ -175,6 +184,11 @@ export default function Chat({ userSessionData }: any) {
 					},
 				}
 			)
+
+			event(type, {
+				category: 'Click',
+				label: chat.content,
+			})
 		} catch (error) {
 			console.log(error)
 		}
@@ -216,6 +230,11 @@ export default function Chat({ userSessionData }: any) {
 			...continueLoading,
 			[messageId]: false,
 		})
+
+		event('continue_generating', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	const handleRegenerate = async (messageId: number, text: string) => {
@@ -249,6 +268,11 @@ export default function Chat({ userSessionData }: any) {
 			...regenLoading,
 			[messageId]: false,
 		})
+
+		event('regenerate', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	const generateQuestion = async (messageId: number, text: string) => {
@@ -276,6 +300,11 @@ export default function Chat({ userSessionData }: any) {
 			})
 		})
 		setGenerateQuestionLoading(true)
+
+		event('generate_question', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	useEffect(() => {
@@ -382,7 +411,9 @@ export default function Chat({ userSessionData }: any) {
 						</div>
 						<button
 							onClick={() => {
-								logEvent('Example', 'Example_1')
+								event('example_question_1', {
+									category: 'Chat',
+								})
 								setInput(questions[0])
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
@@ -390,8 +421,10 @@ export default function Chat({ userSessionData }: any) {
 						</button>
 						<button
 							onClick={() => {
-								logEvent('Example', 'Example_1')
 								setInput(questions[1])
+								event('example_question_2', {
+									category: 'Chat',
+								})
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
 							{questions[1]}
@@ -500,10 +533,6 @@ export default function Chat({ userSessionData }: any) {
 															handleCopyClick(
 																chat.content
 															)
-															logEvent(
-																'Button Click',
-																'Copy_button'
-															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ButtonWithPopover
@@ -517,10 +546,6 @@ export default function Chat({ userSessionData }: any) {
 															likeOrDislikeHandler(
 																'like',
 																chat
-															)
-															logEvent(
-																'Button Click',
-																'like_button'
 															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
@@ -536,10 +561,6 @@ export default function Chat({ userSessionData }: any) {
 																'dislike',
 																chat
 															)
-															logEvent(
-																'Button Click',
-																'dislike_button'
-															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ButtonWithPopover
@@ -553,10 +574,6 @@ export default function Chat({ userSessionData }: any) {
 														<>
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'regenerate_button'
-																	)
 																	handleRegenerate(
 																		chat.id,
 																		chat.content
@@ -578,10 +595,6 @@ export default function Chat({ userSessionData }: any) {
 															</button>
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'continue_generating_button'
-																	)
 																	handleContinueGenerating(
 																		chat.id,
 																		chat.content
@@ -610,10 +623,6 @@ export default function Chat({ userSessionData }: any) {
 															'summary' && (
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'generate_question_button'
-																	)
 																	generateQuestion(
 																		chat.id,
 																		chat.content
@@ -665,10 +674,6 @@ export default function Chat({ userSessionData }: any) {
 										<button
 											onClick={() => {
 												stop()
-												logEvent(
-													'Button Click',
-													'stop_generation_button'
-												)
 											}}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
 											<StopLineIcon className='w-[18px] h-[18px]' />
