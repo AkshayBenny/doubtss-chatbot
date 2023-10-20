@@ -38,6 +38,7 @@ export default function AuthLoginForm() {
 
 			if (!res?.error) {
 				router.push(callbackUrl)
+				localStorage.setItem('recentSignin', 'True')
 			} else {
 				setError('invalid email or password')
 			}
@@ -119,7 +120,10 @@ export default function AuthLoginForm() {
 				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
 			</div>
 			<button
-				onClick={() => signIn('google', { callbackUrl: '/' })}
+				onClick={() => {
+					signIn('google', { callbackUrl: '/' })
+					localStorage.setItem('recentSignin', 'True')
+				}}
 				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
 				<Image
 					src='/google-logo.svg'

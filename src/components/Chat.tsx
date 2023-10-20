@@ -5,7 +5,6 @@ import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import {
-	Message,
 	chatHistory,
 	chatType,
 	showClearChatModal,
@@ -20,9 +19,6 @@ import {
 	appendToMessageDexie,
 	getMessagesByUserEmailDexie,
 } from '@/app/dexie/crud'
-import FileCopyLineIcon from 'remixicon-react/FileCopyLineIcon'
-import ThumbUpLineIcon from 'remixicon-react/ThumbUpLineIcon'
-import ThumbDownLineIcon from 'remixicon-react/ThumbDownLineIcon'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
 import axios from 'axios'
@@ -34,8 +30,11 @@ import ClearChatModal from './ClearChatModal'
 import FeedbackModal from './FeedbackModal'
 
 import EditLineIcon from 'remixicon-react/EditLineIcon'
-import { logEvent } from '@/app/utils/analytics'
 import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
+import Modal from './Modal'
+import { useRouter } from 'next/navigation'
+import ButtonWithPopover from './ButtonWithPopover'
+import { event } from 'nextjs-google-analytics'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -66,6 +65,7 @@ function pushBeforeDelimitter(first: string, second: any) {
 
 export default function Chat({ userSessionData }: any) {
 	const chatEndRef = useRef(null)
+	const router = useRouter()
 	const [chats, setChats] = useRecoilState(chatHistory)
 	const [showFaqModal, setShowFaqModal] = useRecoilState(showFAQModal)
 	const [recoilChatType, setRecoilChatType] = useRecoilState(chatType)
@@ -78,6 +78,8 @@ export default function Chat({ userSessionData }: any) {
 		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
+	const [showWelcomeModal, setShowWelcomeModal] = useState(false)
+	console.log('showWelcomeModal', showWelcomeModal)
 	const [
 		recoilSubmitConfimationFeedback,
 		setRecoilSubmitConfirmationFeedbacl,
@@ -118,6 +120,15 @@ export default function Chat({ userSessionData }: any) {
 		}
 	}
 
+	const closeWelcomeModal = () => {
+		setShowWelcomeModal(false)
+		localStorage.setItem('recentSignin', 'False')
+
+		event('close_welcome_modal', {
+			category: 'Toggles',
+		})
+	}
+
 	const addMessage = async (message: any) => {
 		setChats((oldChats) => [
 			...oldChats,
@@ -141,11 +152,21 @@ export default function Chat({ userSessionData }: any) {
 		handleAISubmit(e)
 		addMessage({ role: 'human', content: input, id: Date.now() })
 		setInput('')
+
+		event('query_ai', {
+			category: 'Chat',
+			label: input,
+		})
 	}
 
 	const handleCopyClick = (text: string) => {
 		navigator.clipboard.writeText(text).then(() => {
 			setIsCopied(true)
+		})
+
+		event('text_copied', {
+			category: 'Click',
+			label: text,
 		})
 	}
 
@@ -163,6 +184,11 @@ export default function Chat({ userSessionData }: any) {
 					},
 				}
 			)
+
+			event(type, {
+				category: 'Click',
+				label: chat.content,
+			})
 		} catch (error) {
 			console.log(error)
 		}
@@ -204,6 +230,11 @@ export default function Chat({ userSessionData }: any) {
 			...continueLoading,
 			[messageId]: false,
 		})
+
+		event('continue_generating', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	const handleRegenerate = async (messageId: number, text: string) => {
@@ -237,6 +268,11 @@ export default function Chat({ userSessionData }: any) {
 			...regenLoading,
 			[messageId]: false,
 		})
+
+		event('regenerate', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	const generateQuestion = async (messageId: number, text: string) => {
@@ -264,6 +300,11 @@ export default function Chat({ userSessionData }: any) {
 			})
 		})
 		setGenerateQuestionLoading(true)
+
+		event('generate_question', {
+			category: 'Chat',
+			label: text,
+		})
 	}
 
 	useEffect(() => {
@@ -319,8 +360,19 @@ export default function Chat({ userSessionData }: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [completion, isLoading])
 
+	useEffect(() => {
+		const recentSigninValue = localStorage.getItem('recentSignin')
+		if (recentSigninValue && recentSigninValue === 'True')
+			setShowWelcomeModal(true)
+	}, [])
+
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
+			{showWelcomeModal && (
+				<div className='absolute z-[900]'>
+					<Modal closeModal={closeWelcomeModal} />
+				</div>
+			)}
 			{showFaqModal && (
 				<>
 					<div className='absolute w-screen h-screen z-[40] bg-black bg-opacity-80'></div>
@@ -359,7 +411,9 @@ export default function Chat({ userSessionData }: any) {
 						</div>
 						<button
 							onClick={() => {
-								logEvent('Example', 'Example_1')
+								event('example_question_1', {
+									category: 'Chat',
+								})
 								setInput(questions[0])
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
@@ -367,8 +421,10 @@ export default function Chat({ userSessionData }: any) {
 						</button>
 						<button
 							onClick={() => {
-								logEvent('Example', 'Example_1')
 								setInput(questions[1])
+								event('example_question_2', {
+									category: 'Chat',
+								})
 							}}
 							className='text-custom-white text-sm flex items-center justify-center gap-2 border border-custom-white border-opacity-[12%] rounded-xl py-[19px] px-[15px] text-left hover:bg-custom-light-gray transition'>
 							{questions[1]}
@@ -477,13 +533,13 @@ export default function Chat({ userSessionData }: any) {
 															handleCopyClick(
 																chat.content
 															)
-															logEvent(
-																'Button Click',
-																'Copy_button'
-															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<FileCopyLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='copy'
+															hoverText='Copy'
+															clickText='Copied!'
+														/>
 													</button>
 													<button
 														onClick={() => {
@@ -491,13 +547,13 @@ export default function Chat({ userSessionData }: any) {
 																'like',
 																chat
 															)
-															logEvent(
-																'Button Click',
-																'like_button'
-															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<ThumbUpLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='like'
+															hoverText='Like Text'
+															clickText='Liked Text!'
+														/>
 													</button>
 													<button
 														onClick={() => {
@@ -505,23 +561,19 @@ export default function Chat({ userSessionData }: any) {
 																'dislike',
 																chat
 															)
-															logEvent(
-																'Button Click',
-																'dislike_button'
-															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='dislike'
+															hoverText='Dislike Text'
+															clickText='Disliked Text!'
+														/>
 													</button>
 													{chats.length - 1 ===
 														index && (
 														<>
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'regenerate_button'
-																	)
 																	handleRegenerate(
 																		chat.id,
 																		chat.content
@@ -543,10 +595,6 @@ export default function Chat({ userSessionData }: any) {
 															</button>
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'continue_generating_button'
-																	)
 																	handleContinueGenerating(
 																		chat.id,
 																		chat.content
@@ -575,10 +623,6 @@ export default function Chat({ userSessionData }: any) {
 															'summary' && (
 															<button
 																onClick={() => {
-																	logEvent(
-																		'Button Click',
-																		'generate_question_button'
-																	)
 																	generateQuestion(
 																		chat.id,
 																		chat.content
@@ -630,10 +674,6 @@ export default function Chat({ userSessionData }: any) {
 										<button
 											onClick={() => {
 												stop()
-												logEvent(
-													'Button Click',
-													'stop_generation_button'
-												)
 											}}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
 											<StopLineIcon className='w-[18px] h-[18px]' />
