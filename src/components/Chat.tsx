@@ -39,6 +39,7 @@ import { logEvent } from '@/app/utils/analytics'
 import ConfirmFeedbackSubmission from './ConfirmFeedbackSubmission'
 import Modal from './Modal'
 import { useRouter } from 'next/navigation'
+import ButtonWithPopover from './ButtonWithPopover'
 
 const questions = [
 	'How did the Industrial Revolution impact economy in Europe & North America?',
@@ -339,7 +340,7 @@ export default function Chat({ userSessionData }: any) {
 	return (
 		<div className='w-full h-full text-custom-white flex flex-col items-center justify-center '>
 			{showWelcomeModal && (
-				<div className='absolute z-[40]'>
+				<div className='absolute z-[900]'>
 					<Modal closeModal={closeWelcomeModal} />
 				</div>
 			)}
@@ -505,7 +506,11 @@ export default function Chat({ userSessionData }: any) {
 															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<FileCopyLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='copy'
+															hoverText='Copy'
+															clickText='Copied!'
+														/>
 													</button>
 													<button
 														onClick={() => {
@@ -519,7 +524,11 @@ export default function Chat({ userSessionData }: any) {
 															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<ThumbUpLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='like'
+															hoverText='Like Text'
+															clickText='Liked Text!'
+														/>
 													</button>
 													<button
 														onClick={() => {
@@ -533,7 +542,11 @@ export default function Chat({ userSessionData }: any) {
 															)
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
-														<ThumbDownLineIcon className='h-[16px] w-[16px] text-custom-white' />
+														<ButtonWithPopover
+															type='dislike'
+															hoverText='Dislike Text'
+															clickText='Disliked Text!'
+														/>
 													</button>
 													{chats.length - 1 ===
 														index && (
