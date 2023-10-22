@@ -143,7 +143,19 @@ export default function AuthRegisterForm() {
 				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
 			</div>
 			<button
-				onClick={() => signIn('google', { callbackUrl: '/' })}
+				onClick={() => {
+					signIn('google', { callbackUrl: '/' })
+					if (typeof window !== 'undefined') {
+						window.dataLayer = window.dataLayer || []
+						window.dataLayer.push({
+							event: 'like_button_click',
+							category: 'Button Click',
+							action: 'Test Action',
+							label: 'Test Label',
+							value: 'Your Value',
+						})
+					}
+				}}
 				className='flex items-center justify-center gap-3 font-medium text-sm bg-custom-white bg-opacity-[12%] py-[15px] px-[20px] rounded-[12px] w-full mt-[24px] border-custom-gray '>
 				<Image
 					src='/google-logo.svg'
