@@ -23,6 +23,14 @@ export default function AuthLoginForm() {
 
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
+		if (!formValues.email) {
+			setError('Please enter a valid email address.')
+			return
+		}
+		if (!formValues.password) {
+			setError('Please enter a valid password.')
+			return
+		}
 		try {
 			setLoading(true)
 			setFormValues({ email: '', password: '' })
@@ -64,7 +72,6 @@ export default function AuthLoginForm() {
 				<input
 					autoFocus={true}
 					autoComplete='off'
-					required
 					type='email'
 					name='email'
 					value={formValues.email}
@@ -74,7 +81,6 @@ export default function AuthLoginForm() {
 				/>
 				<div className='flex items-center justify-between px-5 overflow-hidden rounded-xl border border-custom-white border-opacity-[12%] bg-custom-gray w-full'>
 					<input
-						required
 						autoComplete='new-password'
 						type={showPassword ? 'text' : 'password'}
 						placeholder='Password'
