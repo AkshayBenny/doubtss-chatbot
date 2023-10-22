@@ -547,6 +547,24 @@ export default function Chat({ userSessionData }: any) {
 																'like',
 																chat
 															)
+															if (
+																typeof window !==
+																'undefined'
+															) {
+																window.dataLayer =
+																	window.dataLayer ||
+																	[]
+																window.dataLayer.push(
+																	{
+																		event: 'like_button_click',
+																		category:
+																			'Button Click',
+																		action: 'Test Action',
+																		label: 'Test Label',
+																		value: 'Your Value',
+																	}
+																)
+															}
 														}}
 														className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer'>
 														<ButtonWithPopover
