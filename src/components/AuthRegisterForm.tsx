@@ -21,10 +21,10 @@ export default function AuthRegisterForm() {
 
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		if (formValues.password !== confirmPassword) {
-			setError('Password Missmatch!')
-			return
-		}
+		// if (formValues.password !== confirmPassword) {
+		// 	setError('Password Missmatch!')
+		// 	return
+		// }
 		setLoading(true)
 		setFormValues({ name: '', email: '', password: '' })
 
@@ -143,6 +143,7 @@ export default function AuthRegisterForm() {
 				<div className='h-[1px] w-full bg-custom-white bg-opacity-20'></div>
 			</div>
 			<button
+				disabled={loading}
 				onClick={() => {
 					signIn('google', { callbackUrl: '/' })
 					if (typeof window !== 'undefined') {
