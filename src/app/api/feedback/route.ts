@@ -1,14 +1,11 @@
 import { getServerSession } from 'next-auth'
-import { options } from '../auth/[...nextauth]/options'
 import { NextResponse } from 'next/server'
 import prisma from '@/app/db/prisma'
 
 export async function POST(req: Request) {
 	const { feedback } = await req.json()
 
-	const session = await getServerSession(options)
-
-	if (!feedback || !session) {
+	if (!feedback) {
 		return NextResponse.json({ success: false })
 	}
 
@@ -16,7 +13,7 @@ export async function POST(req: Request) {
 		await prisma.feedback.create({
 			data: {
 				content: feedback,
-				userId: (session.user as any).id,
+				userId: '100000000',
 			},
 		})
 		return NextResponse.json({ success: true })
