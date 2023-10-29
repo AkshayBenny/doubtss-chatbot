@@ -36,33 +36,9 @@ export default function Options() {
 					leave='transition ease-in duration-75'
 					leaveFrom='transform opacity-100 scale-100'
 					leaveTo='transform opacity-0 scale-95'>
-					<Menu.Items className='absolute left-0 mt-2  origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none '>
-						<div className='flex items-center justify-start gap-[10px] px-[15px] py-[16px] w-full'>
-							{recoilUserState && (
-								// <Image
-								// 	src={recoilUserState?.user?.image}
-								// 	height={36}
-								// 	width={36}
-								// 	className='rounded-lg'
-								// 	alt='Profile picture of user'
-								// />
-								<Identicon
-									string={recoilUserState?.name}
-									size={36}
-									className='rounded-lg'
-								/>
-							)}
-							<div>
-								<p className='font-semibold'>
-									{recoilUserState?.name}
-								</p>
-								<p className='text-xs opacity-60'>
-									{recoilUserState?.email}
-								</p>
-							</div>
-						</div>
+					<Menu.Items className='absolute left-0 mt-2  origin-top-right divide-y divide-custom-light-gray rounded-md bg-custom-gray shadow-lg focus:outline-none w-[200px]'>
 						<div className='px-[15px] py-[16px]'>
-							<Menu.Item>
+							{/* <Menu.Item>
 								{({ active }) => (
 									<button
 										className={`group flex w-full items-center rounded-md pt-[0.5px] pb-[10.25px] text-sm`}>
@@ -79,8 +55,8 @@ export default function Options() {
 										</span>
 									</button>
 								)}
-							</Menu.Item>
-							<Menu.Item>
+							</Menu.Item> */}
+							{/* <Menu.Item>
 								{({ active }) => (
 									<button
 										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
@@ -94,8 +70,8 @@ export default function Options() {
 										Invite a friend
 									</button>
 								)}
-							</Menu.Item>
-							<Menu.Item>
+							</Menu.Item> */}
+							{/* <Menu.Item>
 								{({ active }) => (
 									<button
 										className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
@@ -109,7 +85,7 @@ export default function Options() {
 										Settings
 									</button>
 								)}
-							</Menu.Item>
+							</Menu.Item> */}
 							<Menu.Item>
 								{({ active }) => (
 									<Link href='/faq/1'>
@@ -140,22 +116,6 @@ export default function Options() {
 											alt='Star icon'
 										/>
 										Feedback
-									</button>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<button
-										onClick={() => signOut()}
-										className={`group flex w-full items-center rounded-md pt-[10.25px] text-sm`}>
-										<Image
-											src='/options/logout.svg'
-											className='mr-2'
-											height={18}
-											width={18}
-											alt='Star icon'
-										/>
-										Logout
 									</button>
 								)}
 							</Menu.Item>
