@@ -28,8 +28,8 @@ export const chatHistory = atom<ChatHistory>({
 export const userData = atom<User>({
 	key: 'userData',
 	default: {
-		name: '',
-		email: '',
+		name: 'John Doe',
+		email: 'johndoe@gmail.com',
 		image: '',
 	},
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { SessionProvider } from 'next-auth/react'
+// import { SessionProvider } from 'next-auth/react'
 import { RecoilRoot } from 'recoil'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 
@@ -20,9 +20,11 @@ export default function AuthProvider({
 	children: React.ReactNode
 }) {
 	return (
-		<SessionProvider>
+		<>
+			{/* <SessionProvider> */}
 			<GoogleAnalytics trackPageViews />
 			<RecoilRoot>{children}</RecoilRoot>
-		</SessionProvider>
+			{/* </SessionProvider> */}
+		</>
 	)
 }

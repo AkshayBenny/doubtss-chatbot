@@ -63,7 +63,7 @@ function pushBeforeDelimitter(first: string, second: any) {
 	return firstContent + second + '$$$' + referredFromContent
 }
 
-export default function Chat({ userSessionData }: any) {
+export default function Chat() {
 	const chatEndRef = useRef(null)
 	const router = useRouter()
 	const [chats, setChats] = useRecoilState(chatHistory)
@@ -100,8 +100,8 @@ export default function Chat({ userSessionData }: any) {
 		headers: { name: 'Alex' },
 		body: {
 			isText: true,
-			userId: userSessionData?.user.email || '',
-			userName: userSessionData?.user.name || '',
+			userId: 'johndoe@gmail.com' || '',
+			userName: 'John Doe' || '',
 		},
 	})
 
@@ -140,7 +140,7 @@ export default function Chat({ userSessionData }: any) {
 
 		const dixieMessage = {
 			...message,
-			userEmail: userSessionData.user.email,
+			userEmail: 'John Doe',
 			type: recoilChatType,
 			createdAt: new Date(),
 		}
@@ -206,8 +206,8 @@ export default function Chat({ userSessionData }: any) {
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-continue', {
 			prompt: text,
-			userId: userSessionData?.user.email || '',
-			userName: userSessionData?.user.name || '',
+			userId: 'johndoe@gmail.com' || '',
+			userName: 'John Doe' || '',
 		})
 
 		// Update the message in the Dexie DB
@@ -245,8 +245,8 @@ export default function Chat({ userSessionData }: any) {
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-regenerate', {
 			prompt: text,
-			userId: userSessionData?.user.email || '',
-			userName: userSessionData?.user.name || '',
+			userId: 'johndoe@gmail.com' || '',
+			userName: 'John Doe' || '',
 		})
 
 		// Update the message in the Dexie DB
@@ -280,8 +280,8 @@ export default function Chat({ userSessionData }: any) {
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-genq', {
 			prompt: text,
-			userId: userSessionData?.user.email || '',
-			userName: userSessionData?.user.name || '',
+			userId: 'johndoe@gmail.com' || '',
+			userName: 'John Doe' || '',
 		})
 
 		// Update the message in the Dexie DB
@@ -311,36 +311,36 @@ export default function Chat({ userSessionData }: any) {
 		scrollToBottom()
 	}, [chats])
 
-	useEffect(() => {
-		if (userSessionData) {
-			setRecoilUserState(userSessionData.user)
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userSessionData])
+	// useEffect(() => {
+	// 	if (userSessionData) {
+	// 		setRecoilUserState(userSessionData.user)
+	// 	}
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [userSessionData])
 
 	useEffect(() => {
 		const updateHistory = async () => {
-			if (userSessionData?.user.email) {
-				const chatHistory = await getMessagesByUserEmailDexie(
-					userSessionData?.user.email
-				)
+			// if (userSessionData?.user.email) {
+			const chatHistory = await getMessagesByUserEmailDexie(
+				'johndoe@gmail.com'
+			)
 
-				console.log('ChatHistory: ', chatHistory)
+			console.log('ChatHistory: ', chatHistory)
 
-				chatHistory.length > 0 &&
-					chatHistory.map((history) => {
-						let oldMessage: any = {
-							role: history.role,
-							content: history.content,
-							id: history.id,
-						}
-						setChats((oldChats) => [...oldChats, oldMessage])
-					})
-			}
+			chatHistory.length > 0 &&
+				chatHistory.map((history) => {
+					let oldMessage: any = {
+						role: history.role,
+						content: history.content,
+						id: history.id,
+					}
+					setChats((oldChats) => [...oldChats, oldMessage])
+				})
+			// }
 		}
 		updateHistory()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userSessionData])
+	}, [])
 
 	useEffect(() => {
 		const addBotMessage = async () => {
