@@ -83,7 +83,7 @@ export default function Options() {
 									</button>
 								)}
 							</Menu.Item> */}
-							<Menu.Item>
+							{/* <Menu.Item>
 								{({ active }) => (
 									<Link href='/faq/1'>
 										<button
@@ -99,7 +99,7 @@ export default function Options() {
 										</button>
 									</Link>
 								)}
-							</Menu.Item>
+							</Menu.Item> */}
 							<Menu.Item>
 								{({ active }) => (
 									<button
