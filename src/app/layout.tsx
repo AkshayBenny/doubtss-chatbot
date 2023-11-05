@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
 	title: 'Doubtss.com',
-	description: 'Help you pass UPSC CSE exam with ease',
+	description: 'Helps UPSC CSE aspirants speed up their preparation',
 }
 
 export default async function RootLayout({
