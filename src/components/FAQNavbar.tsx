@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function FAQNavbar() {
 	return (
-		<div className='px-[64px] pt-[33px] pb-[64px] bg-custom-white bg-opacity-[12%] rounded-b-[16px]'>
+		<div className='px-[64px] pt-[33px] pb-[64px]  bg-opacity-[12%] rounded-b-[16px]'>
 			<nav className='flex items-center justify-between'>
 				<Link href='/'>
 					<Image
@@ -15,13 +15,6 @@ export default function FAQNavbar() {
 						alt='Doubtss logo'
 					/>
 				</Link>
-				<div className='flex items-center justify-center gap-12'>
-					<p>Collections</p>
-					<Link href='/'>
-						<p>Website</p>
-					</Link>
-					<p>English</p>
-				</div>
 
 				<Link
 					href='/'
@@ -29,14 +22,6 @@ export default function FAQNavbar() {
 					Go to Chat
 				</Link>
 			</nav>
-			<div className='flex items-center justify-start mx-auto w-full max-w-6xl p-[20px] border border-white border-opacity-[12%] h-[58px] rounded-[12px] mt-[92px] '>
-				<SearchLineIcon className='w-[18px] h-[18px]' />
-				<input
-					className='placeholder:text-base placeholder:text-opacity-80 placeholder:font-normal bg-opacity-0 bg-none bg-transparent border-none ring-0 outline-none focus:ring-0 focus:outline-none h-full w-full'
-					type='text'
-					placeholder='Search for articles'
-				/>
-			</div>
 		</div>
 	)
 }
