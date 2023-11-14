@@ -166,10 +166,7 @@ export default function Chat() {
 			setIsCopied(true)
 		})
 
-		event('text_copied', {
-			category: 'Click',
-			label: text,
-		})
+		event('copy_button')
 	}
 
 	const likeOrDislikeHandler = async (type: any, chat: any) => {
@@ -706,6 +703,7 @@ export default function Chat() {
 										<button
 											onClick={() => {
 												stop()
+												event('stop_generating_button')
 											}}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
 											<StopLineIcon className='w-[18px] h-[18px]' />
