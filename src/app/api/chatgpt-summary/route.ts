@@ -1,4 +1,3 @@
-import { metadata } from './../../layout'
 import { OpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
 import { LangChainStream } from 'ai'
@@ -6,7 +5,6 @@ import { CallbackManager } from 'langchain/callbacks'
 import { PromptTemplate } from 'langchain/prompts'
 import { NextResponse } from 'next/server'
 import MemoryManager from '@/app/utils/memory'
-import { rateLimit } from '@/app/utils/rateLimit'
 import { summary_template_prompt } from '@/app/utils/prompts'
 
 export const runtime = 'edge'
@@ -20,39 +18,9 @@ function countTokens(text: string) {
 }
 
 export async function POST(req: Request) {
-	const { prompt, userId, userName } = await req.json()
+	const { prompt } = await req.json()
 	let referredFromFileName = ''
 	try {
-		const identifier = req.url + '-' + (userId || 'anonymous')
-		const { success } = await rateLimit(identifier)
-
-		if (!success) {
-			return new NextResponse(
-				JSON.stringify({
-					Message: "Hi, the companions can't talk this fast.",
-				}),
-				{
-					status: 429,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
-
-		const name = req.headers.get('name')
-		if (!userName) {
-			return new NextResponse(
-				JSON.stringify({ Message: 'User not authorized' }),
-				{
-					status: 401,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
-
 		let data
 		try {
 			data = summary_template_prompt
@@ -67,9 +35,9 @@ export async function POST(req: Request) {
 		const seedchat = seedsplit[0]
 
 		const companionKey = {
-			companionName: name!,
+			companionName: 'name'!,
 			modelName: 'chatgpt',
-			userId: userId,
+			userId: '',
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -122,10 +90,10 @@ export async function POST(req: Request) {
 		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-			You are ${name} and are currently talking to ${userName}.
+			You are Doubtss and are currently talking to a user.
 			${preamble}
 			You reply with answers that range from one sentence to one paragraph and with some details. ${replyWithTwilioLimit}
-			Below are relevant details about ${name}'s past
+			Below are relevant details about Doubtss's past
 			${relevantHistory}
 			Below is a relevant conversation history
 		    ${recentChatHistory}

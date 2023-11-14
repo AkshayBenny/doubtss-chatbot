@@ -137,7 +137,7 @@ export async function POST(req: Request) {
 			})
 
 		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
-		return NextResponse.json(result!.text)
+		return NextResponse.json(result!.text  + '$$$' + referredFromFileName)
 		// return new StreamingTextResponse(stream)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)

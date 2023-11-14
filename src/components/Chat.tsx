@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import {
 	chatHistory,
 	chatType,
+	queryAction,
 	showClearChatModal,
 	showFAQModal,
 	showFeedbackSubmitConfirmation,
@@ -74,12 +75,12 @@ export default function Chat() {
 	const [text, setText] = useState('')
 	const [continueLoading, setContinueLoading] = useState<any>({})
 	const [regenLoading, setRegenLoading] = useState<any>({})
+	const [querying, setQuerying] = useRecoilState(queryAction)
 	const [clearChatModal, setClearChatModal] =
 		useRecoilState(showClearChatModal)
 	const [generateQuestionLoading, setGenerateQuestionLoading] =
 		useState(false)
 	const [showWelcomeModal, setShowWelcomeModal] = useState(false)
-	console.log('showWelcomeModal', showWelcomeModal)
 	const [
 		recoilSubmitConfimationFeedback,
 		setRecoilSubmitConfirmationFeedbacl,
@@ -105,7 +106,7 @@ export default function Chat() {
 		},
 	})
 
-	if (error) console.log('USECOMPLETION HOOK ERROR: ', error)
+	if (error) console.log('USECOMPLETION HOOK ERROR: ', error.message)
 
 	const editHandler = (chat: any) => setInput(chat.content)
 
@@ -149,10 +150,11 @@ export default function Chat() {
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault()
+		setQuerying(true)
 		handleAISubmit(e)
 		addMessage({ role: 'human', content: input, id: Date.now() })
 		setInput('')
-
+		setQuerying(false)
 		event('query_ai', {
 			category: 'Chat',
 			label: input,
@@ -164,10 +166,7 @@ export default function Chat() {
 			setIsCopied(true)
 		})
 
-		event('text_copied', {
-			category: 'Click',
-			label: text,
-		})
+		event('copy_button')
 	}
 
 	const likeOrDislikeHandler = async (type: any, chat: any) => {
@@ -189,8 +188,8 @@ export default function Chat() {
 				category: 'Click',
 				label: chat.content,
 			})
-		} catch (error) {
-			console.log(error)
+		} catch (error: any) {
+			console.log(error.message)
 		}
 	}
 
@@ -198,6 +197,7 @@ export default function Chat() {
 		messageId: number,
 		text: string
 	) => {
+		setQuerying(true)
 		setContinueLoading({
 			...continueLoading,
 			[messageId]: true,
@@ -230,7 +230,7 @@ export default function Chat() {
 			...continueLoading,
 			[messageId]: false,
 		})
-
+		setQuerying(false)
 		event('continue_generating', {
 			category: 'Chat',
 			label: text,
@@ -238,6 +238,7 @@ export default function Chat() {
 	}
 
 	const handleRegenerate = async (messageId: number, text: string) => {
+		setQuerying(true)
 		setRegenLoading({
 			...regenLoading,
 			[messageId]: true,
@@ -268,7 +269,7 @@ export default function Chat() {
 			...regenLoading,
 			[messageId]: false,
 		})
-
+		setQuerying(false)
 		event('regenerate', {
 			category: 'Chat',
 			label: text,
@@ -276,6 +277,7 @@ export default function Chat() {
 	}
 
 	const generateQuestion = async (messageId: number, text: string) => {
+		setQuerying(true)
 		setGenerateQuestionLoading(true)
 		setText(text)
 		const { data } = await axios.post('/api/chatgpt-genq', {
@@ -300,7 +302,7 @@ export default function Chat() {
 			})
 		})
 		setGenerateQuestionLoading(true)
-
+		setQuerying(false)
 		event('generate_question', {
 			category: 'Chat',
 			label: text,
@@ -591,13 +593,16 @@ export default function Chat() {
 														index && (
 														<>
 															<button
+																disabled={
+																	querying
+																}
 																onClick={() => {
 																	handleRegenerate(
 																		chat.id,
 																		chat.content
 																	)
 																}}
-																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group disabled:cursor-wait'>
 																<RefreshLineIcon
 																	className={`h-[16px] w-[16px] text-custom-white ${
 																		regenLoading[
@@ -612,13 +617,16 @@ export default function Chat() {
 																</p>
 															</button>
 															<button
+																disabled={
+																	querying
+																}
 																onClick={() => {
 																	handleContinueGenerating(
 																		chat.id,
 																		chat.content
 																	)
 																}}
-																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group disabled:cursor-wait'>
 																<SpeedMiniLineIcon
 																	className={`h-[16px] w-[16px] text-custom-white ${
 																		continueLoading[
@@ -640,13 +648,16 @@ export default function Chat() {
 														chat.type ===
 															'summary' && (
 															<button
+																disabled={
+																	querying
+																}
 																onClick={() => {
 																	generateQuestion(
 																		chat.id,
 																		chat.content
 																	)
 																}}
-																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer group'>
+																className='flex items-center justify-center gap-[6px] p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer disabled:cursor-wait group'>
 																<Image
 																	src='/gen-ques.svg'
 																	height={16}
@@ -692,6 +703,7 @@ export default function Chat() {
 										<button
 											onClick={() => {
 												stop()
+												event('stop_generating_button')
 											}}
 											className='flex items-center justify-center p-[8px] rounded-[9px] border border-custom-white border-opacity-20 bg-white bg-opacity-[5%] cursor-pointer gap-[6px]'>
 											<StopLineIcon className='w-[18px] h-[18px]' />

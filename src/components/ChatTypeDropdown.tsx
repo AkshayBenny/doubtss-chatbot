@@ -2,6 +2,7 @@
 
 import { chatType } from '@/state/recoil'
 import { Menu, Transition } from '@headlessui/react'
+import { event } from 'nextjs-google-analytics'
 import { Fragment, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import ArrowDownSFillIcon from 'remixicon-react/ArrowDownSFillIcon'
@@ -44,13 +45,18 @@ export default function ChatTypeDropDown({
 							leaveFrom='transform'
 							leaveTo='transform  '>
 							<Menu.Items
-								onClick={() =>
+								onClick={() => {
 									setRecoilChatType(
 										recoilChatType === 'question'
 											? 'summary'
 											: 'question'
 									)
-								}
+									event(
+										`{recoilChatType === 'question'
+									? 'summary_button_main'
+									: 'question_button_main'}`
+									)
+								}}
 								as='div'
 								className={`cursor-pointer absolute ${
 									continuation

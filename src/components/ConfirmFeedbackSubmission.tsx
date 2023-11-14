@@ -3,6 +3,7 @@
 import CloseLineIcon from 'remixicon-react/CloseLineIcon'
 import { showFAQModal, showFeedbackSubmitConfirmation } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
+import Link from 'next/link'
 
 export default function ConfirmFeedbackSubmission() {
 	const [
@@ -29,12 +30,17 @@ export default function ConfirmFeedbackSubmission() {
 				<CloseLineIcon />
 			</button>
 			<h2 className='font-semibold text-[26px]'>Feedback Submitted</h2>
-			<p className='font-normal text-sm max-w-[806px] text-center'>
-				We&apos;ve received your feedback and will review it promptly.
-				In the meantime, if you have any further questions or need
-				assistance, reach out to our support team at{' '}
-				<span className='underline'>support@doubtss.com</span>.
-			</p>
+			<Link
+				legacyBehavior
+				href='mailto:support@doubtss.com'
+				passHref>
+				<p className='font-normal text-sm max-w-[806px] text-center'>
+					We&apos;ve received your feedback and will review it
+					promptly. In the meantime, if you have any further questions
+					or need assistance, reach out to our support team at{' '}
+					<span className='underline'>support@doubtss.com</span>.
+				</p>
+			</Link>
 
 			<button
 				className='text-custom-green'
