@@ -18,7 +18,7 @@ import { useCompletion } from 'ai/react'
 import {
 	addMessageDexie,
 	appendToMessageDexie,
-	getMessagesByUserEmailDexie,
+	getAllMessagesDexie,
 } from '@/app/dexie/crud'
 import RefreshLineIcon from 'remixicon-react/RefreshLineIcon'
 import SpeedMiniLineIcon from 'remixicon-react/SpeedMiniLineIcon'
@@ -141,7 +141,6 @@ export default function Chat() {
 
 		const dixieMessage = {
 			...message,
-			userEmail: 'John Doe',
 			type: recoilChatType,
 			createdAt: new Date(),
 		}
@@ -313,19 +312,10 @@ export default function Chat() {
 		scrollToBottom()
 	}, [chats])
 
-	// useEffect(() => {
-	// 	if (userSessionData) {
-	// 		setRecoilUserState(userSessionData.user)
-	// 	}
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [userSessionData])
-
 	useEffect(() => {
 		const updateHistory = async () => {
 			// if (userSessionData?.user.email) {
-			const chatHistory = await getMessagesByUserEmailDexie(
-				'johndoe@gmail.com'
-			)
+			const chatHistory = await getAllMessagesDexie()
 
 			console.log('ChatHistory: ', chatHistory)
 
@@ -553,9 +543,12 @@ export default function Chat() {
 																typeof window !==
 																'undefined'
 															) {
+																// @ts-ignore
 																window.dataLayer =
+																	// @ts-ignore
 																	window.dataLayer ||
 																	[]
+																// @ts-ignore
 																window.dataLayer.push(
 																	{
 																		event: 'like_button_click',
