@@ -4,27 +4,21 @@ import Chat from '@/components/Chat'
 import Navbar from '@/components/Navbar'
 import { useEffect } from 'react'
 import Logo from './Logo'
-import { addUserDexie } from '@/app/dexie/crud'
+import { db } from '@/app/dexie/db'
 
 export default function ChatPage() {
 	useEffect(() => {
-		const addNewUserDexie = async () => {
-			if (true) {
-				let newDexieUser = {
-					name: 'John Doe',
-					email: 'johndoe@gmail.com',
-				}
-				await addUserDexie(newDexieUser)
+		const initializeDatabase = async () => {
+			try {
+				await db.open() // This may be necessary to open the database explicitly
+				// Other initialization steps if needed
+				console.log('Database initialized')
+			} catch (error) {
+				console.error('Error initializing the database:', error)
 			}
 		}
 
-		if (window && !('indexedDB' in window)) {
-			console.log('IndexedDB not supported')
-		} else {
-			addNewUserDexie()
-		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		initializeDatabase()
 	}, [])
 
 	return (

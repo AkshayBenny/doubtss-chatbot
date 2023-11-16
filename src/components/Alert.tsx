@@ -27,7 +27,7 @@ export default function Alert() {
 				</button>
 			)}
 
-			<Menu
+			{/* <Menu
 				as='div'
 				className='relative inline-block text-left'>
 				<div>
@@ -83,7 +83,7 @@ export default function Alert() {
 						</div>
 					</Menu.Items>
 				</Transition>
-			</Menu>
+			</Menu> */}
 		</div>
 	)
 }

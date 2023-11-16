@@ -1,13 +1,7 @@
 import Dexie from 'dexie'
 
-interface User {
-	email: string
-	name: string
-}
-
 interface Message {
 	id?: number
-	userEmail: string
 	role: string
 	content: string
 	createdAt: string
@@ -15,23 +9,16 @@ interface Message {
 }
 
 class ChatDatabase extends Dexie {
-	users: Dexie.Table<User, string> // string is the type of the primary key (email)
 	messages: Dexie.Table<Message, number>
 
 	constructor() {
 		super('ChatDatabase')
 
-		// Define tables and indexes
-		this.version(1).stores({
-			users: 'email, name', // Set email as the primary key
-		})
-
-		this.version(2).stores({
-			messages: '++id, *userEmail, role, content, createdAt, type', // Added 'type' to the indexes
+		this.version(3).stores({
+			messages: '++id, role, content, createdAt, type',
 		})
 
 		// Define tables
-		this.users = this.table('users')
 		this.messages = this.table('messages')
 	}
 }

@@ -89,18 +89,18 @@ export default function HelpAndFAQ() {
 					</h3>
 					<div className='pt-12 space-y-[24px] mb-[160px]'>
 						<Link
-							href='/faq/2'
+							href='/faq/1'
 							className='flex items-center justify-between px-6 py-7 border rounded-2xl border-white border-opacity-20'>
 							<p className='font-medium text-xl'>
-								What is the cost of using Doubtss.com?
+								How does Doubtss.com work?
 							</p>
 							<ArrowRightSLineIcon />
 						</Link>
 						<Link
-							href='/faq/3'
+							href='/faq/2'
 							className='flex items-center justify-between px-6 py-7 border rounded-2xl border-white border-opacity-20'>
 							<p className='font-medium text-xl'>
-								Is there a trial period for Doubtss.com?
+								What is the cost of using Doubtss.com?
 							</p>
 							<ArrowRightSLineIcon />
 						</Link>

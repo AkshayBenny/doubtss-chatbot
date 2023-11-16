@@ -58,3 +58,8 @@ export const welcomeModal = atom({
 	key: 'welcomeModal',
 	default: false,
 })
+
+export const queryAction = atom({
+	key: 'querying',
+	default: false,
+})

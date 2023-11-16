@@ -4,12 +4,11 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
-import { showFAQModal, userData } from '@/state/recoil'
+import { showFAQModal } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 import Link from 'next/link'
 
 export default function Options() {
-	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [FAQModal, setFAQModal] = useRecoilState(showFAQModal)
 
 	return (
@@ -83,9 +82,9 @@ export default function Options() {
 									</button>
 								)}
 							</Menu.Item> */}
-							{/* <Menu.Item>
+							<Menu.Item>
 								{({ active }) => (
-									<Link href='/faq/1'>
+									<Link href='/faq/'>
 										<button
 											className={`group flex w-full items-center rounded-md py-[10.25px] text-sm`}>
 											<Image
@@ -99,7 +98,7 @@ export default function Options() {
 										</button>
 									</Link>
 								)}
-							</Menu.Item> */}
+							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
 									<button

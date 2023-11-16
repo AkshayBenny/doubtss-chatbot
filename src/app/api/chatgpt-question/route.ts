@@ -11,38 +11,9 @@ import { question_template_prompt } from '@/app/utils/prompts'
 export const runtime = 'edge'
 
 export async function POST(req: Request) {
+	let referredFromFileName = ''
 	try {
-		const { prompt, userId, userName } = await req.json()
-
-		const identifier = req.url + '-' + (userId || 'anonymous')
-		const { success } = await rateLimit(identifier)
-
-		if (!success) {
-			return new NextResponse(
-				JSON.stringify({
-					Message: "Hi, the companions can't talk this fast.",
-				}),
-				{
-					status: 429,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
-
-		if (!userName) {
-			console.log('user not authorized')
-			return new NextResponse(
-				JSON.stringify({ Message: 'User not authorized' }),
-				{
-					status: 401,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
+		const { prompt } = await req.json()
 
 		let data
 		try {
@@ -60,7 +31,6 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: 'Doubtss.com',
 			modelName: 'chatgpt',
-			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -79,11 +49,17 @@ export async function POST(req: Request) {
 			companionKey
 		)
 		let relevantHistory = ''
+		let pineconeSimilarDocs: any = []
 		// query Pinecone
 		try {
-			let pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
+			pineconeSimilarDocs = await memoryManager.pineconeVectorSearch(
 				recentChatHistory
 			)
+
+			if (pineconeSimilarDocs[0].metadata.fileName) {
+				referredFromFileName = pineconeSimilarDocs[0].metadata.fileName
+			}
+
 			if (!!pineconeSimilarDocs && pineconeSimilarDocs.length !== 0) {
 				relevantHistory = pineconeSimilarDocs
 					.map((doc: any) => doc.pageContent)
@@ -92,7 +68,6 @@ export async function POST(req: Request) {
 		} catch (err: any) {
 			console.log('Quering pinecone went wrong!!', err.message)
 		}
-
 		const { stream, handlers } = LangChainStream()
 
 		const model = new OpenAI({
@@ -107,7 +82,7 @@ export async function POST(req: Request) {
 		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-		You are Doubtss.com and are currently talking to ${userName}.
+		You are Doubtss.com and are currently talking to a person.
 		You reply with sample UPSC prelims and mains questions that includes 3 prelims and 3 mains questions for every topic asked. ${replyWithTwilioLimit}
 		Below are relevant details about your past
 		${relevantHistory}
@@ -140,7 +115,7 @@ export async function POST(req: Request) {
 			companionKey
 		)
 
-		return NextResponse.json(result!.text)
+		return NextResponse.json(result!.text + '$$$' + referredFromFileName)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(

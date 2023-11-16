@@ -19,37 +19,9 @@ function countTokens(text: string) {
 }
 
 export async function POST(req: Request) {
-	const { prompt, userId, userName } = await req.json()
+	const { prompt } = await req.json()
 	try {
-		const identifier = req.url + '-' + (userId || 'anonymous')
-		const { success } = await rateLimit(identifier)
-
-		if (!success) {
-			return new NextResponse(
-				JSON.stringify({
-					Message: "Hi, the companions can't talk this fast.",
-				}),
-				{
-					status: 429,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
-
 		const name = req.headers.get('name')
-		if (!userName) {
-			return new NextResponse(
-				JSON.stringify({ Message: 'User not authorized' }),
-				{
-					status: 401,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
 
 		let data
 		try {
@@ -67,7 +39,6 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: name!,
 			modelName: 'chatgpt',
-			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -116,7 +87,7 @@ export async function POST(req: Request) {
 		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-			You are ${name} and are currently talking to ${userName}.
+			You are AI chabot and are currently talking to a person.
 			${preamble}
 			
             Your previous conversation: "${prompt}" Continue from here.`)

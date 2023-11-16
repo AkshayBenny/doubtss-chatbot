@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteAllMessagesByUserEmailDexie } from '@/app/dexie/crud'
+import { deleteAllMessagesDexie } from '@/app/dexie/crud'
 import { chatHistory, showClearChatModal, userData } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
 
@@ -15,7 +15,7 @@ export default function ClearChatModal({ stop }: any) {
 		stop()
 		if (recoilUser.email) {
 			try {
-				deleteAllMessagesByUserEmailDexie(recoilUser.email)
+				deleteAllMessagesDexie()
 			} catch (error) {
 				console.log(error)
 			}
@@ -25,6 +25,7 @@ export default function ClearChatModal({ stop }: any) {
 	const closeModal = () => {
 		setClearChatModal(false)
 	}
+
 	return (
 		<div className='absolute top-0 right-0 bg-custom-black h-screen w-screen overflow-clip z-[100] backdrop-blur-[0.5px] bg-opacity-80 flex items-center justify-center'>
 			<div className='bg-custom-gray border border-custom-white border-opacity-[12%] text-center p-10 rounded-2xl'>
