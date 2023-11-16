@@ -1,6 +1,6 @@
 import { OpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
-import { LangChainStream } from 'ai'
+import { LangChainStream, StreamingTextResponse } from 'ai'
 import { CallbackManager } from 'langchain/callbacks'
 import { PromptTemplate } from 'langchain/prompts'
 import { NextResponse } from 'next/server'
@@ -114,8 +114,20 @@ export async function POST(req: Request) {
 			})
 
 		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
-		return NextResponse.json(result!.text + '$$$' + referredFromFileName)
-		// return new StreamingTextResponse(stream)
+
+		console.log(
+			'--------------------------------------------------',
+			referredFromFileName,
+			'--------------------------------------------------'
+		)
+
+		if (result!.text && result!.text.includes('apologize')) {
+			return NextResponse.json(result!.text)
+		}
+
+		return NextResponse.json(
+			result!.text + '$$$' + referredFromFileName + '$$$'
+		)
 	} catch (err: any) {
 		console.error('An error occurred in POST:', err)
 		return new NextResponse(

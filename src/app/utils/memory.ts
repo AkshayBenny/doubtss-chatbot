@@ -10,7 +10,6 @@ import { OpenAI } from 'langchain'
 export type CompanionKey = {
 	companionName: string
 	modelName: string
-	userId: string
 }
 
 class MemoryManager {
@@ -145,11 +144,11 @@ class MemoryManager {
 	}
 
 	private generateRedisCompanionKey(companionKey: CompanionKey): string {
-		return `${companionKey.companionName}-${companionKey.modelName}-${companionKey.userId}`
+		return `${companionKey.companionName}-${companionKey.modelName}`
 	}
 
 	public async writeToHistory(text: string, companionKey: CompanionKey) {
-		if (!companionKey || typeof companionKey.userId == 'undefined') {
+		if (!companionKey) {
 			console.log('Companion key set incorrectly')
 			return ''
 		}
@@ -166,7 +165,7 @@ class MemoryManager {
 	public async readLatestHistory(
 		companionKey: CompanionKey
 	): Promise<string> {
-		if (!companionKey || typeof companionKey.userId == 'undefined') {
+		if (!companionKey) {
 			console.log('Companion key set incorrectly')
 			return ''
 		}

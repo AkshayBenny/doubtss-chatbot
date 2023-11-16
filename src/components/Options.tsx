@@ -4,12 +4,10 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
-import { showFAQModal, userData } from '@/state/recoil'
+import { showFAQModal } from '@/state/recoil'
 import { useRecoilState } from 'recoil'
-import Link from 'next/link'
 
 export default function Options() {
-	const [recoilUserState, setRecoilUserState] = useRecoilState(userData)
 	const [FAQModal, setFAQModal] = useRecoilState(showFAQModal)
 
 	return (

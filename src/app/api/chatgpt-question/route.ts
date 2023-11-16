@@ -13,24 +13,7 @@ export const runtime = 'edge'
 export async function POST(req: Request) {
 	let referredFromFileName = ''
 	try {
-		const { prompt, userId, userName } = await req.json()
-
-		const identifier = req.url + '-' + (userId || 'anonymous')
-		const { success } = await rateLimit(identifier)
-
-		if (!success) {
-			return new NextResponse(
-				JSON.stringify({
-					Message: "Hi, the companions can't talk this fast.",
-				}),
-				{
-					status: 429,
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			)
-		}
+		const { prompt } = await req.json()
 
 		let data
 		try {
@@ -48,7 +31,6 @@ export async function POST(req: Request) {
 		const companionKey = {
 			companionName: 'Doubtss.com',
 			modelName: 'chatgpt',
-			userId: userId,
 		}
 		const memoryManager = await MemoryManager.getInstance()
 
@@ -100,7 +82,7 @@ export async function POST(req: Request) {
 		const replyWithTwilioLimit = 'You reply within 1000 characters.'
 
 		const chainPrompt = PromptTemplate.fromTemplate(`
-		You are Doubtss.com and are currently talking to ${userName}.
+		You are Doubtss.com and are currently talking to a person.
 		You reply with sample UPSC prelims and mains questions that includes 3 prelims and 3 mains questions for every topic asked. ${replyWithTwilioLimit}
 		Below are relevant details about your past
 		${relevantHistory}

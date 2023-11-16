@@ -22,7 +22,7 @@ export default function Navbar() {
 					</div>
 				)}
 			</div>
-			{/* <Alert /> */}
+			<Alert />
 		</div>
 	)
 }

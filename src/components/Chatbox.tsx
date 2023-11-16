@@ -2,7 +2,6 @@
 
 import SearchLineIcon from 'remixicon-react/SearchLineIcon'
 import SendPlane2FillIcon from 'remixicon-react/SendPlane2FillIcon'
-import Loader from './Loader'
 import ChatTypeDropDown from './ChatTypeDropdown'
 import { event } from 'nextjs-google-analytics'
 
@@ -18,8 +17,8 @@ export default function Chatbox({
 		<div className='w-full flex flex-col items-center justify-center mx-auto gap-3 '>
 			{/* {isLoading && !completion && <Loader />} */}
 			<form
-				onSubmit={() => {
-					handleSubmit()
+				onSubmit={(e) => {
+					handleSubmit(e)
 					event('send_button_main')
 				}}
 				className='flex items-center justify-center gap-3 w-full max-w-[770px] '>
