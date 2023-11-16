@@ -114,6 +114,17 @@ export async function POST(req: Request) {
 			})
 
 		await memoryManager.writeToHistory(result!.text + '\n', companionKey)
+
+		console.log(
+			'--------------------------------------------------',
+			referredFromFileName,
+			'--------------------------------------------------'
+		)
+
+		if (result!.text && result!.text.includes('apologize')) {
+			return NextResponse.json(result!.text)
+		}
+
 		return NextResponse.json(
 			result!.text + '$$$' + referredFromFileName + '$$$'
 		)
